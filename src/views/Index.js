@@ -1,0 +1,26 @@
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Link, Redirect } from 'react-router-dom'
+import AnimationWrapper from '../components/AnimationWrapper'
+import AuthWrapper from '../components/AuthWrapper'
+import { logout } from '../actions/auth'
+
+class Index extends Component {
+  render() {
+    const { auth, logout } = this.props
+    return auth ? (
+      <AnimationWrapper>
+        <div className="col-12">
+          <Link to="/registro">Registro</Link>
+          <span onClick={logout}>Logout</span>
+        </div>
+      </AnimationWrapper>
+    ) : (
+      <Redirect to="/login" />
+    )
+  }
+}
+
+const mapStateToProps = ({ auth }) => ({ auth })
+
+export default connect(mapStateToProps, { logout })(Index)
