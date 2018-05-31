@@ -16,6 +16,7 @@ export default () => {
             redirect="/login"
             submitText="Recuperar contraseña"
             success="Se te ha enviado un correo para que recuperes tu contraseña"
+            error="Al parecer el correo no se encuentra registrado en nuestra base de datos"
           >
             <Input
               name="correo"
