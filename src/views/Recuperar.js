@@ -8,14 +8,14 @@ import AuthWrapper from '../components/AuthWrapper'
 
 export default () => {
   return (
-    <AuthWrapper type="login">
+    <AuthWrapper type="recover">
       {action => (
-        <CenterBox title="Iniciar sesión">
+        <CenterBox title="Recuperar contraseña">
           <Form
             action={action}
-            // redirect="/"
-            submitText="Iniciar sesión"
-            success="Bienvenido"
+            redirect="/login"
+            submitText="Recuperar contraseña"
+            success="Se te ha enviado un correo para que recuperes tu contraseña"
           >
             <Input
               name="correo"
@@ -24,24 +24,16 @@ export default () => {
               validationError="Ingresa un email válido"
               required
             />
-            <Input
-              name="contrasena"
-              label="Contraseña"
-              validations="minLength:6"
-              type="password"
-              validationError="Ingresa una contraseña válida"
-              required
-            />
           </Form>
           <div className="row">
             <div className="col-12 mt-2">
               <span>
-                ¿Aún no tienes tu cuenta? <Link to="/registro">Registrate</Link>
+                <Link to="/login">Iniciar sesión</Link>
               </span>
             </div>
             <div className="col-12 mt-2">
               <span>
-                <Link to="/recuperar">Recuperar contraseña</Link>
+                <Link to="/registro">Registrate</Link>
               </span>
             </div>
           </div>

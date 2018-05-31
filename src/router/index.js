@@ -4,6 +4,7 @@ import Login from '../views/Login'
 import Registro from '../views/Registro'
 import Index from '../views/Index'
 import Perfil from '../views/Perfil'
+import Recuperar from '../views/Recuperar'
 import PrivateRoute from './PrivateRoute'
 
 export default ({ auth }) => {
@@ -13,6 +14,7 @@ export default ({ auth }) => {
       <PrivateRoute path="/perfil" component={Perfil} auth={auth} />
       <Route path="/login" component={Login} />
       <Route path="/registro" component={Registro} />
+      <Route path="/recuperar" component={Recuperar} />
     </Switch>
   )
 }

@@ -55,7 +55,21 @@ export const getAuth = params => async dispatch => {
   })
 }
 
-export const currentUser = async (params) => {
+export const recover = ({ correo }) => {
+  // try {
+  //   const r = await auth.sendPasswordResetEmail(correo)
+  //   return r && 202
+  // } catch (error) {
+  //   return false
+  // }
+
+  return auth
+    .sendPasswordResetEmail(correo)
+    .then(r => 202)
+    .catch(e => false)
+}
+
+export const currentUser = async params => {
   const user = await auth.currentUser
   user ? user : true
 }
