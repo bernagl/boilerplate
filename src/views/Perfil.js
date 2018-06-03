@@ -20,7 +20,7 @@ class Perfil extends Component {
       <AnimationWrapper>
         <div className="row">
           <div className="col-12 col-md-4">
-            <div className="bw p-0 p-md-4">
+            <div className="bw p-2 p-md-4">
               <Form submitText="Guardar" action={updateProfile}>
                 {/* {PerfilModel.map(input => <Input {...input} />)} */}
                 <Input
@@ -50,8 +50,8 @@ class Perfil extends Component {
               </Form>
             </div>
           </div>
-          <div className="col-12 col-md-8 mt-4 mt-md-0">
-            <div className="bw p-0 p-md-4">
+          <div className="col-12 col-md-8 my-4 mt-md-0">
+            <div className="bw p-2 p-md-4">
               <Tabs defaultActiveKey="1" onChange={e => console.log(e)}>
                 <TabPane tab="Mis clases" key="1">
                   <Table title="Historial de clases" />

@@ -54,22 +54,33 @@ class ComprarCreditos extends Component {
                   }}
                   validationError="Ingresa una tarjeta válida"
                   required
-                  value={auth.nombre}
                 />
                 <div className="row">
                   <div className="col-4">
-                    <label>Mes</label>
-                    <Select defaultValue="Option1-1">
-                      <Option value="Option1-1">Option1-1</Option>
-                      <Option value="Option1-2">Option1-2</Option>
-                    </Select>
+                    <Input
+                      name="mes"
+                      label="Mes"
+                      validations={{
+                        minLength: 2,
+                        isNumeric: true,
+                        maxLength: 2
+                      }}
+                      validationError="Ingrese un mes válido"
+                      required
+                    />
                   </div>
                   <div className="col-4">
-                    <label>Año</label>
-                    <Select defaultValue="Option1-1">
-                      <Option value="Option1-1">Option1-1</Option>
-                      <Option value="Option1-2">Option1-2</Option>
-                    </Select>
+                    <Input
+                      name="ano"
+                      label="Año"
+                      validations={{
+                        minLength: 2,
+                        isNumeric: true,
+                        maxLength: 2
+                      }}
+                      validationError="Ingresa una año válido"
+                      required
+                    />
                   </div>
                   <div className="col-4">
                     <Input
