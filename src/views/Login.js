@@ -6,48 +6,42 @@ import Input from '../components/Input'
 import CenterBox from '../components/CenterBox'
 import AuthWrapper from '../components/AuthWrapper'
 import Login from '../models/login'
+import bg from '../assets/login.jpg'
+import '../assets/login.css'
 
 export default () => {
   return (
     <AuthWrapper type="login">
       {action => (
-        <CenterBox title="Iniciar sesión">
-          <Form
-            action={action}
-            // redirect="/"
-            submitText="Iniciar sesión"
-            success="Bienvenido"
-          >
-            {Login.map(input => <Input {...input} />)}
-            {/* <Input
-              name="correo"
-              label="Correo"
-              validations="isEmail"
-              validationError="Ingresa un email válido"
-              required
-            />
-            <Input
-              name="contrasena"
-              label="Contraseña"
-              validations="minLength:6"
-              type="password"
-              validationError="Ingresa una contraseña válida"
-              required
-            /> */}
-          </Form>
-          <div className="row">
-            <div className="col-12 mt-2">
-              <span>
-                ¿Aún no tienes tu cuenta? <Link to="/registro">Registrate</Link>
-              </span>
-            </div>
-            <div className="col-12 mt-2">
-              <span>
-                <Link to="/recuperar">Recuperar contraseña</Link>
-              </span>
+        <div className="row">
+          <div className="col-3 login-box">
+            <div className="row align-content-center fh p-4">
+              <div className="col-12">
+                <h1 className="mb-5 center-text">Iniciar sesión</h1>
+                <Form
+                  action={action}
+                  // redirect="/"
+                  submitText="Iniciar sesión"
+                  success="Bienvenido"
+                >
+                  {Login.map(input => <Input {...input} />)}
+                </Form>
+              </div>
+              <div className="col-12 mt-2">
+                <p>
+                  <span>¿Aún no tienes tu cuenta? </span>
+                  <Link to="/registro">Registrate</Link>
+                </p>
+              </div>
+              <div className="col-12 mt-2">
+                <span>
+                  <Link to="/recuperar">Recuperar contraseña</Link>
+                </span>
+              </div>
             </div>
           </div>
-        </CenterBox>
+          <div className="col-9" style={{ background: `url(${bg})` }} />
+        </div>
       )}
     </AuthWrapper>
   )

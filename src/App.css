@@ -28,7 +28,8 @@ body {
 }
 
 .fh {
-  height: calc(100vh - 80px);
+  /* height: calc(100vh - 80px); */
+  height: 100vh;
 }
 
 .center-text {
