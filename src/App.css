@@ -73,3 +73,22 @@ body {
   opacity: 1;
   transition: opacity .5s ease-in;
 }
+
+/* Gimnasio */
+
+/* .select-to-top {
+  position: absolute;
+  animation: select-to-top;
+  animation-duration: .5s;
+}
+
+@keyframes select-to-top {
+  from {
+    top: 50%;
+    left: calc(50% - 60px);
+  }
+  to {
+    top: 80px;
+    left: calc(50% - 60px);
+  }
+} */

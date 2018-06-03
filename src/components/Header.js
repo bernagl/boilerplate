@@ -13,7 +13,7 @@ export default ({ openModal, closeModal }) => {
         <ul className="luxbar-navigation">
           <li className="luxbar-header">
             <Link to="/" className="luxbar-brand" exact>
-              Comprar créditos
+              IMPULSEFITNESS
             </Link>
             <label
               className="luxbar-hamburger luxbar-hamburger-doublespin"
@@ -35,7 +35,7 @@ export default ({ openModal, closeModal }) => {
             </NavLink>
           </li>
           <li className="luxbar-item">
-            <NavLink to="/" activeClassName="active" exact>
+            <NavLink to="/comprar" activeClassName="active" exact>
               Comprar créditos
             </NavLink>
           </li>

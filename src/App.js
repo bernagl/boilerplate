@@ -16,6 +16,7 @@ class App extends Component {
   render() {
     const { loading } = this.state
     const { auth } = this.props
+    console.log(auth)
     return (
       <React.Fragment>
         {auth && <Header />}

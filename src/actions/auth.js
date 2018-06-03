@@ -31,11 +31,10 @@ export const login = ({ correo, contrasena }) => async dispatch => {
       .ref(`usuario/${user.uid}`)
       .update({ last_login: Date.now() })
       .then(result => {
-        dispatch({
-          type: LOGIN,
-          payload: { correo, contrasena, uid: user.uid }
+        db.ref(`usuario/${user.uid}`).on('value', snapshot => {
+          dispatch({ type: LOGIN, payload: { ...snapshot.val() } })
         })
-        console.log(user.uid)
+        // console.log(user.uid)
         return user.uid
       })
   } catch (e) {
@@ -47,11 +46,15 @@ export const login = ({ correo, contrasena }) => async dispatch => {
 export const getAuth = params => async dispatch => {
   auth.onAuthStateChanged(function(user) {
     if (user) {
-      dispatch({ type: LOGIN, payload: user.uid })
+      db.ref(`usuario/${user.uid}`).on('value', snapshot => {
+        dispatch({ type: LOGIN, payload: { ...snapshot.val() } })
+        params.setState({ loading: false })
+      })
+      // dispatch({ type: LOGIN, payload: user.uid })
     } else {
       dispatch({ type: LOGOUT })
+      params.setState({ loading: false })
     }
-    params.setState({ loading: false })
   })
 }
 

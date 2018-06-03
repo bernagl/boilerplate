@@ -75,8 +75,10 @@ td {
     transition: .3s;
 }
 
-#btable tr:nth-child(even) {
-    background-color: #f7fbff;
+/* #btable tr:nth-child(even) { */
+
+tr:nth-child(even) {
+    background-color: #fafafb;
 }
 
 #btable input {

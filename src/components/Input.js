@@ -5,6 +5,11 @@ const { Item } = Form
 
 class Input extends Component {
   state = { value: '', validate: false }
+
+  componentDidMount() {
+    this.setState({ value: this.props.value })
+  }
+
   onChange = e => {
     const value = e.currentTarget.value
     this.props.setValue(value)

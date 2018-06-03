@@ -6386,6 +6386,10 @@ react-slick@~0.23.1:
     lodash.debounce "^4.0.8"
     resize-observer-polyfill "^1.5.0"
 
+react-super-responsive-table@^4.2.3:
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/react-super-responsive-table/-/react-super-responsive-table-4.2.3.tgz#e5bb9302fd24795fd7e50088747b81b6674b67f3"
+
 react-transition-group@1.x, react-transition-group@^1.2.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-1.2.1.tgz#e11f72b257f921b213229a774df46612346c7ca6"

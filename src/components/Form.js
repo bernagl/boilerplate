@@ -19,14 +19,15 @@ class Form extends Component {
     this.setState({ loading: true })
     const r = await action(model)
     // this.setState(() => {
-    console.log(r)
     r
-      ? (message.success(success), redirect && history.push(redirect))
+      ? (message.success(success),
+        redirect ? history.push(redirect) : this.setState({ loading: false }))
       : (this.setState({ loading: false }),
         message.error(
           error ? error : 'Ocurrio un error, por favor intentalo de nuevo'
         ))
-    // return { loading: false }
+
+    // !redirect && this.setState({ loading: false })
     // },
     // )
   }
