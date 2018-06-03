@@ -5,7 +5,7 @@ body {
 /* Auth */
 
 .auth {
-  height: 100vh;
+  /* height: 100vh; */
 }
 
 .auth .login-box {
@@ -28,11 +28,15 @@ body {
 }
 
 .fh {
-  height: 100vh;
+  height: calc(100vh - 80px);
 }
 
 .center-text {
   text-align: center;
+}
+
+.bw {
+  background-color: white !important;
 }
 
 /* Fixed */

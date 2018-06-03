@@ -12,6 +12,9 @@ class Index extends Component {
       <AnimationWrapper>
         <div className="col-12">
           <Link to="/registro">Registro</Link>
+          <br />
+          <Link to="/perfil">Perfil</Link>
+          <br />
           <span onClick={logout}>Logout</span>
         </div>
       </AnimationWrapper>

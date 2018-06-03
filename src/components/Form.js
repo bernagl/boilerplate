@@ -19,6 +19,7 @@ class Form extends Component {
     this.setState({ loading: true })
     const r = await action(model)
     // this.setState(() => {
+    console.log(r)
     r
       ? (message.success(success), redirect && history.push(redirect))
       : (this.setState({ loading: false }),
@@ -38,6 +39,7 @@ class Form extends Component {
         onValidSubmit={this.submit}
         onValid={this.enableButton}
         onInvalid={this.disableButton}
+        className="ant-form-vertical"
       >
         {children}
         <Button

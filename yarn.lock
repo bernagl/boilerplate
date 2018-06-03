@@ -6396,6 +6396,10 @@ react-transition-group@1.x, react-transition-group@^1.2.0:
     prop-types "^15.5.6"
     warning "^3.0.0"
 
+react-xtable@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/react-xtable/-/react-xtable-1.0.5.tgz#80ac263620c491dd9f75b5d61e0c5e0cc817daee"
+
 react@^16.4.0:
   version "16.4.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.4.0.tgz#402c2db83335336fba1962c08b98c6272617d585"

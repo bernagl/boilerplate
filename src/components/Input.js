@@ -19,7 +19,7 @@ class Input extends Component {
 
   render() {
     const { validate, value } = this.state
-    const { label, name, placeholder, type } = this.props
+    const { label, name, pattern, placeholder, type } = this.props
     const errorMessage = this.props.getErrorMessage()
     return (
       <Item
@@ -43,6 +43,8 @@ class Input extends Component {
           type={type ? type : 'text'}
           onChange={this.onChange}
           onBlur={this.handleEvent}
+          value={value}
+          // pattern={pattern}
           // onFocus={this.handleEvent}
         />
       </Item>

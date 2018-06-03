@@ -8,6 +8,8 @@ import store from './store'
 import 'antd/dist/antd.css'
 import 'bootstrap-4-grid/css/grid.min.css'
 import './App.css'
+import './assets/xtable.css'
+import './assets/header.css'
 
 ReactDOM.render(
   <Provider store={store}>

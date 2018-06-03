@@ -5,6 +5,7 @@ import Form from '../components/Form'
 import Input from '../components/Input'
 import CenterBox from '../components/CenterBox'
 import AuthWrapper from '../components/AuthWrapper'
+import Login from '../models/login'
 
 export default () => {
   return (
@@ -17,7 +18,8 @@ export default () => {
             submitText="Iniciar sesión"
             success="Bienvenido"
           >
-            <Input
+            {Login.map(input => <Input {...input} />)}
+            {/* <Input
               name="correo"
               label="Correo"
               validations="isEmail"
@@ -31,7 +33,7 @@ export default () => {
               type="password"
               validationError="Ingresa una contraseña válida"
               required
-            />
+            /> */}
           </Form>
           <div className="row">
             <div className="col-12 mt-2">

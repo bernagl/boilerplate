@@ -5,7 +5,7 @@ export default ({ children }) => {
   return (
     <AnimationWrapper>
       <div className="row align-items-center justify-content-center fh">
-        <div className="col-10 center-text">{children}</div>
+        <div className="col-11 center-text">{children}</div>
       </div>
     </AnimationWrapper>
   )
