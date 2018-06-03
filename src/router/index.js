@@ -9,16 +9,26 @@ import Gimnasio from '../views/Gimnasio'
 import ComprarCreditos from '../views/ComprarCreditos'
 import PrivateRoute from './PrivateRoute'
 
-export default ({ auth }) => {
+export const WithAuth = ({ auth }) => {
   return (
     <Switch>
       <PrivateRoute path="/" component={Index} exact auth={auth} />
       <PrivateRoute path="/perfil" component={Perfil} auth={auth} />
       <PrivateRoute path="/clase" component={Gimnasio} auth={auth} />
       <PrivateRoute path="/comprar" component={ComprarCreditos} auth={auth} />
-      <Route path="/login" component={Login} />
+      {/* <Route path="/login" component={Login} />
+      <Route path="/registro" component={Registro} />
+      <Route path="/recuperar" component={Recuperar} /> */}
+    </Switch>
+  )
+}
+
+export const NoAuth = () => {
+  return (
+    <Switch>
       <Route path="/registro" component={Registro} />
       <Route path="/recuperar" component={Recuperar} />
+      <Route component={Login} />
     </Switch>
   )
 }

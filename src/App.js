@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import Router from './router'
+import { NoAuth, WithAuth } from './router'
 import { getAuth } from './actions/auth'
 import AnimationWrapper from './components/AnimationWrapper'
 import Header from './components/Header'
@@ -18,13 +18,15 @@ class App extends Component {
     const { auth } = this.props
     // !auth && import ('./assets/login.css')
 
-    return (
+    return auth ? (
       <React.Fragment>
-        {auth && <Header />}
+        <Header />
         <div className="container" style={{ marginTop: 80 }}>
-          {loading ? <Loading /> : <Router auth={auth} />}
+          {loading ? <Loading /> : <WithAuth auth={auth} />}
         </div>
       </React.Fragment>
+    ) : (
+      <NoAuth />
     )
   }
 }
