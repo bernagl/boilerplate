@@ -16,6 +16,7 @@ export const WithAuth = ({ auth }) => {
       <PrivateRoute path="/perfil" component={Perfil} auth={auth} />
       <PrivateRoute path="/clase" component={Gimnasio} auth={auth} />
       <PrivateRoute path="/comprar" component={ComprarCreditos} auth={auth} />
+      <Route component={() => <p>Ruta no encontrada</p>} />
       {/* <Route path="/login" component={Login} />
       <Route path="/registro" component={Registro} />
       <Route path="/recuperar" component={Recuperar} /> */}

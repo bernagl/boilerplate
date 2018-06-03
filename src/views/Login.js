@@ -7,14 +7,14 @@ import CenterBox from '../components/CenterBox'
 import AuthWrapper from '../components/AuthWrapper'
 import Login from '../models/login'
 import bg from '../assets/login.jpg'
-// import '../assets/login.css'
+import '../assets/login.css'
 
 export default () => {
   return (
     <AuthWrapper type="login">
       {action => (
         <div className="row">
-          <div className="col-md-3 col-12 login-box">
+          <div className="col-12 col-md-5 col-lg-4 col-xl-3 login-box">
             <div className="row align-content-center fh p-4">
               <div className="col-12">
                 <h1 className="mb-5 center-text">Iniciar sesión</h1>
@@ -40,7 +40,8 @@ export default () => {
               </div>
             </div>
           </div>
-          <div className="col-12 col-md-9 hidden-sm-up" style={{ background: `url(${bg})` }} />
+          <div className="col-12 col-md-5 col-lg-8 col-xl-9 hidden-sm-up bg-cover"
+          style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover' }} />
         </div>
       )}
     </AuthWrapper>

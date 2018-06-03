@@ -18,11 +18,13 @@ class App extends Component {
     const { auth } = this.props
     // !auth && import ('./assets/login.css')
 
-    return auth ? (
+    return loading ? (
+      <Loading />
+    ) : auth ? (
       <React.Fragment>
         <Header />
         <div className="container" style={{ marginTop: 80 }}>
-          {loading ? <Loading /> : <WithAuth auth={auth} />}
+          <WithAuth auth={auth} />
         </div>
       </React.Fragment>
     ) : (

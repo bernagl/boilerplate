@@ -1,8 +1,8 @@
-.container {
+/* .container {
     margin: 0px !important;
     padding: 0px !important;
     max-width: 100% !important;
-}
+} */
 
 .login-box {
     transition: 1s;
@@ -10,4 +10,8 @@
 
 .login-box:hover {
     transform: scale(1.02);
+}
+
+.bg-cover {
+    background-size: cover;
 }
