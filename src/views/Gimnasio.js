@@ -1,18 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Link, Redirect } from 'react-router-dom'
 import AnimationWrapper from '../components/AnimationWrapper'
-import EmptyState from '../components/EmptyState'
-import SelectGym from '../components/SelectGym'
 import { Button, Icon, Select } from 'antd'
-import BigCalendar from 'react-big-calendar'
 import moment from 'moment'
-import { ReactCSSTransitionGroup } from 'react-transition-group'
-import 'react-big-calendar/lib/css/react-big-calendar.css'
 const { Option } = Select
-
-BigCalendar.momentLocalizer(moment)
-let allViews = Object.keys(BigCalendar.Views).map(k => BigCalendar.Views[k])
 
 export default class Gimnasio extends Component {
   state = {
@@ -121,7 +112,7 @@ export default class Gimnasio extends Component {
     const { auth, logout, updateProfile } = this.props
     const { dates, dias, gym, month } = this.state
     return (
-      <div>
+      <AnimationWrapper>
         <Button type="primary" onClick={() => this.daysHandler(0)}>
           <Icon type="left" />
         </Button>
@@ -165,18 +156,24 @@ export default class Gimnasio extends Component {
                           <div className="col-12 day-event">{ev.title}</div>
                         ))
                       ) : (
-                        <span style={{ fontSize: 14, textAlign: 'center', width: '100%' }}>
+                        <span
+                          style={{
+                            fontSize: 14,
+                            textAlign: 'center',
+                            width: '100%'
+                          }}
+                        >
                           No hay eventos
                         </span>
                       )}
                     </div>
-                  </div>  
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
-      </div>
+      </AnimationWrapper>
     )
   }
 }
