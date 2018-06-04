@@ -27,7 +27,7 @@ class ComprarCreditos extends Component {
       <AnimationWrapper>
         <div className="row">
           <div className="col-12 col-md-6">
-            <div className="bw p-0 p-md-4">
+            <div className="container-shadow p-0 p-md-4">
               <RadioGroup>
                 <Radio style={radioStyle} value={1}>
                   Paquete 5 créditos
@@ -42,7 +42,7 @@ class ComprarCreditos extends Component {
             </div>
           </div>
           <div className="col-12 col-md-6 mt- mt-md-0">
-            <div className="bw p-0 p-md-4">
+            <div className="container-shadow p-0 p-md-4">
               <Form submitText="Pagar" action={updateProfile}>
                 <Input
                   name="nombre"

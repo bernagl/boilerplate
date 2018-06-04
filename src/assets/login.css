@@ -4,14 +4,18 @@
     max-width: 100% !important;
 } */
 
-.login-box {
+/* .login-box {
     transition: 1s;
 }
 
 .login-box:hover {
     transform: scale(1.02);
-}
+} */
 
 .bg-cover {
     background-size: cover;
+}
+
+.fw {
+    height: 100vh !important;
 }
