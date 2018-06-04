@@ -12,7 +12,7 @@ export default ({ openModal, closeModal }) => {
       <div className="luxbar-menu luxbar-menu-right luxbar-menu-material-cyan">
         <ul className="luxbar-navigation">
           <li className="luxbar-header">
-            <Link to="/" className="luxbar-brand" exact>
+            <Link to="/" className="luxbar-brand">
               IMPULSEFITNESS
             </Link>
             <label

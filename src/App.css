@@ -29,8 +29,8 @@ body {
 }
 
 .fh {
-  /* height: calc(100vh - 80px); */
-  height: 100vh;
+  height: calc(100vh - 80px);
+  /* height: 100vh; */
 }
 
 .center-text {
@@ -76,21 +76,73 @@ body {
   transition: opacity .5s ease-in;
 }
 
-/* Gimnasio */
-
-/* .select-to-top {
-  position: absolute;
-  animation: select-to-top;
-  animation-duration: .5s;
+@media (max-width: 992px) {
+  .show-sm {
+    display: block !important;
+  }
+  .hidden-sm {
+    display: none !important;
+  }
+  .week {
+    display: block !important;
+    width: 100%;
+  }
+  .day {
+    max-width: 100% !important;
+    width: 100%;
+    margin-top: 10px !important;
+  }
 }
 
-@keyframes select-to-top {
-  from {
-    top: 50%;
-    left: calc(50% - 60px);
-  }
-  to {
-    top: 80px;
-    left: calc(50% - 60px);
-  }
-} */
+.hidden-lg {
+  display: none;
+}
+
+.hidden-sm {
+  display: none;
+}
+
+.show-lg {
+  display: flex;
+}
+
+.week {
+  display: flex;
+}
+
+.day {
+  flex-basis: 0;
+  flex: 1 1 0;
+  margin: 0px 2.5px;
+  max-width: 14.2857%;
+  text-align: center;
+}
+
+.day-row {
+  background-color: #1990ff;
+  color: white;
+}
+
+.calendar-container {
+  border: 1px solid #e8e8e8;
+  min-height: 200px;
+}
+
+.day-event {
+  background: #e8e8e8;
+  padding: 10px;
+  margin: 2.5px 0px;
+  width: 100%;
+  /* opacity: 1; */
+  transition: 1s;
+  word-break: break-all;
+  cursor: pointer;
+}
+
+.week-header {
+  background: #1990ff;
+  padding: 20px 0px;
+  width: 100%;
+}
+
+/* week week-header */
