@@ -136,7 +136,7 @@ class Gimnasio extends Component {
     this.daysHandler()
     const { creditos, clases } = this.props.cart
     this.setState({
-      creditos: creditos > 0 ? creditos : 4,
+      creditos: creditos,
       clases: clases ? clases : new Map()
     })
   }
