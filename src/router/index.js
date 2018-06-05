@@ -7,6 +7,7 @@ import Perfil from '../views/Perfil'
 import Recuperar from '../views/Recuperar'
 import Gimnasio from '../views/Gimnasio'
 import ComprarCreditos from '../views/ComprarCreditos'
+import Checkout from '../views/Checkout'
 import PrivateRoute from './PrivateRoute'
 
 export const WithAuth = ({ auth }) => {
@@ -16,6 +17,7 @@ export const WithAuth = ({ auth }) => {
       <PrivateRoute path="/perfil" component={Perfil} auth={auth} />
       <PrivateRoute path="/clase" component={Gimnasio} auth={auth} />
       <PrivateRoute path="/comprar" component={ComprarCreditos} auth={auth} />
+      <PrivateRoute path="/checkout" component={Checkout} auth={auth} />
       <Route component={() => <p>Ruta no encontrada</p>} />
       {/* <Route path="/login" component={Login} />
       <Route path="/registro" component={Registro} />

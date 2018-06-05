@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import AnimationWrapper from '../components/AnimationWrapper'
+import { setCheckout } from '../actions/cart'
 import { Button, Icon, message, Select } from 'antd'
 import moment from 'moment'
 const { Option } = Select
@@ -8,7 +9,8 @@ message.config({
   duration: 2,
   maxCount: 3
 })
-export default class Gimnasio extends Component {
+
+class Gimnasio extends Component {
   state = {
     gym: null,
     week: 0,
@@ -29,6 +31,7 @@ export default class Gimnasio extends Component {
       {
         title: 'Zumba',
         profesor: 'Luis García',
+        creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
         id: 1,
@@ -37,6 +40,7 @@ export default class Gimnasio extends Component {
       {
         title: 'Ritmos látino',
         profesor: 'Luis García',
+        creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
         id: 2,
@@ -45,6 +49,7 @@ export default class Gimnasio extends Component {
       {
         title: 'Zumba',
         profesor: 'Luis García',
+        creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
         id: 3,
@@ -53,6 +58,7 @@ export default class Gimnasio extends Component {
       {
         title: 'Aerobic',
         profesor: 'Luis García',
+        creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
         id: 4,
@@ -62,6 +68,7 @@ export default class Gimnasio extends Component {
         title: 'Zumba',
         id: 5,
         profesor: 'Luis García',
+        creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
         date: new Date('2018, 6, 6')
@@ -70,6 +77,7 @@ export default class Gimnasio extends Component {
         title: 'Ritmos látino',
         id: 6,
         profesor: 'Luis García',
+        creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
         date: new Date('2018, 6, 6')
@@ -78,6 +86,7 @@ export default class Gimnasio extends Component {
         title: 'Pesas',
         id: 7,
         profesor: 'Luis García',
+        creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
         date: new Date('2018, 6, 6')
@@ -86,6 +95,7 @@ export default class Gimnasio extends Component {
         title: 'Cardio',
         id: 8,
         profesor: 'Luis García',
+        creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
         date: new Date('2018, 6, 6')
@@ -94,6 +104,7 @@ export default class Gimnasio extends Component {
         title: 'Bicicleta',
         id: 9,
         profesor: 'Luis García',
+        creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
         date: new Date('2018, 6, 7')
@@ -102,6 +113,7 @@ export default class Gimnasio extends Component {
         title: 'Ritmos látino',
         id: 10,
         profesor: 'Luis García',
+        creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
         date: new Date('2018, 6, 8')
@@ -110,6 +122,7 @@ export default class Gimnasio extends Component {
         title: 'Zumba',
         id: 11,
         profesor: 'Luis García',
+        creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
         date: new Date('2018, 6, 9')
@@ -121,6 +134,11 @@ export default class Gimnasio extends Component {
 
   componentDidMount() {
     this.daysHandler()
+    const { creditos, clases } = this.props.cart
+    this.setState({
+      creditos: creditos > 0 ? creditos : 4,
+      clases: clases ? clases : new Map()
+    })
   }
 
   daysHandler = sum => {
@@ -177,14 +195,20 @@ export default class Gimnasio extends Component {
     }
   }
 
+  setCheckout = () => {
+    const { clases, creditos } = this.state
+    this.props.setCheckout({ clases, creditos })
+    this.props.history.push('/checkout')
+  }
+
   render() {
     const { auth, logout, updateProfile } = this.props
     const { dates, dias, clases, creditos, gym, month } = this.state
-    console.log(this.state)
+    console.log(this.props)
     return (
       <AnimationWrapper>
         {/* <div className="row align-items-center"> */}
-        <div className="col-12">
+        <div className="col-12 my-4">
           <div className="row">
             <div className="col-12 container-shadow p-2 p-md-4">
               <div className="row">
@@ -192,7 +216,7 @@ export default class Gimnasio extends Component {
                   <Button
                     type="primary"
                     size="large"
-                    onClick={() => this.daysHandler(1)}
+                    onClick={this.setCheckout}
                     style={{ float: 'right' }}
                   >
                     Checkout
@@ -294,31 +318,6 @@ export default class Gimnasio extends Component {
   }
 }
 
-// const mapStateToProps = ({ auth }) => ({ auth })
+const mapStateToProps = ({ cart }) => ({ cart })
 
-// export default connect(mapStateToProps, { logout, updateProfile })(Perfil)
-{
-  /* <BigCalendar
-              events={[
-                {
-                  id: 13,
-                  title: 'Multi-day Event',
-                  start: new Date('2018, 6, 3'),
-                    end: new Date('2018, 6, 3')
-                  },
-                  {
-                    id: 14,
-                    title: 'Segundo Event',
-                    start: new Date('2018, 6, 3'),
-                    end: new Date('2018, 6, 3')
-                  }
-                ]}
-                showMultiDayTimes
-                defaultDate={new Date(2015, 3, 1)}
-                defaultView={'week'}
-                views={['week']}
-                min={new Date('2018, 5, 3, 08:00')}
-                max={new Date('2018, 5, 3, 08:00')}
-                step={1}
-              /> */
-}
+export default connect(mapStateToProps, { setCheckout })(Gimnasio)

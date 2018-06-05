@@ -17,6 +17,6 @@ export default (state = null, { payload, type }) => {
     case REGISTER:
       return payload
     default:
-      return null
+      return state
   }
 }
