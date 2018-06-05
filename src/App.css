@@ -177,4 +177,21 @@ body {
   border-radius: 0;
 }
 
+/* Perfil */
+
+.profile-pic {
+  width: 50%;
+  border-radius: 50%;
+}
+
 /* week week-header */
+
+/* Table */
+
+.responsiveTable tbody tr {
+  border: 1px solid #e8e8e8;
+}
+
+.responsiveTable td.pivoted{
+  padding: 5px;
+}

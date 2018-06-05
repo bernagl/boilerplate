@@ -3,60 +3,22 @@ import { Tag } from 'antd'
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table'
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css'
 
-export default ({ title }) => {
+export default ({ title, cols, data }) => {
   return (
     <div>
       <h2>{title}</h2>
       <Table>
         <Thead>
-          <Tr>
-            <Th>Fecha</Th>
-            <Th>Créditos</Th>
-            <Th>Método</Th>
-            <Th>Estatus</Th>
-          </Tr>
+          <Tr>{cols.map(col => <Td>{col.label}</Td>)}</Tr>
         </Thead>
         <Tbody>
-          <Tr>
-            <Td>28/Octubre/2018</Td>
-            <Td>10</Td>
-            <Td>Visa-6369</Td>
-            <Td>
-              <Tag color="geekblue">Pendiente</Tag>
-            </Td>
-          </Tr>
-          <Tr>
-            <Td>28/Octubre/2018</Td>
-            <Td>10</Td>
-            <Td>Visa-6369</Td>
-            <Td>
-              <Tag color="geekblue">Pendiente</Tag>
-            </Td>
-          </Tr>
-          <Tr>
-            <Td>28/Octubre/2018</Td>
-            <Td>10</Td>
-            <Td>Visa-6369</Td>
-            <Td>
-              <Tag color="geekblue">Pendiente</Tag>
-            </Td>
-          </Tr>
-          <Tr>
-            <Td>28/Octubre/2018</Td>
-            <Td>10</Td>
-            <Td>Visa-6369</Td>
-            <Td>
-              <Tag color="geekblue">Pendiente</Tag>
-            </Td>
-          </Tr>
-          <Tr>
-            <Td>28/Octubre/2018</Td>
-            <Td>10</Td>
-            <Td>Visa-6369</Td>
-            <Td>
-              <Tag color="geekblue">Pendiente</Tag>
-            </Td>
-          </Tr>
+          {data.map((item, i) => (
+            <Tr>
+              {cols.map(({ Render, key }, j) => (
+                <Td>{Render ? Render(item, i) : item[key]}</Td>
+              ))}
+            </Tr>
+          ))}
         </Tbody>
       </Table>
     </div>
