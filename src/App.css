@@ -121,7 +121,7 @@ body {
   /* border: 1px solid #e8e8e8; */
 }
 
-.day{
+.day {
   flex-basis: 0;
   flex: 1 1 0;
   margin: 0px 2.5px;
@@ -155,6 +155,11 @@ body {
   transition: .7s;
   word-break: break-all;
   cursor: pointer;
+}
+
+.day-event.disabled {
+  background: lightgray !important;
+  cursor: not-allowed;
 }
 
 .day-event.active {

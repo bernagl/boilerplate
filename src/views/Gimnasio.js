@@ -3,7 +3,11 @@ import { connect } from 'react-redux'
 import AnimationWrapper from '../components/AnimationWrapper'
 import { setCheckout } from '../actions/cart'
 import { Button, Icon, message, Select } from 'antd'
-import moment from 'moment'
+import moment from 'moment-timezone'
+import 'moment/locale/es'
+
+moment.locale('es')
+moment.tz.setDefault('America/Mexico_City')
 const { Option } = Select
 message.config({
   duration: 2,
@@ -29,13 +33,13 @@ class Gimnasio extends Component {
     ],
     events: [
       {
-        title: 'Zumba',
+        title: 'Zumbazzzz',
         profesor: 'Luis García',
         creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
         id: 1,
-        date: new Date('2018, 6, 10')
+        date: new Date('2018-06-10T23:59:59')
       },
       {
         title: 'Ritmos látino',
@@ -44,7 +48,7 @@ class Gimnasio extends Component {
         hora_inicio: '10:00',
         hora_fin: '11:30',
         id: 2,
-        date: new Date('2018, 6, 17')
+        date: new Date('2018-06-17T23:59:59')
       },
       {
         title: 'Zumba',
@@ -53,7 +57,7 @@ class Gimnasio extends Component {
         hora_inicio: '10:00',
         hora_fin: '11:30',
         id: 3,
-        date: new Date('2018, 6, 4')
+        date: new Date('2018-06-04T23:59:59')
       },
       {
         title: 'Aerobic',
@@ -62,7 +66,7 @@ class Gimnasio extends Component {
         hora_inicio: '10:00',
         hora_fin: '11:30',
         id: 4,
-        date: new Date('2018, 6, 5')
+        date: new Date('2018-06-05T23:59:59')
       },
       {
         title: 'Zumba',
@@ -71,7 +75,7 @@ class Gimnasio extends Component {
         creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
-        date: new Date('2018, 6, 6')
+        date: new Date('2018-06-06T23:59:59')
       },
       {
         title: 'Ritmos látino',
@@ -80,7 +84,7 @@ class Gimnasio extends Component {
         creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
-        date: new Date('2018, 6, 6')
+        date: new Date('2018-06-06T23:59:59')
       },
       {
         title: 'Pesas',
@@ -89,7 +93,7 @@ class Gimnasio extends Component {
         creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
-        date: new Date('2018, 6, 6')
+        date: new Date('2018-06-06T23:59:59')
       },
       {
         title: 'Cardio',
@@ -98,7 +102,7 @@ class Gimnasio extends Component {
         creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
-        date: new Date('2018, 6, 6')
+        date: new Date('2018-06-06T23:59:59')
       },
       {
         title: 'Bicicleta',
@@ -107,7 +111,7 @@ class Gimnasio extends Component {
         creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
-        date: new Date('2018, 6, 7')
+        date: new Date('2018-06-14T23:59:59')
       },
       {
         title: 'Ritmos látino',
@@ -116,16 +120,16 @@ class Gimnasio extends Component {
         creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
-        date: new Date('2018, 6, 8')
+        date: new Date('2018-06-08T23:59:59')
       },
       {
-        title: 'Zumba',
+        title: 'Zumbaaaaa',
         id: 11,
         profesor: 'Luis García',
         creditos: 1,
         hora_inicio: '10:00',
         hora_fin: '11:30',
-        date: new Date('2018, 6, 9')
+        date: new Date('2018-06-09T23:59:59')
       }
     ]
   }
@@ -204,7 +208,6 @@ class Gimnasio extends Component {
   render() {
     const { auth, logout, updateProfile } = this.props
     const { dates, dias, clases, creditos, gym, month } = this.state
-    console.log(this.props)
     return (
       <AnimationWrapper>
         {/* <div className="row align-items-center"> */}
@@ -275,21 +278,30 @@ class Gimnasio extends Component {
                           <div className="col-12">
                             <div className="row">
                               {dias[i].events.length > 0 ? (
-                                dias[i].events.map((ev, j) => (
-                                  <div
-                                    className={`col-12 day-event ${clases.has(
-                                      ev.id
-                                    ) && 'active'}`}
-                                    onClick={() => this.eventHandler(ev)}
-                                  >
-                                    <b>{ev.title}</b> <br />
-                                    <span>{ev.profesor}</span>
-                                    <br />
-                                    <span>
-                                      {ev.hora_inicio} - {ev.hora_fin}
-                                    </span>
-                                  </div>
-                                ))
+                                dias[i].events.map((ev, j) => {
+                                  const future = new Date(ev.date) >= new Date()
+                                  return (
+                                    <div
+                                      className={`col-12 day-event ${clases.has(
+                                        ev.id
+                                      ) && 'active'} ${!future && 'disabled'}`}
+                                      onClick={() =>
+                                        future
+                                          ? this.eventHandler(ev)
+                                          : message.info(
+                                              'Esta clase ya se venció'
+                                            )
+                                      }
+                                    >
+                                      <b>{ev.title}</b> <br />
+                                      <span>{ev.profesor}</span>
+                                      <br />
+                                      <span>
+                                        {ev.hora_inicio} - {ev.hora_fin}
+                                      </span>
+                                    </div>
+                                  )
+                                })
                               ) : (
                                 <span
                                   style={{

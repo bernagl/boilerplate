@@ -8,6 +8,7 @@
     "firebase": "^5.0.4",
     "formsy-react": "^1.1.4",
     "moment": "^2.22.2",
+    "moment-timezone": "^0.5.17",
     "react": "^16.4.0",
     "react-addons-css-transition-group": "^15.6.2",
     "react-big-calendar": "^0.19.1",
