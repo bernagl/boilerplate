@@ -172,7 +172,7 @@ export default class Gimnasio extends Component {
     } else {
       isSet
         ? (clases.delete(event.id), (c += 1), message.warning('Clase devuelta'))
-        : message.warning('No tienes suficientes créditos')
+        : message.error('No tienes suficientes créditos')
       this.setState({ clases, creditos: c })
     }
   }
