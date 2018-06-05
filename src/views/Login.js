@@ -15,7 +15,7 @@ export default () => {
       {action => (
         <div className="row">
           <div className="col-12 col-md-5 col-lg-4 col-xl-3 login-box">
-            <div className="row align-content-center fh p-4">
+            <div className="row align-content-center fh-login p-2 p-md-4">
               <div className="col-12">
                 <h1 className="mb-5 center-text">Iniciar sesión</h1>
                 <Form

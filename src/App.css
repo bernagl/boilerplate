@@ -97,6 +97,7 @@ body {
     max-width: 100% !important;
     width: 100%;
     margin-top: 10px !important;
+    margin: 0px !important;
   }
 }
 
@@ -116,12 +117,24 @@ body {
   display: flex;
 }
 
-.day {
+.week.week-events {
+  /* border: 1px solid #e8e8e8; */
+}
+
+.day{
   flex-basis: 0;
   flex: 1 1 0;
   margin: 0px 2.5px;
   max-width: 14.2857%;
-  text-align: center;
+  /* text-align: center; */
+}
+
+.day:last-child {
+  margin-right: 0px !important;
+}
+
+.day:first-child {
+  margin-left: 0px !important;
 }
 
 .day-row {
@@ -130,7 +143,6 @@ body {
 }
 
 .calendar-container {
-  border: 1px solid #e8e8e8;
   min-height: 200px;
 }
 
@@ -140,15 +152,24 @@ body {
   margin: 2.5px 0px;
   width: 100%;
   /* opacity: 1; */
-  transition: 1s;
+  transition: .7s;
   word-break: break-all;
   cursor: pointer;
+}
+
+.day-event.active {
+  background-color: #34495e !important;
+  color: white !important;
 }
 
 .week-header {
   background: #1990ff;
   padding: 20px 0px;
   width: 100%;
+}
+
+.box-button {
+  border-radius: 0;
 }
 
 /* week week-header */
