@@ -177,6 +177,24 @@ body {
   border-radius: 0;
 }
 
+.no-credits-label {
+  float: right;
+}
+
+.fade {
+  animation: fade;
+  animation-duration: 1s;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* Perfil */
 
 .profile-pic {
@@ -192,6 +210,6 @@ body {
   border: 1px solid #e8e8e8;
 }
 
-.responsiveTable td.pivoted{
+.responsiveTable td.pivoted {
   padding: 5px;
 }

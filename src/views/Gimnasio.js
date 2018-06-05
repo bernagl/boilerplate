@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import AnimationWrapper from '../components/AnimationWrapper'
 import { setCheckout } from '../actions/cart'
 import { Button, Icon, message, Select } from 'antd'
@@ -201,8 +202,13 @@ class Gimnasio extends Component {
 
   setCheckout = () => {
     const { clases, creditos } = this.state
-    this.props.setCheckout({ clases, creditos })
-    this.props.history.push('/checkout')
+    // console.log(clases.size)
+    // this.props.setCheckout({ clases, creditos })
+    // this.props.history.push('/checkout')
+    clases.size === 0
+      ? message.error('Para proceder al pago debes agregar al menos una clase')
+      : (this.props.setCheckout({ clases, creditos }),
+        this.props.history.push('/checkout'))
   }
 
   render() {
@@ -228,8 +234,12 @@ class Gimnasio extends Component {
                 </div>
                 <div className="col-12">
                   <span>Créditos disponibles: {creditos}</span> <br />
-                  {clases.length > 0 && (
-                    <span>Tienes {clases.size()} clases</span>
+                  {clases.size > 0 && <span>Tienes {clases.size} clases</span>}
+                  {creditos === 0 && (
+                    <span className="no-credits-label fade">
+                      Ya no tienes créditos disponibles,{' '}
+                      <Link to="/comprar">comprar créditos</Link>
+                    </span>
                   )}
                 </div>
                 <div className="col-12 center-text ">
@@ -282,7 +292,7 @@ class Gimnasio extends Component {
                                   const future = new Date(ev.date) >= new Date()
                                   return (
                                     <div
-                                      className={`col-12 day-event ${clases.has(
+                                      className={`col-12 day-event fade ${clases.has(
                                         ev.id
                                       ) && 'active'} ${!future && 'disabled'}`}
                                       onClick={() =>
@@ -332,4 +342,7 @@ class Gimnasio extends Component {
 
 const mapStateToProps = ({ cart }) => ({ cart })
 
-export default connect(mapStateToProps, { setCheckout })(Gimnasio)
+export default connect(
+  mapStateToProps,
+  { setCheckout }
+)(Gimnasio)
