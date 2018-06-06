@@ -3,10 +3,12 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import AnimationWrapper from '../components/AnimationWrapper'
 import { setCheckout } from '../actions/cart'
-import { Button, Icon, message, Select } from 'antd'
+import { Button, Icon, message, Radio, Select } from 'antd'
 import moment from 'moment-timezone'
 import 'moment/locale/es'
 
+const RadioButton = Radio.Button
+const RadioGroup = Radio.Group
 moment.locale('es')
 moment.tz.setDefault('America/Mexico_City')
 const { Option } = Select
@@ -17,8 +19,149 @@ message.config({
 
 class Gimnasio extends Component {
   state = {
-    gym: null,
+    gymSelected: 1,
+    gimnasios: [
+      {
+        id: 1,
+        name: 'Gimnasio 1',
+        events: [
+          {
+            title: 'Aerobic',
+            profesor: 'Luis García',
+            creditos: 1,
+            hora_inicio: '10:00',
+            hora_fin: '11:30',
+            id: 4,
+            date: new Date('2018-06-05T23:59:59')
+          },
+          {
+            title: 'Zumbazzzz',
+            profesor: 'Luis García',
+            creditos: 1,
+            hora_inicio: '10:00',
+            hora_fin: '11:30',
+            id: 1,
+            date: new Date('2018-06-10T23:59:59')
+          },
+          {
+            title: 'Ritmos látino',
+            profesor: 'Luis García',
+            creditos: 1,
+            hora_inicio: '10:00',
+            hora_fin: '11:30',
+            id: 2,
+            date: new Date('2018-06-17T23:59:59')
+          },
+          {
+            title: 'Zumba',
+            profesor: 'Luis García',
+            creditos: 1,
+            hora_inicio: '10:00',
+            hora_fin: '11:30',
+            id: 3,
+            date: new Date('2018-06-04T23:59:59')
+          },
+          {
+            title: 'Zumba',
+            id: 5,
+            profesor: 'Luis García',
+            creditos: 1,
+            hora_inicio: '10:00',
+            hora_fin: '11:30',
+            date: new Date('2018-06-06T23:59:59')
+          },
+          {
+            title: 'Ritmos látino',
+            id: 6,
+            profesor: 'Luis García',
+            creditos: 1,
+            hora_inicio: '10:00',
+            hora_fin: '11:30',
+            date: new Date('2018-06-06T23:59:59')
+          },
+          {
+            title: 'Pesas',
+            id: 7,
+            profesor: 'Luis García',
+            creditos: 1,
+            hora_inicio: '10:00',
+            hora_fin: '11:30',
+            date: new Date('2018-06-06T23:59:59')
+          },
+          {
+            title: 'Cardio',
+            id: 8,
+            profesor: 'Luis García',
+            creditos: 1,
+            hora_inicio: '10:00',
+            hora_fin: '11:30',
+            date: new Date('2018-06-06T23:59:59')
+          },
+          {
+            title: 'Bicicleta',
+            id: 9,
+            profesor: 'Luis García',
+            creditos: 1,
+            hora_inicio: '10:00',
+            hora_fin: '11:30',
+            date: new Date('2018-06-14T23:59:59')
+          },
+          {
+            title: 'Ritmos látino',
+            id: 10,
+            profesor: 'Luis García',
+            creditos: 1,
+            hora_inicio: '10:00',
+            hora_fin: '11:30',
+            date: new Date('2018-06-08T23:59:59')
+          },
+          {
+            title: 'Zumbaaaaa',
+            id: 11,
+            profesor: 'Luis García',
+            creditos: 1,
+            hora_inicio: '10:00',
+            hora_fin: '11:30',
+            date: new Date('2018-06-09T23:59:59')
+          }
+        ]
+      },
+      {
+        name: 'Gimnasio 2',
+        id: 2,
+        events: [
+          {
+            title: 'Ritmos látino',
+            id: 12,
+            profesor: 'Luis García',
+            creditos: 1,
+            hora_inicio: '10:00',
+            hora_fin: '11:30',
+            date: new Date('2018-06-06T23:59:59')
+          },
+          {
+            title: 'Pesas',
+            id: 13,
+            profesor: 'Luis García',
+            creditos: 1,
+            hora_inicio: '10:00',
+            hora_fin: '11:30',
+            date: new Date('2018-06-06T23:59:59')
+          },
+          {
+            title: 'Cardio',
+            id: 14,
+            profesor: 'Luis García',
+            creditos: 1,
+            hora_inicio: '10:00',
+            hora_fin: '11:30',
+            date: new Date('2018-06-07T23:59:59')
+          }
+        ]
+      }
+    ],
     week: 0,
+    events: [],
     creditos: 5,
     clases: new Map(),
     month: moment().format('MMMM'),
@@ -31,119 +174,27 @@ class Gimnasio extends Component {
       { name: 'Viernes', events: [] },
       { name: 'Sábado', events: [] },
       { name: 'Domingo', events: [] }
-    ],
-    events: [
-      {
-        title: 'Zumbazzzz',
-        profesor: 'Luis García',
-        creditos: 1,
-        hora_inicio: '10:00',
-        hora_fin: '11:30',
-        id: 1,
-        date: new Date('2018-06-10T23:59:59')
-      },
-      {
-        title: 'Ritmos látino',
-        profesor: 'Luis García',
-        creditos: 1,
-        hora_inicio: '10:00',
-        hora_fin: '11:30',
-        id: 2,
-        date: new Date('2018-06-17T23:59:59')
-      },
-      {
-        title: 'Zumba',
-        profesor: 'Luis García',
-        creditos: 1,
-        hora_inicio: '10:00',
-        hora_fin: '11:30',
-        id: 3,
-        date: new Date('2018-06-04T23:59:59')
-      },
-      {
-        title: 'Aerobic',
-        profesor: 'Luis García',
-        creditos: 1,
-        hora_inicio: '10:00',
-        hora_fin: '11:30',
-        id: 4,
-        date: new Date('2018-06-05T23:59:59')
-      },
-      {
-        title: 'Zumba',
-        id: 5,
-        profesor: 'Luis García',
-        creditos: 1,
-        hora_inicio: '10:00',
-        hora_fin: '11:30',
-        date: new Date('2018-06-06T23:59:59')
-      },
-      {
-        title: 'Ritmos látino',
-        id: 6,
-        profesor: 'Luis García',
-        creditos: 1,
-        hora_inicio: '10:00',
-        hora_fin: '11:30',
-        date: new Date('2018-06-06T23:59:59')
-      },
-      {
-        title: 'Pesas',
-        id: 7,
-        profesor: 'Luis García',
-        creditos: 1,
-        hora_inicio: '10:00',
-        hora_fin: '11:30',
-        date: new Date('2018-06-06T23:59:59')
-      },
-      {
-        title: 'Cardio',
-        id: 8,
-        profesor: 'Luis García',
-        creditos: 1,
-        hora_inicio: '10:00',
-        hora_fin: '11:30',
-        date: new Date('2018-06-06T23:59:59')
-      },
-      {
-        title: 'Bicicleta',
-        id: 9,
-        profesor: 'Luis García',
-        creditos: 1,
-        hora_inicio: '10:00',
-        hora_fin: '11:30',
-        date: new Date('2018-06-14T23:59:59')
-      },
-      {
-        title: 'Ritmos látino',
-        id: 10,
-        profesor: 'Luis García',
-        creditos: 1,
-        hora_inicio: '10:00',
-        hora_fin: '11:30',
-        date: new Date('2018-06-08T23:59:59')
-      },
-      {
-        title: 'Zumbaaaaa',
-        id: 11,
-        profesor: 'Luis García',
-        creditos: 1,
-        hora_inicio: '10:00',
-        hora_fin: '11:30',
-        date: new Date('2018-06-09T23:59:59')
-      }
     ]
   }
 
-  handleChange = gym => this.setState({ gym })
-
   componentDidMount() {
-    this.daysHandler()
+    // this.daysHandler()
     const { creditos, clases } = this.props.cart
-    this.setState({
-      creditos: creditos,
-      clases: clases ? clases : new Map()
-    })
+    const { gimnasios } = this.state
+    this.setState(
+      {
+        creditos: creditos,
+        clases: clases ? clases : new Map()
+      },
+      () => this.handleGym(0)
+    )
+  }
+
+  handleGym = i => {
+    const { gimnasios } = this.state
+    this.setState({ events: gimnasios[i].events, gymSelected: i }, () =>
+      this.daysHandler()
+    )
   }
 
   daysHandler = sum => {
@@ -168,7 +219,7 @@ class Gimnasio extends Component {
       const evts = events.filter(
         (e, j) => moment(day).format('L') === moment(e.date).format('L')
       )
-      d[i] = { ...dias[i], events: evts }
+      d[i] = { events: evts }
     })
 
     const month = moment(startOfWeek).format('MMMM')
@@ -202,9 +253,6 @@ class Gimnasio extends Component {
 
   setCheckout = () => {
     const { clases, creditos } = this.state
-    // console.log(clases.size)
-    // this.props.setCheckout({ clases, creditos })
-    // this.props.history.push('/checkout')
     clases.size === 0
       ? message.error('Para proceder al pago debes agregar al menos una clase')
       : (this.props.setCheckout({ clases, creditos }),
@@ -213,7 +261,17 @@ class Gimnasio extends Component {
 
   render() {
     const { auth, logout, updateProfile } = this.props
-    const { dates, dias, clases, creditos, gym, month } = this.state
+    const {
+      dates,
+      dias,
+      clases,
+      creditos,
+      gymSelected,
+      gimnasios,
+      month,
+      events
+    } = this.state
+    console.log(events)
     return (
       <AnimationWrapper>
         {/* <div className="row align-items-center"> */}
@@ -243,10 +301,21 @@ class Gimnasio extends Component {
                   )}
                 </div>
                 <div className="col-12 center-text ">
-                  <Select onChange={this.handleChange} style={{ width: 120 }}>
+                  {/* <Select onChange={this.handleChange} style={{ width: 120 }}>
                     <Option value={1}>Gimnasio 1</Option>
                     <Option value={2}>Gimnasio 2</Option>
-                  </Select>
+                  </Select> */}
+                  <RadioGroup defaultValue={gymSelected} size="large">
+                    {gimnasios.map((gym, i) => (
+                      <RadioButton
+                        value={gym.id}
+                        onClick={() => this.handleGym(i)}
+                      >
+                        {gym.name}
+                      </RadioButton>
+                    ))}
+                    {/* <RadioButton value="b">Gimnasio 2</RadioButton> */}
+                  </RadioGroup>
                 </div>
                 <div className="col-12">
                   <div className="calendar-container">
