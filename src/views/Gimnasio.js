@@ -167,13 +167,13 @@ class Gimnasio extends Component {
     month: moment().format('MMMM'),
     dates: [],
     dias: [
+      { name: 'Domingo', events: [] },
       { name: 'Lunes', events: [] },
       { name: 'Martes', events: [] },
       { name: 'Miércoles', events: [] },
       { name: 'Jueves', events: [] },
       { name: 'Viernes', events: [] },
       { name: 'Sábado', events: [] },
-      { name: 'Domingo', events: [] }
     ]
   }
 
@@ -219,7 +219,7 @@ class Gimnasio extends Component {
       const evts = events.filter(
         (e, j) => moment(day).format('L') === moment(e.date).format('L')
       )
-      d[i] = { events: evts }
+      d[i] = { events: evts,  name: d[i].name }
     })
 
     const month = moment(startOfWeek).format('MMMM')
@@ -271,7 +271,7 @@ class Gimnasio extends Component {
       month,
       events
     } = this.state
-    console.log(events)
+    
     return (
       <AnimationWrapper>
         {/* <div className="row align-items-center"> */}
@@ -301,10 +301,6 @@ class Gimnasio extends Component {
                   )}
                 </div>
                 <div className="col-12 center-text ">
-                  {/* <Select onChange={this.handleChange} style={{ width: 120 }}>
-                    <Option value={1}>Gimnasio 1</Option>
-                    <Option value={2}>Gimnasio 2</Option>
-                  </Select> */}
                   <RadioGroup defaultValue={gymSelected} size="large">
                     {gimnasios.map((gym, i) => (
                       <RadioButton
@@ -314,7 +310,6 @@ class Gimnasio extends Component {
                         {gym.name}
                       </RadioButton>
                     ))}
-                    {/* <RadioButton value="b">Gimnasio 2</RadioButton> */}
                   </RadioGroup>
                 </div>
                 <div className="col-12">
@@ -354,11 +349,12 @@ class Gimnasio extends Component {
                             <br />
                             <b>{moment(e).format('DD MMMM')}</b>
                           </div>
-                          <div className="col-12">
+                          <div className={`col-12 ${moment().day() === i && 'today'}`}>
                             <div className="row">
                               {dias[i].events.length > 0 ? (
                                 dias[i].events.map((ev, j) => {
                                   const future = new Date(ev.date) >= new Date()
+                                  const today = moment().week() === i && true
                                   return (
                                     <div
                                       className={`col-12 day-event fade ${clases.has(

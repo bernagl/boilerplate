@@ -157,6 +157,14 @@ body {
   cursor: pointer;
 }
 
+.day-event:last-child {
+  margin-bottom: 5px !important;
+}
+
+.day-event:first-child {
+  margin-top: 5px !important;
+}
+
 .day-event.disabled {
   background: lightgray !important;
   cursor: not-allowed;
@@ -165,6 +173,11 @@ body {
 .day-event.active {
   background-color: #34495e !important;
   color: white !important;
+}
+
+.today {
+  border: 1px solid #34495e;
+  border-top: none;
 }
 
 .week-header {

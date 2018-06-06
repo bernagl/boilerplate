@@ -48,8 +48,14 @@ class Checkout extends Component {
                       <h3>Total: ${items.length} créditos</h3>
                     </div>
                     <div className="col-12">
-                      <Button type="secondary">Cancelar</Button>
-                      <Button type="primary">Confirmar</Button>
+                      <div className="row">
+                        <div className="col-6">
+                          <Button type="secondary">Cancelar</Button>
+                        </div>
+                        <div className="col-6">
+                          <Button type="primary">Confirmar</Button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
