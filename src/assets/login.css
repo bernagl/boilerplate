@@ -19,3 +19,9 @@
 .fh-login {
     height: 100vh !important;
 }
+
+.terminos-text {
+    color: #7c58a2;
+    cursor: pointer;
+    padding: 0px !important;
+}

@@ -136,9 +136,10 @@ class Perfil extends Component {
                 alt="Profile pic"
                 className="profile-pic"
               />
-              <h4 className="mt-2">{auth.nombre}</h4>
+              <h3 className="mt-2">{auth.nombre}</h3>
               <span>Miembro desde: 28/Octubre/2017</span>
               <br />
+              <h5 className="mb-0">Total de clases compradas: 23</h5>
               <h5>Créditos disponibles: 4</h5>
             </div>
           </div>
@@ -146,7 +147,12 @@ class Perfil extends Component {
             <div className="container-shadow p-2 p-md-4">
               <Tabs defaultActiveKey="1" onChange={e => console.log(e)}>
                 <TabPane tab="Mis clases" key="1">
-                  <Table title="Mis clases" data={clases} cols={clasesCol} />
+                  <Table
+                    title="Mis clases"
+                    data={clases}
+                    Render={() => <Link to="/comprar">Comprar créditos</Link>}
+                    cols={clasesCol}
+                  />
                 </TabPane>
                 <TabPane tab="Historial de pagos" key="2">
                   <Table

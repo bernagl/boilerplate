@@ -13,35 +13,37 @@ export default () => {
   return (
     <AuthWrapper type="login">
       {action => (
-        <div className="row">
+        <div className="row margin-auto">
           <div className="col-12 col-md-5 col-lg-4 col-xl-3 login-box">
             <div className="row align-content-center fh-login p-2 p-md-4">
               <div className="col-12">
-                <h1 className="mb-5 center-text">Iniciar sesión</h1>
+                <h1 className="mb-5">Iniciar sesión</h1>
                 <Form
                   action={action}
-                  // redirect="/"
+                  redirect="/"
                   submitText="Iniciar sesión"
                   success="Bienvenido"
                 >
                   {Login.map(input => <Input {...input} />)}
                 </Form>
               </div>
-              <div className="col-12 mt-2">
+              <div className="col-12 mt-2 mt-md-5 center-text">
                 <p>
                   <span>¿Aún no tienes tu cuenta? </span>
                   <Link to="/registro">Registrate</Link>
                 </p>
               </div>
-              <div className="col-12 mt-2">
+              <div className="col-12 mt-3 center-text">
                 <span>
                   <Link to="/recuperar">Recuperar contraseña</Link>
                 </span>
               </div>
             </div>
           </div>
-          <div className="col-12 col-md-5 col-lg-8 col-xl-9 hidden-sm-up bg-cover"
-          style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover' }} />
+          <div
+            className="col-12 col-md-5 col-lg-8 col-xl-9 hidden-sm-up bg-cover"
+            style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover' }}
+          />
         </div>
       )}
     </AuthWrapper>

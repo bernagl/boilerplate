@@ -11,7 +11,7 @@ export default () => {
   return (
     <AuthWrapper type="recover">
       {action => (
-        <div style={{ background: `url(${bg})` }}>
+        <div style={{ background: `url(${bg})`, backgroundSize: 'cover' }} className="fh-login">
           <CenterBox title="Recuperar contraseña">
             <Form
               action={action}
@@ -29,12 +29,12 @@ export default () => {
               />
             </Form>
             <div className="row">
-              <div className="col-12 mt-2">
+              <div className="col-12 mt-4">
                 <span>
                   <Link to="/login">Iniciar sesión</Link>
                 </span>
               </div>
-              <div className="col-12 mt-2">
+              <div className="col-12 mt-4">
                 <span>
                   <Link to="/registro">Registrate</Link>
                 </span>

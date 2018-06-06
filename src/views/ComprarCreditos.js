@@ -85,7 +85,7 @@ class ComprarCreditos extends Component {
                   <div className="col-4">
                     <Input
                       name="CVV"
-                      label="Código de seguridad"
+                      label="CVV"
                       validations="isNumeric"
                       validationError="Ingresa un CVV válido"
                       required

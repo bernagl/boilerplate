@@ -300,7 +300,7 @@ class Gimnasio extends Component {
                     </span>
                   )}
                 </div>
-                <div className="col-12 center-text ">
+                <div className="col-12 center-text my-4 my-md-0">
                   <RadioGroup defaultValue={gymSelected} size="large">
                     {gimnasios.map((gym, i) => (
                       <RadioButton

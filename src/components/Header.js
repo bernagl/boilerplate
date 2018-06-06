@@ -13,7 +13,10 @@ export default ({ openModal, closeModal }) => {
         <ul className="luxbar-navigation">
           <li className="luxbar-header">
             <Link to="/" className="luxbar-brand">
-              IMPULSEFITNESS
+              <img
+                src="http://impulse-fitnessstudio.com/wp-content/uploads/2016/12/logo-impulsfit.png"
+                alt=""
+              />
             </Link>
             <label
               className="luxbar-hamburger luxbar-hamburger-doublespin"

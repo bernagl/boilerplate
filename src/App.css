@@ -20,6 +20,10 @@ body {
 
 /* Helpers */
 
+.inline-block {
+  display: inline-block;
+}
+
 .fw {
   width: 100%;
 }
@@ -31,6 +35,10 @@ body {
 .fh {
   height: calc(100vh - 80px);
   /* height: 100vh; */
+}
+
+.margin-auto {
+  margin: auto !important;
 }
 
 .container-shadow {
@@ -61,7 +69,7 @@ body {
 
 .fade-enter.fade-enter-active {
   opacity: 1;
-  transition: opacity 500ms ease-in;
+  transition: opacity 1000ms ease-in;
 }
 
 .fade-leave {
@@ -70,7 +78,7 @@ body {
 
 .fade-leave.fade-leave-active {
   opacity: 0.01;
-  transition: opacity 300ms ease-in;
+  transition: opacity 600ms ease-in;
 }
 
 .fade-appear {
@@ -79,7 +87,7 @@ body {
 
 .fade-appear.fade-appear-active {
   opacity: 1;
-  transition: opacity .5s ease-in;
+  transition: opacity 1s ease-in;
 }
 
 @media (max-width: 992px) {
@@ -138,7 +146,7 @@ body {
 }
 
 .day-row {
-  background-color: #1990ff;
+  background-color: #7c57a1;
   color: white;
 }
 
@@ -181,22 +189,31 @@ body {
 }
 
 .week-header {
-  background: #1990ff;
+  background: #7c57a1;
   padding: 20px 0px;
   width: 100%;
 }
 
 .box-button {
-  border-radius: 0;
+  border-radius: 0 !important;
 }
 
 .no-credits-label {
   float: right;
 }
 
+.float-right {
+  float: right;
+}
+
 .fade {
   animation: fade;
   animation-duration: 1s;
+}
+
+.fadeIn {
+  animation: fade;
+  animation-duration: .8s;
 }
 
 @keyframes fade {
