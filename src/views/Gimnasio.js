@@ -27,6 +27,7 @@ class Gimnasio extends Component {
         events: [
           {
             title: 'Aerobic',
+            salon: 'A',
             profesor: 'Luis García',
             creditos: 1,
             hora_inicio: '10:00',
@@ -35,7 +36,8 @@ class Gimnasio extends Component {
             date: new Date('2018-06-05T23:59:59')
           },
           {
-            title: 'Zumbazzzz',
+            title: 'Zumba',
+            salon: 'B',
             profesor: 'Luis García',
             creditos: 1,
             hora_inicio: '10:00',
@@ -45,6 +47,7 @@ class Gimnasio extends Component {
           },
           {
             title: 'Ritmos látino',
+            salon: 'B',
             profesor: 'Luis García',
             creditos: 1,
             hora_inicio: '10:00',
@@ -54,6 +57,7 @@ class Gimnasio extends Component {
           },
           {
             title: 'Zumba',
+            salon: 'A',
             profesor: 'Luis García',
             creditos: 1,
             hora_inicio: '10:00',
@@ -63,6 +67,7 @@ class Gimnasio extends Component {
           },
           {
             title: 'Zumba',
+            salon: 'A',
             id: 5,
             profesor: 'Luis García',
             creditos: 1,
@@ -72,6 +77,7 @@ class Gimnasio extends Component {
           },
           {
             title: 'Ritmos látino',
+            salon: 'A',
             id: 6,
             profesor: 'Luis García',
             creditos: 1,
@@ -81,6 +87,7 @@ class Gimnasio extends Component {
           },
           {
             title: 'Pesas',
+            salon: 'B',
             id: 7,
             profesor: 'Luis García',
             creditos: 1,
@@ -90,6 +97,7 @@ class Gimnasio extends Component {
           },
           {
             title: 'Cardio',
+            salon: 'A',
             id: 8,
             profesor: 'Luis García',
             creditos: 1,
@@ -99,6 +107,7 @@ class Gimnasio extends Component {
           },
           {
             title: 'Bicicleta',
+            salon: 'A',
             id: 9,
             profesor: 'Luis García',
             creditos: 1,
@@ -108,6 +117,7 @@ class Gimnasio extends Component {
           },
           {
             title: 'Ritmos látino',
+            salon: 'A',
             id: 10,
             profesor: 'Luis García',
             creditos: 1,
@@ -116,7 +126,8 @@ class Gimnasio extends Component {
             date: new Date('2018-06-08T23:59:59')
           },
           {
-            title: 'Zumbaaaaa',
+            title: 'Zumba',
+            salon: 'B',
             id: 11,
             profesor: 'Luis García',
             creditos: 1,
@@ -173,7 +184,7 @@ class Gimnasio extends Component {
       { name: 'Miércoles', events: [] },
       { name: 'Jueves', events: [] },
       { name: 'Viernes', events: [] },
-      { name: 'Sábado', events: [] },
+      { name: 'Sábado', events: [] }
     ]
   }
 
@@ -219,7 +230,7 @@ class Gimnasio extends Component {
       const evts = events.filter(
         (e, j) => moment(day).format('L') === moment(e.date).format('L')
       )
-      d[i] = { events: evts,  name: d[i].name }
+      d[i] = { events: evts, name: d[i].name }
     })
 
     const month = moment(startOfWeek).format('MMMM')
@@ -271,7 +282,7 @@ class Gimnasio extends Component {
       month,
       events
     } = this.state
-    
+
     return (
       <AnimationWrapper>
         {/* <div className="row align-items-center"> */}
@@ -349,7 +360,10 @@ class Gimnasio extends Component {
                             <br />
                             <b>{moment(e).format('DD MMMM')}</b>
                           </div>
-                          <div className={`col-12 ${moment().day() === i && 'today'}`}>
+                          <div
+                            className={`col-12 ${moment().day() === i &&
+                              'today'}`}
+                          >
                             <div className="row">
                               {dias[i].events.length > 0 ? (
                                 dias[i].events.map((ev, j) => {
@@ -374,6 +388,12 @@ class Gimnasio extends Component {
                                       <span>
                                         {ev.hora_inicio} - {ev.hora_fin}
                                       </span>
+                                      {ev.salon && (
+                                        <React.Fragment>
+                                          <br />
+                                          <span>Salón: {ev.salon}</span>
+                                        </React.Fragment>
+                                      )}
                                     </div>
                                   )
                                 })
