@@ -6,7 +6,6 @@ export default WrappedComponent => ChildrenComponent => ({ ...props }) => {
     state = { visible: true }
 
     openModal = () => {
-      console.log('hola de modal')
       this.setState({ visible: true })
     }
 
@@ -26,7 +25,6 @@ export default WrappedComponent => ChildrenComponent => ({ ...props }) => {
     }
     render() {
       //   const { cancelText, children, handleOk, okText, title } = this.props
-      console.log(...props)
       return (
         <WrappedComponent openModal={this.openModal}>
           <M

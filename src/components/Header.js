@@ -1,11 +1,7 @@
 import React from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { Layout, Menu, Breadcrumb } from 'antd'
-// import Modal from '../components/Modal'
-// const { Header, Content, Footer } = Layout
 
 export default ({ openModal, closeModal }) => {
-  //   console.log(toggleModal)
   return (
     <header id="luxbar" className="luxbar-fixed">
       <input type="checkbox" className="luxbar-checkbox" id="luxbar-checkbox" />

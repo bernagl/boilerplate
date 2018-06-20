@@ -1,12 +1,9 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import Form from '../components/Form'
 import Input from '../components/Input'
-import CenterBox from '../components/CenterBox'
 import AuthWrapper from '../components/AuthWrapper'
 import Login from '../models/login'
-import bg from '../assets/login.jpg'
 import '../assets/login.css'
 
 export default () => {
@@ -24,7 +21,7 @@ export default () => {
                   submitText="Iniciar sesión"
                   success="Bienvenido"
                 >
-                  {Login.map(input => <Input {...input} />)}
+                  {Login.map((input, i) => <Input key={i} {...input} />)}
                 </Form>
               </div>
               <div className="col-12 mt-2 mt-md-5 center-text">
@@ -41,13 +38,19 @@ export default () => {
             </div>
           </div>
           <div
-            className="col-12 col-md-5 col-lg-8 col-xl-9 hidden-sm-up bg-cover"
-            style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover' }}
+            className="col-12 col-md-7 col-lg-8 col-xl-9 hidden-sm-up bg-cover"
+            style={{ backgroundImage: `url(http://impulse-fitnessstudio.com/wp-content/uploads/2018/01/2-Impulse.jpg)`, backgroundSize: 'cover' }}
           />
         </div>
       )}
     </AuthWrapper>
   )
 }
+
+
+
+
+
+
 
 // export default connect(null, { login })(Login)

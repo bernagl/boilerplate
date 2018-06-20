@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import AnimationWrapper from '../components/AnimationWrapper'
 import { setCheckout } from '../actions/cart'
-import { Button, Icon, message, Radio, Select } from 'antd'
+import { Button, Icon, message, Radio } from 'antd'
 import moment from 'moment-timezone'
 import 'moment/locale/es'
 
@@ -11,7 +11,6 @@ const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
 moment.locale('es')
 moment.tz.setDefault('America/Mexico_City')
-const { Option } = Select
 message.config({
   duration: 2,
   maxCount: 3
@@ -178,20 +177,19 @@ class Gimnasio extends Component {
     month: moment().format('MMMM'),
     dates: [],
     dias: [
-      { name: 'Domingo', events: [] },
       { name: 'Lunes', events: [] },
       { name: 'Martes', events: [] },
       { name: 'Miércoles', events: [] },
       { name: 'Jueves', events: [] },
       { name: 'Viernes', events: [] },
-      { name: 'Sábado', events: [] }
+      { name: 'Sábado', events: [] },
+      { name: 'Domingo', events: [] }
     ]
   }
 
   componentDidMount() {
     // this.daysHandler()
     const { creditos, clases } = this.props.cart
-    const { gimnasios } = this.state
     this.setState(
       {
         creditos: creditos,
@@ -271,7 +269,6 @@ class Gimnasio extends Component {
   }
 
   render() {
-    const { auth, logout, updateProfile } = this.props
     const {
       dates,
       dias,
@@ -279,8 +276,6 @@ class Gimnasio extends Component {
       creditos,
       gymSelected,
       gimnasios,
-      month,
-      events
     } = this.state
 
     return (
@@ -291,11 +286,13 @@ class Gimnasio extends Component {
             <div className="col-12 container-shadow p-2 p-md-4">
               <div className="row">
                 <div className="col-12">
+                  <h1 className="inline-block">Clases</h1>
                   <Button
                     type="primary"
                     size="large"
                     onClick={this.setCheckout}
                     style={{ float: 'right' }}
+                    className="btn-morado"
                   >
                     Checkout
                     <Icon type="right" />
@@ -317,6 +314,7 @@ class Gimnasio extends Component {
                       <RadioButton
                         value={gym.id}
                         onClick={() => this.handleGym(i)}
+                        key={i}
                       >
                         {gym.name}
                       </RadioButton>
@@ -342,7 +340,7 @@ class Gimnasio extends Component {
                     <div className="week">
                       <div className="week-header hidden-sm show-lg">
                         {dates.map((e, i) => (
-                          <div className="day row">
+                          <div className="day row" key={i}>
                             <div className="col-12 day-row">
                               <b>{dias[i].name}</b>
                               <br />
@@ -354,21 +352,20 @@ class Gimnasio extends Component {
                     </div>
                     <div className="week week-events">
                       {dates.map((e, i) => (
-                        <div className="day row">
+                        <div className="day row" key={i}>
                           <div className="col-12 hidden-lg day-row show-sm">
                             <b>{dias[i].name}</b>
                             <br />
                             <b>{moment(e).format('DD MMMM')}</b>
                           </div>
                           <div
-                            className={`col-12 ${moment().day() === i &&
+                            className={`col-12 ${moment().day() === i + 1 &&
                               'today'}`}
                           >
                             <div className="row">
                               {dias[i].events.length > 0 ? (
                                 dias[i].events.map((ev, j) => {
                                   const future = new Date(ev.date) >= new Date()
-                                  const today = moment().week() === i && true
                                   return (
                                     <div
                                       className={`col-12 day-event fade ${clases.has(
@@ -381,6 +378,7 @@ class Gimnasio extends Component {
                                               'Esta clase ya se venció'
                                             )
                                       }
+                                      key={j}
                                     >
                                       <b>{ev.title}</b> <br />
                                       <span>{ev.profesor}</span>

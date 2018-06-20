@@ -1,44 +1,55 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Link, Redirect } from 'react-router-dom'
 import AnimationWrapper from '../components/AnimationWrapper'
 import Form from '../components/Form'
 import Input from '../components/Input'
 import Table from '../components/Table'
 import { logout } from '../actions/auth'
 import { updateProfile } from '../actions/perfil'
-import PerfilModel from '../models/perfil'
-import { Input as Ainput, Radio, Select } from 'antd'
-import Xtable from 'react-xtable'
-const RadioGroup = Radio.Group
-const InputGroup = Ainput.Group
-const Option = Select.Option
+import { Divider } from 'antd'
 
 class ComprarCreditos extends Component {
   render() {
-    const { auth, logout, updateProfile } = this.props
+    const { updateProfile } = this.props
 
-    const radioStyle = {
-      display: 'block',
-      height: '30px',
-      lineHeight: '30px'
-    }
     return (
       <AnimationWrapper>
         <div className="row my-4">
           <div className="col-12 col-md-6">
             <div className="container-shadow p-2 p-md-4">
-              <RadioGroup>
-                <Radio style={radioStyle} value={1}>
-                  Paquete 5 créditos
-                </Radio>
-                <Radio style={radioStyle} value={2}>
-                  Paquete 10 créditos
-                </Radio>
-                <Radio style={radioStyle} value={3}>
-                  Paguete 15 créditos
-                </Radio>
-              </RadioGroup>
+              <h1>Comprar créditos</h1>
+              <Divider />
+              {/* <h4>Paquetes</h4> */}
+              <Table
+                title="Mis clases"
+                data={[
+                  {
+                    paquete: 'Paquete 1',
+                    creditos: 5,
+                    precio: '$150 MXN'
+                  },
+                  {
+                    paquete: 'Paquete 2',
+                    creditos: 10,
+                    precio: '$250 MXN'
+                  },
+                  {
+                    paquete: 'Paquete 3',
+                    creditos: 15,
+                    precio: '$300 MXN'
+                  },
+                  {
+                    paquete: 'Paquete 4',
+                    creditos: 20,
+                    precio: '$400 MXN'
+                  }
+                ]}
+                cols={[
+                  { label: 'Paquete', key: 'paquete' },
+                  { label: 'Creditos', key: 'creditos' },
+                  { label: 'Precio', key: 'precio' }
+                ]}
+              />
             </div>
           </div>
           <div className="col-12 col-md-6 mt-4 mt-md-0">
@@ -89,32 +100,9 @@ class ComprarCreditos extends Component {
                       validations="isNumeric"
                       validationError="Ingresa un CVV válido"
                       required
-                      //   value={auth.telefono}
                     />
                   </div>
                 </div>
-                {/* <div className="row">
-                  <div className="col-6">
-                    <Input
-                      name="correo"
-                      label="Correo"
-                      validations="isEmail"
-                      validationError="Ingresa un correo válido"
-                      required
-                      value={auth.correo}
-                    />
-                  </div>
-                  <div className="col-6">
-                    <Input
-                      name="telefono"
-                      label="Teléfono"
-                      validations="isNumeric"
-                      validationError="Ingresa un telefono válido"
-                      required
-                      value={auth.telefono}
-                    />
-                  </div>
-                </div> */}
               </Form>
             </div>
           </div>
@@ -126,6 +114,7 @@ class ComprarCreditos extends Component {
 
 const mapStateToProps = ({ auth }) => ({ auth })
 
-export default connect(mapStateToProps, { logout, updateProfile })(
-  ComprarCreditos
-)
+export default connect(
+  mapStateToProps,
+  { logout, updateProfile }
+)(ComprarCreditos)

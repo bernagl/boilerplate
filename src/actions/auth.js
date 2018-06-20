@@ -20,8 +20,6 @@ export const register = ({ correo, contrasena, nombre }) => async dispatch => {
   } catch (e) {
     return false
   }
-
-  // console.log('actions', { correo, contrasena })
 }
 
 export const login = ({ correo, contrasena }) => async dispatch => {
@@ -34,7 +32,6 @@ export const login = ({ correo, contrasena }) => async dispatch => {
         db.ref(`usuario/${user.uid}`).on('value', snapshot => {
           dispatch({ type: LOGIN, payload: { ...snapshot.val() } })
         })
-        // console.log(user.uid)
         return user.uid
       })
   } catch (e) {
@@ -47,7 +44,7 @@ export const getAuth = params => async dispatch => {
   auth.onAuthStateChanged(function(user) {
     if (user) {
       db.ref(`usuario/${user.uid}`).on('value', snapshot => {
-        dispatch({ type: LOGIN, payload: { ...snapshot.val() } })
+        dispatch({ type: LOGIN, payload: { uid: user.uid, ...snapshot.val() } })
         params.setState({ loading: false })
       })
       // dispatch({ type: LOGIN, payload: user.uid })

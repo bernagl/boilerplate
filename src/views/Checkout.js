@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Link, Redirect } from 'react-router-dom'
 import AnimationWrapper from '../components/AnimationWrapper'
 import { Button } from 'antd'
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table'
@@ -11,9 +10,9 @@ class Checkout extends Component {
   render() {
     const { clases } = this.props.cart
     const items = []
-    clases.forEach(item => {
+    clases.forEach((item, i) => {
       items.push(
-        <Tr>
+        <Tr key={i}>
           <Td>{item.title}</Td>
           <Td>{item.profesor}</Td>
           <Td>{item.creditos}</Td>
@@ -52,7 +51,7 @@ class Checkout extends Component {
                         <div className="col-6">
                           <Button type="secondary">Cancelar</Button>
                         </div>
-                        <div className="col-6">
+                        <div className="col-6 ">
                           <Button type="primary">Confirmar</Button>
                         </div>
                       </div>

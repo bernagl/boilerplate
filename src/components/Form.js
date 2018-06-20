@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Formsy from 'formsy-react'
 import { withRouter } from 'react-router-dom'
-import { Button, Form as Aform, message } from 'antd'
+import { Button, message } from 'antd'
 
 class Form extends Component {
   state = { canSubmit: false, loading: false }
@@ -15,9 +15,9 @@ class Form extends Component {
   }
 
   submit = async model => {
-    const { action, error, history, redirect, success } = this.props
+    const { action, uid, error, history, redirect, success } = this.props
     this.setState({ loading: true })
-    const r = await action(model)
+    const r = await action({...model, uid})
     // this.setState(() => {
     r
       ? (message.success(success),

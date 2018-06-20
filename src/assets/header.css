@@ -374,13 +374,13 @@
 
 .luxbar-menu-material-cyan,
 .luxbar-menu-material-cyan .dropdown ul {
-    background-color: #7c58a2;
+    background-color: #745af2;
     color: #fff
 }
 
 .luxbar-menu-material-cyan .active,
 .luxbar-menu-material-cyan .luxbar-item:hover {
-    background-color: #9978bb;
+    background-color: #846cfb;
 }
 
 .luxbar-menu-material-cyan .luxbar-hamburger span,

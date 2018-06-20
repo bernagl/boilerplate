@@ -1,15 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Link, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import AnimationWrapper from '../components/AnimationWrapper'
 import Form from '../components/Form'
 import Input from '../components/Input'
 import Table from '../components/Table'
 import { logout } from '../actions/auth'
 import { updateProfile } from '../actions/perfil'
-import PerfilModel from '../models/perfil'
 import { Icon, message, Popconfirm, Popover, Tabs, Tag } from 'antd'
-import Xtable from 'react-xtable'
 
 const { TabPane } = Tabs
 
@@ -107,8 +105,6 @@ class Perfil extends Component {
               this.setState(
                 ({ metodos }) => {
                   metodos.splice(i, 1)
-                  // console.log(i, methods)
-
                   return { metodos }
                 },
                 () => message.success('Método de pago eliminado')
@@ -124,7 +120,7 @@ class Perfil extends Component {
     ]
   }
   render() {
-    const { auth, logout, updateProfile } = this.props
+    const { auth, updateProfile } = this.props
     const { metodos, metodosCol } = this.state
     return (
       <AnimationWrapper>
@@ -145,12 +141,16 @@ class Perfil extends Component {
           </div>
           <div className="col-12 col-md-8 my-4 mt-md-0">
             <div className="container-shadow p-2 p-md-4">
-              <Tabs defaultActiveKey="1" onChange={e => console.log(e)}>
+              <Tabs defaultActiveKey="1">
                 <TabPane tab="Mis clases" key="1">
                   <Table
                     title="Mis clases"
                     data={clases}
-                    Render={() => <Link to="/comprar">Comprar créditos</Link>}
+                    Render={() => (
+                      <div className="mt-2 mb-3">
+                        <Link to="/comprar">Comprar créditos</Link>
+                      </div>
+                    )}
                     cols={clasesCol}
                   />
                 </TabPane>
@@ -173,6 +173,7 @@ class Perfil extends Component {
                     submitText="Guardar"
                     success="Perfil actualizado"
                     action={updateProfile}
+                    uid={auth.uid}
                   >
                     <Input
                       name="nombre"

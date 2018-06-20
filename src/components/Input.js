@@ -24,7 +24,7 @@ class Input extends Component {
 
   render() {
     const { validate, value } = this.state
-    const { label, name, pattern, placeholder, type } = this.props
+    const { label, name, placeholder, type } = this.props
     const errorMessage = this.props.getErrorMessage()
     return (
       <Item

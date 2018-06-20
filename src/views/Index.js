@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link, Redirect } from 'react-router-dom'
 import AnimationWrapper from '../components/AnimationWrapper'
-import AuthWrapper from '../components/AuthWrapper'
 import { logout } from '../actions/auth'
 
 class Index extends Component {

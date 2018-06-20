@@ -16,14 +16,3 @@ export default [
     required: true
   }
 ]
-
-{
-  /* <Input
-name="contrasena"
-label="Contraseña"
-validations="minLength:6"
-type="password"
-validationError="Ingresa una contraseña válida"
-required
-/> */
-}

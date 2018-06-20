@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { NoAuth, WithAuth } from './router'
 import { getAuth } from './actions/auth'
-import AnimationWrapper from './components/AnimationWrapper'
 import Header from './components/Header'
 import Loading from './components/Loading'
 import { withRouter } from 'react-router-dom'
@@ -16,9 +15,6 @@ class App extends Component {
   render() {
     const { loading } = this.state
     const { auth } = this.props
-    console.log('auth', auth)
-    // !auth && import ('./assets/login.css')
-
     return loading ? (
       <Loading />
     ) : auth ? (

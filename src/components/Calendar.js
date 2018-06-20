@@ -236,4 +236,3 @@ var time_slots = [
 ]
 
 var calendar = new Calendar('#calendar', time_slots)
-console.log(calendar)

@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom'
 import Form from '../components/Form'
 import Input from '../components/Input'
 import AuthWrapper from '../components/AuthWrapper'
-import CenterBox from '../components/CenterBox'
-import bg from '../assets/login.jpg'
 import { Checkbox } from 'antd'
 
 export default class Registro extends Component {
@@ -12,7 +10,7 @@ export default class Registro extends Component {
   render() {
     const { terminos } = this.state
     return (
-      <AuthWrapper type="login">
+      <AuthWrapper type="register">
         {action => (
           <div className="row margin-auto">
             <div className="col-12 col-md-5 col-lg-4 col-xl-3 login-box">
@@ -21,7 +19,7 @@ export default class Registro extends Component {
                   <h1 className="mb-5">Registrate</h1>
                   <Form
                     action={action}
-                    // redirect="/"
+                    redirect="/"
                     submitText="Registrarme"
                     success="Gracias por registrarte"
                   >
@@ -73,7 +71,7 @@ export default class Registro extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-12 col-md-5 col-lg-8 col-xl-9 hidden-sm-up bg-cover">
+            <div className="col-12 col-md-7 col-lg-8 col-xl-9 hidden-sm-up bg-cover">
               {terminos ? (
                 <div className="row justify-content-center align-items-center fade container-shadow fh-login">
                   <div className="col-10">
@@ -103,7 +101,7 @@ export default class Registro extends Component {
                   <div
                     className="row fh-login fade"
                     style={{
-                      backgroundImage: `url(${bg})`,
+                      backgroundImage: `url(http://impulse-fitnessstudio.com/wp-content/uploads/2018/01/1-Impulse-copy.jpg)`,
                       backgroundSize: 'cover'
                     }}
                   />

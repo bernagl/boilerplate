@@ -146,7 +146,7 @@ body {
 }
 
 .day-row {
-  background-color: #7c57a1;
+  background-color: #337ddf;
   color: white;
 }
 
@@ -166,11 +166,11 @@ body {
 }
 
 .day-event:last-child {
-  margin-bottom: 5px !important;
+  margin-bottom: 0px !important;
 }
 
 .day-event:first-child {
-  margin-top: 5px !important;
+  margin-top: 0px !important;
 }
 
 .day-event.disabled {
@@ -184,12 +184,12 @@ body {
 }
 
 .today {
-  border: 1px solid #34495e;
+  border: 1px solid #337ddf;
   border-top: none;
 }
 
 .week-header {
-  background: #7c57a1;
+  background: #337ddf;
   padding: 20px 0px;
   width: 100%;
 }
@@ -242,4 +242,9 @@ body {
 
 .responsiveTable td.pivoted {
   padding: 5px;
+}
+
+.btn-morado {
+  background-color: #745af2 !important;
+  border-color: #745af2 !important;
 }
