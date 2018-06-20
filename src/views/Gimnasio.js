@@ -6,6 +6,7 @@ import { setCheckout } from '../actions/cart'
 import { Button, Icon, message, Radio } from 'antd'
 import moment from 'moment-timezone'
 import 'moment/locale/es'
+import { Body, Header } from '../components/Calendario'
 
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
@@ -32,7 +33,7 @@ class Gimnasio extends Component {
             hora_inicio: '10:00',
             hora_fin: '11:30',
             id: 4,
-            date: new Date('2018-06-05T23:59:59')
+            date: new Date('2018-06-25T23:59:59')
           },
           {
             title: 'Zumba',
@@ -42,7 +43,7 @@ class Gimnasio extends Component {
             hora_inicio: '10:00',
             hora_fin: '11:30',
             id: 1,
-            date: new Date('2018-06-10T23:59:59')
+            date: new Date('2018-06-20T23:59:59')
           },
           {
             title: 'Ritmos látino',
@@ -52,7 +53,7 @@ class Gimnasio extends Component {
             hora_inicio: '10:00',
             hora_fin: '11:30',
             id: 2,
-            date: new Date('2018-06-17T23:59:59')
+            date: new Date('2018-06-27T23:59:59')
           },
           {
             title: 'Zumba',
@@ -62,7 +63,7 @@ class Gimnasio extends Component {
             hora_inicio: '10:00',
             hora_fin: '11:30',
             id: 3,
-            date: new Date('2018-06-04T23:59:59')
+            date: new Date('2018-06-24T23:59:59')
           },
           {
             title: 'Zumba',
@@ -72,7 +73,7 @@ class Gimnasio extends Component {
             creditos: 1,
             hora_inicio: '10:00',
             hora_fin: '11:30',
-            date: new Date('2018-06-06T23:59:59')
+            date: new Date('2018-06-26T23:59:59')
           },
           {
             title: 'Ritmos látino',
@@ -82,7 +83,7 @@ class Gimnasio extends Component {
             creditos: 1,
             hora_inicio: '10:00',
             hora_fin: '11:30',
-            date: new Date('2018-06-06T23:59:59')
+            date: new Date('2018-06-26T23:59:59')
           },
           {
             title: 'Pesas',
@@ -92,7 +93,7 @@ class Gimnasio extends Component {
             creditos: 1,
             hora_inicio: '10:00',
             hora_fin: '11:30',
-            date: new Date('2018-06-06T23:59:59')
+            date: new Date('2018-06-26T23:59:59')
           },
           {
             title: 'Cardio',
@@ -102,7 +103,7 @@ class Gimnasio extends Component {
             creditos: 1,
             hora_inicio: '10:00',
             hora_fin: '11:30',
-            date: new Date('2018-06-06T23:59:59')
+            date: new Date('2018-06-26T23:59:59')
           },
           {
             title: 'Bicicleta',
@@ -112,7 +113,7 @@ class Gimnasio extends Component {
             creditos: 1,
             hora_inicio: '10:00',
             hora_fin: '11:30',
-            date: new Date('2018-06-14T23:59:59')
+            date: new Date('2018-06-24T23:59:59')
           },
           {
             title: 'Ritmos látino',
@@ -122,7 +123,7 @@ class Gimnasio extends Component {
             creditos: 1,
             hora_inicio: '10:00',
             hora_fin: '11:30',
-            date: new Date('2018-06-08T23:59:59')
+            date: new Date('2018-06-28T23:59:59')
           },
           {
             title: 'Zumba',
@@ -132,7 +133,7 @@ class Gimnasio extends Component {
             creditos: 1,
             hora_inicio: '10:00',
             hora_fin: '11:30',
-            date: new Date('2018-06-09T23:59:59')
+            date: new Date('2018-06-29T23:59:59')
           }
         ]
       },
@@ -147,7 +148,7 @@ class Gimnasio extends Component {
             creditos: 1,
             hora_inicio: '10:00',
             hora_fin: '11:30',
-            date: new Date('2018-06-06T23:59:59')
+            date: new Date('2018-06-26T23:59:59')
           },
           {
             title: 'Pesas',
@@ -156,7 +157,7 @@ class Gimnasio extends Component {
             creditos: 1,
             hora_inicio: '10:00',
             hora_fin: '11:30',
-            date: new Date('2018-06-06T23:59:59')
+            date: new Date('2018-06-26T23:59:59')
           },
           {
             title: 'Cardio',
@@ -165,7 +166,7 @@ class Gimnasio extends Component {
             creditos: 1,
             hora_inicio: '10:00',
             hora_fin: '11:30',
-            date: new Date('2018-06-07T23:59:59')
+            date: new Date('2018-06-27T23:59:59')
           }
         ]
       }
@@ -269,14 +270,7 @@ class Gimnasio extends Component {
   }
 
   render() {
-    const {
-      dates,
-      dias,
-      clases,
-      creditos,
-      gymSelected,
-      gimnasios,
-    } = this.state
+    const { dates, dias, clases, creditos, gymSelected, gimnasios } = this.state
 
     return (
       <AnimationWrapper>
@@ -337,80 +331,8 @@ class Gimnasio extends Component {
                     >
                       <Icon type="right" />
                     </Button>
-                    <div className="week">
-                      <div className="week-header hidden-sm show-lg">
-                        {dates.map((e, i) => (
-                          <div className="day row" key={i}>
-                            <div className="col-12 day-row">
-                              <b>{dias[i].name}</b>
-                              <br />
-                              <b>{moment(e).format('DD MMMM')}</b>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="week week-events">
-                      {dates.map((e, i) => (
-                        <div className="day row" key={i}>
-                          <div className="col-12 hidden-lg day-row show-sm">
-                            <b>{dias[i].name}</b>
-                            <br />
-                            <b>{moment(e).format('DD MMMM')}</b>
-                          </div>
-                          <div
-                            className={`col-12 ${moment().day() === i + 1 &&
-                              'today'}`}
-                          >
-                            <div className="row">
-                              {dias[i].events.length > 0 ? (
-                                dias[i].events.map((ev, j) => {
-                                  const future = new Date(ev.date) >= new Date()
-                                  return (
-                                    <div
-                                      className={`col-12 day-event fade ${clases.has(
-                                        ev.id
-                                      ) && 'active'} ${!future && 'disabled'}`}
-                                      onClick={() =>
-                                        future
-                                          ? this.eventHandler(ev)
-                                          : message.info(
-                                              'Esta clase ya se venció'
-                                            )
-                                      }
-                                      key={j}
-                                    >
-                                      <b>{ev.title}</b> <br />
-                                      <span>{ev.profesor}</span>
-                                      <br />
-                                      <span>
-                                        {ev.hora_inicio} - {ev.hora_fin}
-                                      </span>
-                                      {ev.salon && (
-                                        <React.Fragment>
-                                          <br />
-                                          <span>Salón: {ev.salon}</span>
-                                        </React.Fragment>
-                                      )}
-                                    </div>
-                                  )
-                                })
-                              ) : (
-                                <span
-                                  style={{
-                                    fontSize: 14,
-                                    textAlign: 'center',
-                                    width: '100%'
-                                  }}
-                                >
-                                  No hay eventos
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                    <Header dates={dates} dias={dias} />
+                    <Body clases={clases} dates={dates} dias={dias} />
                   </div>
                 </div>
               </div>
