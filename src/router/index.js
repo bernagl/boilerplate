@@ -4,6 +4,7 @@ import Login from '../views/Login'
 import Registro from '../views/Registro'
 import Index from '../views/Index'
 import Perfil from '../views/Perfil'
+import Fake from '../views/Fake'
 import Recuperar from '../views/Recuperar'
 import Gimnasio from '../views/Gimnasio'
 import ComprarCreditos from '../views/ComprarCreditos'
@@ -18,6 +19,7 @@ export const WithAuth = ({ auth }) => {
       <PrivateRoute path="/clase" component={Gimnasio} auth={auth} />
       <PrivateRoute path="/comprar" component={ComprarCreditos} auth={auth} />
       <PrivateRoute path="/checkout" component={Checkout} auth={auth} />
+      <PrivateRoute path="/fake" component={Fake} auth={auth} />
       <Route component={() => <p>Ruta no encontrada</p>} />
       {/* <Route path="/login" component={Login} />
       <Route path="/registro" component={Registro} />

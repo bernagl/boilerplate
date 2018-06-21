@@ -7,6 +7,8 @@ import { Button, Icon, message, Radio } from 'antd'
 import moment from 'moment-timezone'
 import 'moment/locale/es'
 import { Body, Header } from '../components/Calendario'
+import { getClases } from '../actions/clase'
+import { getGimnasios } from '../actions/gimnasio'
 
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
@@ -19,158 +21,8 @@ message.config({
 
 class Gimnasio extends Component {
   state = {
-    gymSelected: 1,
-    gimnasios: [
-      {
-        id: 1,
-        name: 'Gimnasio 1',
-        events: [
-          {
-            title: 'Aerobic',
-            salon: 'A',
-            profesor: 'Luis García',
-            creditos: 1,
-            hora_inicio: '10:00',
-            hora_fin: '11:30',
-            id: 4,
-            date: new Date('2018-06-25T23:59:59')
-          },
-          {
-            title: 'Zumba',
-            salon: 'B',
-            profesor: 'Luis García',
-            creditos: 1,
-            hora_inicio: '10:00',
-            hora_fin: '11:30',
-            id: 1,
-            date: new Date('2018-06-20T23:59:59')
-          },
-          {
-            title: 'Ritmos látino',
-            salon: 'B',
-            profesor: 'Luis García',
-            creditos: 1,
-            hora_inicio: '10:00',
-            hora_fin: '11:30',
-            id: 2,
-            date: new Date('2018-06-27T23:59:59')
-          },
-          {
-            title: 'Zumba',
-            salon: 'A',
-            profesor: 'Luis García',
-            creditos: 1,
-            hora_inicio: '10:00',
-            hora_fin: '11:30',
-            id: 3,
-            date: new Date('2018-06-24T23:59:59')
-          },
-          {
-            title: 'Zumba',
-            salon: 'A',
-            id: 5,
-            profesor: 'Luis García',
-            creditos: 1,
-            hora_inicio: '10:00',
-            hora_fin: '11:30',
-            date: new Date('2018-06-26T23:59:59')
-          },
-          {
-            title: 'Ritmos látino',
-            salon: 'A',
-            id: 6,
-            profesor: 'Luis García',
-            creditos: 1,
-            hora_inicio: '10:00',
-            hora_fin: '11:30',
-            date: new Date('2018-06-26T23:59:59')
-          },
-          {
-            title: 'Pesas',
-            salon: 'B',
-            id: 7,
-            profesor: 'Luis García',
-            creditos: 1,
-            hora_inicio: '10:00',
-            hora_fin: '11:30',
-            date: new Date('2018-06-26T23:59:59')
-          },
-          {
-            title: 'Cardio',
-            salon: 'A',
-            id: 8,
-            profesor: 'Luis García',
-            creditos: 1,
-            hora_inicio: '10:00',
-            hora_fin: '11:30',
-            date: new Date('2018-06-26T23:59:59')
-          },
-          {
-            title: 'Bicicleta',
-            salon: 'A',
-            id: 9,
-            profesor: 'Luis García',
-            creditos: 1,
-            hora_inicio: '10:00',
-            hora_fin: '11:30',
-            date: new Date('2018-06-24T23:59:59')
-          },
-          {
-            title: 'Ritmos látino',
-            salon: 'A',
-            id: 10,
-            profesor: 'Luis García',
-            creditos: 1,
-            hora_inicio: '10:00',
-            hora_fin: '11:30',
-            date: new Date('2018-06-28T23:59:59')
-          },
-          {
-            title: 'Zumba',
-            salon: 'B',
-            id: 11,
-            profesor: 'Luis García',
-            creditos: 1,
-            hora_inicio: '10:00',
-            hora_fin: '11:30',
-            date: new Date('2018-06-29T23:59:59')
-          }
-        ]
-      },
-      {
-        name: 'Gimnasio 2',
-        id: 2,
-        events: [
-          {
-            title: 'Ritmos látino',
-            id: 12,
-            profesor: 'Luis García',
-            creditos: 1,
-            hora_inicio: '10:00',
-            hora_fin: '11:30',
-            date: new Date('2018-06-26T23:59:59')
-          },
-          {
-            title: 'Pesas',
-            id: 13,
-            profesor: 'Luis García',
-            creditos: 1,
-            hora_inicio: '10:00',
-            hora_fin: '11:30',
-            date: new Date('2018-06-26T23:59:59')
-          },
-          {
-            title: 'Cardio',
-            id: 14,
-            profesor: 'Luis García',
-            creditos: 1,
-            hora_inicio: '10:00',
-            hora_fin: '11:30',
-            date: new Date('2018-06-27T23:59:59')
-          }
-        ]
-      }
-    ],
+    gymSelected: 0,
+    gimnasios: [],
     week: 0,
     events: [],
     creditos: 5,
@@ -189,15 +41,33 @@ class Gimnasio extends Component {
   }
 
   componentDidMount() {
-    // this.daysHandler()
+    this.props.getGimnasios()
+    this.props.getClases()
     const { creditos, clases } = this.props.cart
-    this.setState(
-      {
-        creditos: creditos,
-        clases: clases ? clases : new Map()
-      },
-      () => this.handleGym(0)
-    )
+    this.setState({
+      creditos,
+      clases: clases ? clases : new Map()
+    })
+  }
+
+  componentWillReceiveProps(newProps) {
+    const {
+      auth: { creditos },
+      clases,
+      gimnasios
+    } = newProps
+    const gyms = []
+    if (clases.length > 0 && gimnasios.length > 0) {
+      gimnasios.map((gym, i) => {
+        clases.map(clase => {
+          clase.gimnasio === gym.id && gimnasios[i].events.push({ ...clase })
+        })
+      })
+
+      this.setState({ creditos, gimnasios }, () =>
+        this.handleGym(this.state.gymSelected)
+      )
+    }
   }
 
   handleGym = i => {
@@ -227,7 +97,7 @@ class Gimnasio extends Component {
     let d = [...dias]
     days.map((day, i) => {
       const evts = events.filter(
-        (e, j) => moment(day).format('L') === moment(e.date).format('L')
+        (e, j) => moment(day).format('L') === moment(e.fecha).format('L')
       )
       d[i] = { events: evts, name: d[i].name }
     })
@@ -251,7 +121,7 @@ class Gimnasio extends Component {
         ? (clases.delete(event.id), (c += 1), message.warning('Clase devuelta'))
         : (clases.set(event.id, event),
           (c -= 1),
-          message.success(`Clase ${event.title} agregada`))
+          message.success(`Clase ${event.nombre} agregada`))
       this.setState({ clases, creditos: c })
     } else {
       isSet
@@ -270,8 +140,9 @@ class Gimnasio extends Component {
   }
 
   render() {
-    const { dates, dias, clases, creditos, gymSelected, gimnasios } = this.state
-
+    const { dates, creditos, dias, clases, gymSelected, gimnasios } = this.state
+    // const { auth } = this.props
+    // console.log(gimnasios)
     return (
       <AnimationWrapper>
         {/* <div className="row align-items-center"> */}
@@ -310,7 +181,7 @@ class Gimnasio extends Component {
                         onClick={() => this.handleGym(i)}
                         key={i}
                       >
-                        {gym.name}
+                        {gym.nombre}
                       </RadioButton>
                     ))}
                   </RadioGroup>
@@ -332,7 +203,12 @@ class Gimnasio extends Component {
                       <Icon type="right" />
                     </Button>
                     <Header dates={dates} dias={dias} />
-                    <Body clases={clases} dates={dates} dias={dias} />
+                    <Body
+                      clases={clases}
+                      dates={dates}
+                      dias={dias}
+                      eventHandler={this.eventHandler}
+                    />
                   </div>
                 </div>
               </div>
@@ -345,9 +221,14 @@ class Gimnasio extends Component {
   }
 }
 
-const mapStateToProps = ({ cart }) => ({ cart })
+const mapStateToProps = ({ auth, cart, clases, gimnasios }) => ({
+  auth,
+  clases,
+  cart,
+  gimnasios
+})
 
 export default connect(
   mapStateToProps,
-  { setCheckout }
+  { getClases, getGimnasios, setCheckout }
 )(Gimnasio)

@@ -19,7 +19,10 @@ body {
 }
 
 /* Helpers */
-
+.a {
+  color: #337ddf;
+  cursor: pointer;
+}
 .inline-block {
   display: inline-block;
 }

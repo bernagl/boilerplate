@@ -8,45 +8,46 @@ import Table from '../components/Table'
 import { logout } from '../actions/auth'
 import { updateProfile } from '../actions/perfil'
 import { Icon, message, Popconfirm, Popover, Tabs, Tag } from 'antd'
+import moment from 'moment'
 
 const { TabPane } = Tabs
 
 const clases = [
-  {
-    fecha: '28/Octubre/2018',
-    clase: 'Zumba',
-    profesor: 'Luis García',
-    creditos: 1,
-    status: 0
-  },
-  {
-    fecha: '28/Septiembre/2018',
-    clase: 'Zumba',
-    profesor: 'Luis García',
-    creditos: 1,
-    status: 1
-  },
-  {
-    fecha: '28/Agosto/2018',
-    clase: 'Zumba',
-    profesor: 'Luis García',
-    creditos: 1,
-    status: 1
-  },
-  {
-    fecha: '28/Julio/2018',
-    clase: 'Zumba',
-    profesor: 'Luis García',
-    creditos: 1,
-    status: 1
-  }
+  // {
+  //   fecha: '28/Octubre/2018',
+  //   clase: 'Zumba',
+  //   profesor: 'Luis García',
+  //   creditos: 1,
+  //   status: 0
+  // },
+  // {
+  //   fecha: '28/Septiembre/2018',
+  //   clase: 'Zumba',
+  //   profesor: 'Luis García',
+  //   creditos: 1,
+  //   status: 1
+  // },
+  // {
+  //   fecha: '28/Agosto/2018',
+  //   clase: 'Zumba',
+  //   profesor: 'Luis García',
+  //   creditos: 1,
+  //   status: 1
+  // },
+  // {
+  //   fecha: '28/Julio/2018',
+  //   clase: 'Zumba',
+  //   profesor: 'Luis García',
+  //   creditos: 1,
+  //   status: 1
+  // }
 ]
 
 const clasesCol = [
-  { label: 'Clase', key: 'clase' },
+  { label: 'Clase', key: 'nombre' },
   { label: 'Profesor', key: 'profesor' },
   { label: 'Fecha', key: 'fecha' },
-  { label: 'Créditos', key: 'creditos' },
+  { label: 'Créditos', key: 'costo_creditos' },
   {
     label: 'Estatus',
     key: 'status',
@@ -122,6 +123,16 @@ class Perfil extends Component {
   render() {
     const { auth, updateProfile } = this.props
     const { metodos, metodosCol } = this.state
+    const clases = []
+    auth.clases.map(clase =>
+      clases.push({
+        ...clase,
+        status: moment(clase.fecha).format('L') > moment().format('L') ? 0 : 1
+      })
+    )
+
+    console.log(clases)
+
     return (
       <AnimationWrapper>
         <div className="row">
@@ -136,7 +147,7 @@ class Perfil extends Component {
               <span>Miembro desde: 28/Octubre/2017</span>
               <br />
               <h5 className="mb-0">Total de clases compradas: 23</h5>
-              <h5>Créditos disponibles: 4</h5>
+              <h5>Créditos disponibles: {auth.creditos}</h5>
             </div>
           </div>
           <div className="col-12 col-md-8 my-4 mt-md-0">

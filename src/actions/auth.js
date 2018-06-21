@@ -13,7 +13,7 @@ export const register = ({ correo, contrasena, nombre }) => async dispatch => {
       .then(result => {
         dispatch({
           type: REGISTER,
-          payload: { correo, contrasena, nombre, uid: user.uid }
+          payload: { correo, contrasena, nombre, uid: user.uid, creditos: 1 }
         })
         return user.uid
       })
@@ -25,12 +25,28 @@ export const register = ({ correo, contrasena, nombre }) => async dispatch => {
 export const login = ({ correo, contrasena }) => async dispatch => {
   try {
     const { user } = await auth.signInWithEmailAndPassword(correo, contrasena)
+    const clases = []
     return db
       .ref(`usuario/${user.uid}`)
       .update({ last_login: Date.now() })
       .then(result => {
-        db.ref(`usuario/${user.uid}`).on('value', snapshot => {
-          dispatch({ type: LOGIN, payload: { ...snapshot.val() } })
+        db.ref(`usuario/${user.uid}`).once('value', snapshot => {
+          db.ref('usuario/' + user.uid)
+            .child('clases')
+            .once('value', snap => {
+              snap.forEach(clase =>
+                clases.push({
+                  id: clase.key,
+                  ...clase.val(),
+                  profesor: clase.val().profesor.nombre
+                })
+              )
+              console.log('clases', clases)
+              dispatch({
+                type: LOGIN,
+                payload: { uid: user.uid, ...snapshot.val(), clases }
+              })
+            })
         })
         return user.uid
       })
@@ -44,7 +60,22 @@ export const getAuth = params => async dispatch => {
   auth.onAuthStateChanged(function(user) {
     if (user) {
       db.ref(`usuario/${user.uid}`).on('value', snapshot => {
-        dispatch({ type: LOGIN, payload: { uid: user.uid, ...snapshot.val() } })
+        db.ref('usuario/' + user.uid)
+        .child('clases')
+        .once('value', snap => {
+          const clases = []
+            snap.forEach((clase, i) => {
+              clases.push({
+                id: clase.key,
+                ...clase.val(),
+                profesor: clase.val().profesor.nombre
+              })
+            })
+            dispatch({
+              type: LOGIN,
+              payload: { uid: user.uid, ...snapshot.val(), clases }
+            })
+          })
         params.setState({ loading: false })
       })
       // dispatch({ type: LOGIN, payload: user.uid })
