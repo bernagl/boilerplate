@@ -23,9 +23,11 @@ class Gimnasio extends Component {
   state = {
     gymSelected: 0,
     gimnasios: [],
+    clasesCount: 0,
     week: 0,
     events: [],
     creditos: 5,
+    menosCreditos: 0,
     clases: new Map(),
     month: moment().format('MMMM'),
     dates: [],
@@ -43,10 +45,11 @@ class Gimnasio extends Component {
   componentDidMount() {
     this.props.getGimnasios()
     this.props.getClases()
-    const { creditos, clases } = this.props.cart
+    const { creditos } = this.props.cart
+    const { clases } = this.props.auth
     this.setState({
       creditos,
-      clases: clases ? clases : new Map()
+      clases: new Map(clases)
     })
   }
 
@@ -112,22 +115,35 @@ class Gimnasio extends Component {
   }
 
   eventHandler = event => {
-    const { clases, creditos } = this.state
+    const { clases, clasesCount : cc, creditos } = this.state
     let c = creditos
     let isSet = clases.has(event.id)
+    let clase = clases.get(event.id)
+    let clasesCount = cc
+    if (isSet && clase.status === 0) {
+      message.error('Para cancelar la clase debe ser desde tu perfil')
+      return
+    } else if (isSet && clase.status === 2) {
+      clases.delete(event.id)
+      isSet = false
+    }
 
     if (creditos >= 1) {
       isSet
-        ? (clases.delete(event.id), (c += 1), message.warning('Clase devuelta'))
-        : (clases.set(event.id, event),
+        ? (clases.delete(event.id),
+          clasesCount -= 1,
+          (c += 1),
+          message.warning('Clase devuelta'))
+        : (clases.set(event.id, { status: 1, ...event }),
           (c -= 1),
+          clasesCount += 1,
           message.success(`Clase ${event.nombre} agregada`))
-      this.setState({ clases, creditos: c })
+      this.setState({ clases, creditos: c, clasesCount })
     } else {
       isSet
-        ? (clases.delete(event.id), (c += 1), message.warning('Clase devuelta'))
+        ? (clases.delete(event.id), (c += 1), (clasesCount -= 1), message.warning('Clase devuelta'))
         : message.error('No tienes suficientes créditos')
-      this.setState({ clases, creditos: c })
+      this.setState({ clases, creditos: c, clasesCount })
     }
   }
 
@@ -140,9 +156,18 @@ class Gimnasio extends Component {
   }
 
   render() {
-    const { dates, creditos, dias, clases, gymSelected, gimnasios } = this.state
+    const {
+      dates,
+      clasesCount,
+      creditos,
+      dias,
+      clases,
+      gymSelected,
+      gimnasios,
+      menosCreditos
+    } = this.state
     // const { auth } = this.props
-    // console.log(gimnasios)
+    console.log(this.state)
     return (
       <AnimationWrapper>
         {/* <div className="row align-items-center"> */}
@@ -165,7 +190,7 @@ class Gimnasio extends Component {
                 </div>
                 <div className="col-12">
                   <span>Créditos disponibles: {creditos}</span> <br />
-                  {clases.size > 0 && <span>Tienes {clases.size} clases</span>}
+                  {clasesCount > 0 && <span>Tienes {clasesCount} clases</span>}
                   {creditos === 0 && (
                     <span className="no-credits-label fade">
                       Ya no tienes créditos disponibles,{' '}

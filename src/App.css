@@ -186,6 +186,11 @@ body {
   color: white !important;
 }
 
+.day-event.active-reservada {
+  background-color: #78b2ec !important;
+  color: white !important;
+}
+
 .today {
   border: 1px solid #337ddf;
   border-top: none;

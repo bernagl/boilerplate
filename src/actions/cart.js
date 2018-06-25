@@ -34,6 +34,7 @@ export const confirmCheckout = props => {
               )
               .then(r => {
                 props.clases.forEach(clase => {
+                  console.log(clase)
                   db.ref('clase/' + clase.id).once('value', snapshot => {
                     const cl = snapshot.val()
                     console.log(cl.cupo, cl.inscritos + 1)
@@ -46,7 +47,7 @@ export const confirmCheckout = props => {
                         .then(r => {
                           db.ref('usuario')
                             .child(props.uid + '/clases')
-                            .push(cl)
+                            .push({ id_clase: clase.id, status: 0, ...cl })
                         })
                     } else {
                       return (response = 202)

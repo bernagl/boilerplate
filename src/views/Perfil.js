@@ -7,74 +7,17 @@ import Input from '../components/Input'
 import Table from '../components/Table'
 import { logout } from '../actions/auth'
 import { updateProfile } from '../actions/perfil'
+import { cancelarClase } from '../actions/clase'
 import { Icon, message, Popconfirm, Popover, Tabs, Tag } from 'antd'
 import moment from 'moment'
 
 const { TabPane } = Tabs
 
-const clases = [
-  // {
-  //   fecha: '28/Octubre/2018',
-  //   clase: 'Zumba',
-  //   profesor: 'Luis García',
-  //   creditos: 1,
-  //   status: 0
-  // },
-  // {
-  //   fecha: '28/Septiembre/2018',
-  //   clase: 'Zumba',
-  //   profesor: 'Luis García',
-  //   creditos: 1,
-  //   status: 1
-  // },
-  // {
-  //   fecha: '28/Agosto/2018',
-  //   clase: 'Zumba',
-  //   profesor: 'Luis García',
-  //   creditos: 1,
-  //   status: 1
-  // },
-  // {
-  //   fecha: '28/Julio/2018',
-  //   clase: 'Zumba',
-  //   profesor: 'Luis García',
-  //   creditos: 1,
-  //   status: 1
-  // }
-]
-
-const clasesCol = [
-  { label: 'Clase', key: 'nombre' },
-  { label: 'Profesor', key: 'profesor' },
-  { label: 'Fecha', key: 'fecha' },
-  { label: 'Créditos', key: 'costo_creditos' },
-  {
-    label: 'Estatus',
-    key: 'status',
-    Render: item => (
-      <Popover
-        content={
-          <p>
-            {item.status === 0
-              ? 'La fecha aún no se cumple'
-              : 'La clase ya pasó'}
-          </p>
-        }
-        title={item.status === 0 ? 'Pendiente' : 'Cumplida'}
-      >
-        <Tag color={`${item.status === 0 ? 'green' : 'volcano'}`}>
-          {item.status === 0 ? 'Pendiente' : 'Cumplida'}
-        </Tag>
-      </Popover>
-    )
-  }
-]
-
-const pagos = [{ fecha: '28/Octubre/2018', creditos: 4, metodo: 'visa-1234' }]
+// const pagos = [{ fecha: '28/Octubre/2018', creditos: 4, metodo: 'visa-1234' }]
 const pagosCol = [
   { label: 'Fecha', key: 'fecha' },
   { label: 'Créditos', key: 'creditos' },
-  { label: 'Método', key: 'metodo' }
+  { label: 'Método', key: 'uid' }
 ]
 
 class Perfil extends Component {
@@ -120,18 +63,80 @@ class Perfil extends Component {
       }
     ]
   }
+
+  cancelarClase = async (...props) => {
+    const r = await cancelarClase(...props)
+    r && message.success('Clase cancelada, tus créditos han sido devueltos')
+  }
+
+  clasesCol = () => [
+    { label: 'Clase', key: 'nombre' },
+    { label: 'Profesor', key: 'profesor' },
+    { label: 'Fecha', key: 'fecha' },
+    { label: 'Créditos', key: 'costo_creditos' },
+    {
+      label: 'Estatus',
+      key: 'status',
+      Render: item => {
+        return (
+          <React.Fragment>
+            <Popover
+              content={
+                <p>
+                  {item.status === 0
+                    ? 'La fecha aún no se cumple'
+                    : item.status === 2 ? 'Cancelaste la clase' : 'La clase ya pasó'}
+                </p>
+              }
+              title={
+                item.status === 0
+                  ? 'Pendiente'
+                  : item.status === 1
+                    ? 'Cumplida'
+                    : 'Cancelada'
+              }
+            >
+              <Tag color={`${item.status === 0 ? 'green' : 'volcano'}`}>
+                {item.status === 0
+                  ? 'Pendiente'
+                  : item.status === 2
+                    ? 'Cancelada'
+                    : 'Cumplida'}
+              </Tag>
+            </Popover>
+            {item.status === 0 && (
+              <Popconfirm
+                title="¿Deseas cancelar la clase?"
+                okText="Si"
+                cancelText="No"
+                onConfirm={() =>
+                  this.cancelarClase({
+                    uid: this.props.auth.uid,
+                    creditos: +this.props.auth.creditos + +item.costo_creditos,
+                    id_clase: item.id
+                  })
+                }
+              >
+                <Tag color="red">Cancelar</Tag>
+              </Popconfirm>
+            )}
+          </React.Fragment>
+        )
+      }
+    }
+  ]
   render() {
     const { auth, updateProfile } = this.props
     const { metodos, metodosCol } = this.state
     const clases = []
-    auth.clases.map(clase =>
+    auth.clases.forEach(clase =>
       clases.push({
         ...clase,
-        status: moment(clase.fecha).format('L') > moment().format('L') ? 0 : 1
+        status: clase.status === 0 ? moment(clase.fecha).format('L') > moment().format('L') ? 0 : 1 : clase.status
       })
     )
 
-    console.log(clases)
+    console.log(this.props)
 
     return (
       <AnimationWrapper>
@@ -146,7 +151,9 @@ class Perfil extends Component {
               <h3 className="mt-2">{auth.nombre}</h3>
               <span>Miembro desde: 28/Octubre/2017</span>
               <br />
-              <h5 className="mb-0">Total de clases compradas: 23</h5>
+              <h5 className="mb-0">
+                Total de clases compradas: {clases.length}
+              </h5>
               <h5>Créditos disponibles: {auth.creditos}</h5>
             </div>
           </div>
@@ -162,13 +169,13 @@ class Perfil extends Component {
                         <Link to="/comprar">Comprar créditos</Link>
                       </div>
                     )}
-                    cols={clasesCol}
+                    cols={this.clasesCol()}
                   />
                 </TabPane>
                 <TabPane tab="Historial de pagos" key="2">
                   <Table
                     title="Historial de pagos"
-                    data={pagos}
+                    data={auth.pagos}
                     cols={pagosCol}
                   />
                 </TabPane>

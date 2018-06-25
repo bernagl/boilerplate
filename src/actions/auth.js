@@ -57,25 +57,41 @@ export const login = ({ correo, contrasena }) => async dispatch => {
 }
 
 export const getAuth = params => async dispatch => {
+  let clases = new Map()
+  let pagos = []
   auth.onAuthStateChanged(function(user) {
+    console.log(user)
     if (user) {
       db.ref(`usuario/${user.uid}`).on('value', snapshot => {
         db.ref('usuario/' + user.uid)
-        .child('clases')
-        .once('value', snap => {
-          const clases = []
+          .child('clases')
+          .once('value', snap => {
+            clases.clear()
             snap.forEach((clase, i) => {
-              clases.push({
-                id: clase.key,
+              clases.set(clase.val().id_clase, {
                 ...clase.val(),
+                id: clase.key,
                 profesor: clase.val().profesor.nombre
               })
             })
-            dispatch({
-              type: LOGIN,
-              payload: { uid: user.uid, ...snapshot.val(), clases }
-            })
           })
+          .then(r => {
+            db.ref('usuario/' + user.uid)
+              .child('pagos')
+              .once('value', snapPagos => {
+                pagos = []
+                snapPagos.forEach(pago => {
+                  db.ref('pago/' + pago.val().id).once('value', snapPago => {
+                    pagos.push({ ...snapPago.val() })
+                  })
+                })
+                dispatch({
+                  type: LOGIN,
+                  payload: { uid: user.uid, ...snapshot.val(), clases, pagos }
+                })
+              })
+          })
+
         params.setState({ loading: false })
       })
       // dispatch({ type: LOGIN, payload: user.uid })

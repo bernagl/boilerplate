@@ -9,13 +9,14 @@ import moment from 'moment'
 
 class Checkout extends Component {
   state = { loading: false, label: 'Confirmar' }
-  confirm = async ({ creditos, items }) => {
+  confirm = async ({ clases, creditos, items }) => {
     this.setState({ loading: true, label: 'Asignando clases' })
-    const { clases } = this.props.cart
     const { uid } = this.props.auth
+    const c = []
+    clases.forEach(item => item.status === 1 && c.push(item))
     const r = await confirmCheckout({
       creditos,
-      clases,
+      clases: c,
       uid,
       fecha: moment().format('L')
     })
@@ -31,19 +32,19 @@ class Checkout extends Component {
   render() {
     const { clases } = this.props.cart
     const { label, loading } = this.state
-    console.log(this.props)
     const items = []
     let creditos = 0
     clases.forEach((item, i) => {
-      creditos += item.costo_creditos
-      items.push(
-        <Tr key={i}>
-          <Td>{item.nombre}</Td>
-          <Td>{item.profesor.nombre}</Td>
-          <Td>{item.costo_creditos}</Td>
-          <Td>{moment(item.fecha).format('LL')}</Td>
-        </Tr>
-      )
+      item.status === 1 &&
+        (items.push(
+          <Tr key={i}>
+            <Td>{item.nombre}</Td>
+            <Td>{item.profesor.nombre}</Td>
+            <Td>{item.costo_creditos}</Td>
+            <Td>{moment(item.fecha).format('LL')}</Td>
+          </Tr>
+        ),
+        (creditos += item.costo_creditos))
     })
     return (
       <AnimationWrapper>
@@ -79,7 +80,9 @@ class Checkout extends Component {
                         <div className="col-6 ">
                           <Button
                             type="primary"
-                            onClick={() => this.confirm({ creditos, items })}
+                            onClick={() =>
+                              this.confirm({ clases, creditos, items })
+                            }
                             loading={loading ? true : false}
                           >
                             {label}

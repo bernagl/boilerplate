@@ -7,13 +7,31 @@ import Table from '../components/Table'
 import { logout } from '../actions/auth'
 import { comprarCreditos } from '../actions/creditos'
 import { updateProfile } from '../actions/perfil'
-import { Button, Divider, Radio, Select } from 'antd'
+import { Button, Divider, message, Radio, Select } from 'antd'
 
 class ComprarCreditos extends Component {
   state = { nuevaTarjeta: false, paquete: null, metodo: null }
+
+  pagar = async () => {
+    const { uid } = this.props.auth
+    const {
+      metodo,
+      paquete: { creditos }
+    } = this.state
+    const r = await this.props.comprarCreditos({
+      uid,
+      metodo,
+      creditos,
+      fecha: Date.now()
+    })
+    r &&
+      (message.success('Créditos comprados'),
+      this.props.history.push('/perfil'))
+  }
   render() {
     const { metodo, nuevaTarjeta, paquete } = this.state
     const { updateProfile } = this.props
+    const { creditos } = this.props.auth
     return (
       <AnimationWrapper>
         <div className="row my-4">
@@ -112,12 +130,23 @@ class ComprarCreditos extends Component {
                     <Select.Option value="3">Visa-1234</Select.Option>
                   </Select>
                 </div>
+                {paquete && (
+                  <div className="col-12 my-2">
+                    <div>
+                      <span>Saldo anterior: {creditos}</span>
+                    </div>
+                    <div>
+                      <span>Saldo nuevo: {creditos + paquete.creditos}</span>
+                    </div>
+                  </div>
+                )}
                 {!nuevaTarjeta && (
                   <div className="col-12 my-2">
                     <Button
                       type="primary"
                       className="fw"
                       disabled={metodo ? false : true}
+                      onClick={this.pagar}
                     >
                       Pagar
                     </Button>

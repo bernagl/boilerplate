@@ -38,11 +38,34 @@ export const Body = ({ clases, dates, dias, eventHandler }) => {
             <div className="row">
               {dias[i].events.length > 0 ? (
                 dias[i].events.map((ev, j) => {
+                  let active = null
+                  let clase = false
+                  if (clases.has(ev.id)) {
+                    clase = clases.get(ev.id)
+                    active = clase.status === 0
+                      ? 1
+                      : clase.status === 2
+                        ? null
+                        : clase.status === 1
+                          ? 0
+                          : null
+                    // if (clase.status === 2) {
+                    //   return
+                    // } else if (clase.status === 0) {active = 1;}
+                    // else if (clase.reservada) {
+                    //   active = 0
+                    // }
+                  }
                   const future = new Date(ev.fecha) >= new Date()
                   return (
                     <div
-                      className={`col-12 day-event fade ${clases.has(ev.id) &&
-                        'active'} ${!future && 'disabled'}`}
+                      className={`col-12 day-event fade ${
+                        active === 1
+                          ? 'active-reservada'
+                          : active === 0
+                            ? 'active'
+                            : ''
+                      } ${!future && 'disabled'}`}
                       onClick={() =>
                         future
                           ? eventHandler(ev)
@@ -50,7 +73,7 @@ export const Body = ({ clases, dates, dias, eventHandler }) => {
                       }
                       key={j}
                     >
-                      <b>{ev.title}</b> <br />
+                      <b>{ev.nombre}</b> <br />
                       <span>{ev.profesor.nombre}</span>
                       <br />
                       <span>
@@ -60,6 +83,8 @@ export const Body = ({ clases, dates, dias, eventHandler }) => {
                         <React.Fragment>
                           <br />
                           <span>Salón: {ev.salon}</span>
+                          <br/>
+                          {clase && <span>{clase.status}</span>}
                         </React.Fragment>
                       )}
                     </div>
