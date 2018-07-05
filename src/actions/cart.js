@@ -5,70 +5,46 @@ export const setCheckout = props => dispatch => {
 }
 
 export const confirmCheckout = props => {
-  let response = ''
-  console.log(props)
-  return db
-    .ref('usuario/' + props.uid)
-    .once('value', snapshot => {
-      const usuario = snapshot.val()
-      const creditos = usuario.creditos - props.creditos
-      console.log(usuario)
-      console.log(usuario.creditos, props.creditos)
-      if (creditos >= 0) {
-        db.ref('pago')
-          .push({
-            uid: props.uid,
-            creditos: props.creditos,
-            fecha: props.fecha
-          })
-          .then(r =>
-            db
-              .ref('usuario/' + props.uid)
-              .child('pagos')
-              .push({ id: r.getKey() })
-              .then(r =>
-                db
-                  .ref('usuario')
-                  .child(props.uid)
-                  .update({ creditos })
-              )
+  const usuarioRef = db.ref('usuario').child(props.uid)
+  // const claseRef = db.ref('horario').child(clase.id)
+  return usuarioRef.once('value').then(snapshot => {
+    const usuario = snapshot.val()
+    console.log('usuario', usuario)
+    props.clases.forEach(clase => {
+      if (usuario.creditos > 0) {
+        console.log('usuario.creditos', usuario.creditos)
+        db.ref('horario')
+          .child(clase.id)
+          .once('value')
+          .then(snap => {
+            const c = snap.val()
+            return db
+              .ref('horario/' + clase.id)
+              .child('inscritos')
+              .push(usuario)
               .then(r => {
-                props.clases.forEach(clase => {
-                  console.log(clase)
-                  db.ref('clase/' + clase.id).once('value', snapshot => {
-                    const cl = snapshot.val()
-                    console.log(cl.cupo, cl.inscritos + 1)
-                    if (cl.cupo >= cl.inscritos + 1) {
-                      db.ref('clase')
-                        .child(clase.id)
-                        .update({
-                          inscritos: cl.inscritos + 1
-                        })
-                        .then(r => {
-                          db.ref('usuario')
-                            .child(props.uid + '/clases')
-                            .push({ id_clase: clase.id, cola: false, status: 0, ...cl })
-                        })
-                    } else {
-                      db.ref('clase/' + clase.id)
-                        .child('cola')
-                        .push({
-                          uid: props.uid
-                        })
-                        .then(r => {
-                          db.ref('usuario')
-                            .child(props.uid + '/clases')
-                            .push({ id_clase: clase.id, status: 0, ...cl })
-                        })
-                    }
+                db.ref('horario')
+                  .child(clase.id)
+                  .update({ inscritos_numero: c.inscritos_numero + 1 })
+                  .then(r => {
+                    const creditos = clase.creditos ? clase.creditos : 1
+                    return usuarioRef
+                      .update({ creditos: usuario.creditos - creditos })
+                      .then(r => {
+                        usuarioRef
+                          .child('clases')
+                          .push({ ...clase, status: 0 })
+                          .then(r => 202)
+                      })
+                      .catch(e => 404)
                   })
-                })
-                return (response = 200)
               })
-          )
+              .catch(e => 404)
+          })
+          .catch(e => 404)
       } else {
-        return (response = 204)
+        return 404
       }
     })
-    .then(r => response)
+  })
 }

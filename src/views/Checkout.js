@@ -20,15 +20,13 @@ class Checkout extends Component {
       uid,
       fecha: moment().format('L')
     })
-    console.log(r)
-    // r === 200
 
     setTimeout(() => {
       message.success('Tus clases se han comprado'),
         this.props.history.push('/perfil')
     }, 1000)
-    // : message.error('Créditos insuficientes')
   }
+
   render() {
     const { clases } = this.props.cart
     const { label, loading } = this.state
@@ -38,9 +36,9 @@ class Checkout extends Component {
       item.status === 1 &&
         (items.push(
           <Tr key={i}>
-            <Td>{item.nombre}</Td>
-            <Td>{item.profesor.nombre}</Td>
-            <Td>{item.costo_creditos}</Td>
+            <Td>{item.clase.nombre}</Td>
+            <Td>{item.instructor.nombre}</Td>
+            <Td>{item.costo}</Td>
             <Td>{moment(item.fecha).format('LL')}</Td>
           </Tr>
         ),

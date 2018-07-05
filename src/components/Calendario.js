@@ -73,8 +73,6 @@ export const Body = ({ clases, dates, dias, eventHandler }) => {
                       <b>{ev.clase.nombre}</b> <br />
                       <span>{ev.instructor.nombre}</span>
                       <br />
-                      <span>{ev.id}</span>
-                      <br />
                       <span>
                         {moment(ev.inicio).format('LT')} -{' '}
                         {moment(ev.fin).format('LT')}

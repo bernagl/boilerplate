@@ -155,7 +155,7 @@ class Perfil extends Component {
             : clase.cola
               ? 3
               : clase.status === 0
-                ? moment(clase.fecha).format('L') > moment().format('L')
+                ? moment(clase.fin) > moment()
                   ? 0
                   : 1
                 : clase.status
