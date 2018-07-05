@@ -78,6 +78,7 @@ class Perfil extends Component {
       label: 'Estatus',
       key: 'status',
       Render: item => {
+        console.log(item)
         return (
           <React.Fragment>
             <Popover
@@ -85,7 +86,11 @@ class Perfil extends Component {
                 <p>
                   {item.status === 0
                     ? 'La fecha aún no se cumple'
-                    : item.status === 2 ? 'Cancelaste la clase' : 'La clase ya pasó'}
+                    : item.status === 2
+                      ? 'Cancelaste la clase'
+                      : item.status === 3
+                        ? 'Estas en la lista de espera, si algún usuario cancela se te notificará por correo'
+                        : 'La clase ya pasó'}
                 </p>
               }
               title={
@@ -93,18 +98,30 @@ class Perfil extends Component {
                   ? 'Pendiente'
                   : item.status === 1
                     ? 'Cumplida'
-                    : 'Cancelada'
+                    : item.status === 3
+                      ? 'En cola'
+                      : 'Cancelada'
               }
             >
-              <Tag color={`${item.status === 0 ? 'green' : 'volcano'}`}>
+              <Tag
+                color={`${
+                  item.status === 0
+                    ? 'green'
+                    : item.status === 3
+                      ? 'blue'
+                      : 'volcano'
+                }`}
+              >
                 {item.status === 0
                   ? 'Pendiente'
                   : item.status === 2
                     ? 'Cancelada'
-                    : 'Cumplida'}
+                    : item.status === 3
+                      ? 'En cola'
+                      : 'Cumplida'}
               </Tag>
             </Popover>
-            {item.status === 0 && (
+            {(item.status === 0 || item.status === 3) && (
               <Popconfirm
                 title="¿Deseas cancelar la clase?"
                 okText="Si"
@@ -132,7 +149,16 @@ class Perfil extends Component {
     auth.clases.forEach(clase =>
       clases.push({
         ...clase,
-        status: clase.status === 0 ? moment(clase.fecha).format('L') > moment().format('L') ? 0 : 1 : clase.status
+        status:
+          clase.status === 2
+            ? 2
+            : clase.cola
+              ? 3
+              : clase.status === 0
+                ? moment(clase.fecha).format('L') > moment().format('L')
+                  ? 0
+                  : 1
+                : clase.status
       })
     )
 

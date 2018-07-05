@@ -1,5 +1,5 @@
 body {
-  background: rgb(251, 251, 252);
+  background: #f4f6f9;
   height: auto;
 }
 
@@ -19,10 +19,12 @@ body {
 }
 
 /* Helpers */
+
 .a {
   color: #337ddf;
   cursor: pointer;
 }
+
 .inline-block {
   display: inline-block;
 }
@@ -179,6 +181,11 @@ body {
 .day-event.disabled {
   background: lightgray !important;
   cursor: not-allowed;
+}
+
+.day-event.full {
+  background-color: #5e3444 !important;
+  color: white !important;
 }
 
 .day-event.active {

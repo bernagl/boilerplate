@@ -63,7 +63,9 @@ class Gimnasio extends Component {
     if (clases.length > 0 && gimnasios.length > 0) {
       gimnasios.map((gym, i) => {
         clases.map(clase => {
-          clase.gimnasio === gym.id && gimnasios[i].events.push({ ...clase })
+          clase.gimnasio.id === gym.id &&
+            clase.status !== 2 &&
+            gimnasios[i].events.push({ ...clase })
         })
       })
 
@@ -99,9 +101,7 @@ class Gimnasio extends Component {
     }
     let d = [...dias]
     days.map((day, i) => {
-      const evts = events.filter(
-        (e, j) => moment(day).format('L') === moment(e.fecha).format('L')
-      )
+      const evts = events.filter((e, j) => moment(day).format('L') === e.fecha)
       d[i] = { events: evts, name: d[i].name }
     })
 
@@ -114,8 +114,8 @@ class Gimnasio extends Component {
     })
   }
 
-  eventHandler = event => {
-    const { clases, clasesCount : cc, creditos } = this.state
+  eventHandler = (event, cola) => {
+    const { clases, clasesCount: cc, creditos } = this.state
     let c = creditos
     let isSet = clases.has(event.id)
     let clase = clases.get(event.id)
@@ -128,20 +128,32 @@ class Gimnasio extends Component {
       isSet = false
     }
 
+    if (cola) {
+      if (
+        !window.confirm(
+          '¿Esta clase ya está llena, deseas que te agreguemos a la cola?'
+        )
+      )
+        return
+    }
+
     if (creditos >= 1) {
       isSet
         ? (clases.delete(event.id),
-          clasesCount -= 1,
+          (clasesCount -= 1),
           (c += 1),
           message.warning('Clase devuelta'))
-        : (clases.set(event.id, { status: 1, ...event }),
+        : (clases.set(event.id, { status: 1, cola, ...event }),
           (c -= 1),
-          clasesCount += 1,
-          message.success(`Clase ${event.nombre} agregada`))
+          (clasesCount += 1),
+          message.success(`Clase ${event.clase.nombre} agregada`))
       this.setState({ clases, creditos: c, clasesCount })
     } else {
       isSet
-        ? (clases.delete(event.id), (c += 1), (clasesCount -= 1), message.warning('Clase devuelta'))
+        ? (clases.delete(event.id),
+          (c += 1),
+          (clasesCount -= 1),
+          message.warning('Clase devuelta'))
         : message.error('No tienes suficientes créditos')
       this.setState({ clases, creditos: c, clasesCount })
     }
@@ -167,7 +179,6 @@ class Gimnasio extends Component {
       menosCreditos
     } = this.state
     // const { auth } = this.props
-    console.log(this.state)
     return (
       <AnimationWrapper>
         {/* <div className="row align-items-center"> */}

@@ -21,7 +21,7 @@ export const Header = ({ dates, dias }) => {
 }
 
 export const Body = ({ clases, dates, dias, eventHandler }) => {
-  // // console.log('dias', dias)
+  console.log('clases', clases)
   return (
     <div className="week week-events">
       {dates.map((e, i) => (
@@ -42,21 +42,17 @@ export const Body = ({ clases, dates, dias, eventHandler }) => {
                   let clase = false
                   if (clases.has(ev.id)) {
                     clase = clases.get(ev.id)
-                    active = clase.status === 0
-                      ? 1
-                      : clase.status === 2
-                        ? null
-                        : clase.status === 1
-                          ? 0
-                          : null
-                    // if (clase.status === 2) {
-                    //   return
-                    // } else if (clase.status === 0) {active = 1;}
-                    // else if (clase.reservada) {
-                    //   active = 0
-                    // }
+                    active =
+                      clase.status === 0
+                        ? 1
+                        : clase.status === 2
+                          ? null
+                          : clase.status === 1
+                            ? 0
+                            : null
                   }
-                  const future = new Date(ev.fecha) >= new Date()
+                  const cola = ev.cupo <= ev.inscritos ? true : false
+                  const future = moment(ev.fin) >= moment()
                   return (
                     <div
                       className={`col-12 day-event fade ${
@@ -65,25 +61,29 @@ export const Body = ({ clases, dates, dias, eventHandler }) => {
                           : active === 0
                             ? 'active'
                             : ''
-                      } ${!future && 'disabled'}`}
+                      } ${!future && 'disabled'}
+                      ${cola && 'full'}`}
                       onClick={() =>
                         future
-                          ? eventHandler(ev)
+                          ? eventHandler(ev, cola)
                           : message.info('Esta clase ya se venció')
                       }
                       key={j}
                     >
-                      <b>{ev.nombre}</b> <br />
-                      <span>{ev.profesor.nombre}</span>
+                      <b>{ev.clase.nombre}</b> <br />
+                      <span>{ev.instructor.nombre}</span>
+                      <br />
+                      <span>{ev.id}</span>
                       <br />
                       <span>
-                        {ev.hora_inicio} - {ev.hora_fin}
+                        {moment(ev.inicio).format('LT')} -{' '}
+                        {moment(ev.fin).format('LT')}
                       </span>
                       {ev.salon && (
                         <React.Fragment>
                           <br />
                           <span>Salón: {ev.salon}</span>
-                          <br/>
+                          <br />
                           {clase && <span>{clase.status}</span>}
                         </React.Fragment>
                       )}

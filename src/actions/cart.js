@@ -47,10 +47,19 @@ export const confirmCheckout = props => {
                         .then(r => {
                           db.ref('usuario')
                             .child(props.uid + '/clases')
-                            .push({ id_clase: clase.id, status: 0, ...cl })
+                            .push({ id_clase: clase.id, cola: false, status: 0, ...cl })
                         })
                     } else {
-                      return (response = 202)
+                      db.ref('clase/' + clase.id)
+                        .child('cola')
+                        .push({
+                          uid: props.uid
+                        })
+                        .then(r => {
+                          db.ref('usuario')
+                            .child(props.uid + '/clases')
+                            .push({ id_clase: clase.id, status: 0, ...cl })
+                        })
                     }
                   })
                 })

@@ -3,7 +3,7 @@ import { GET_CLASES } from '../types'
 
 export const getClases = () => dispatch => {
   const collection = []
-  db.ref('clase').on('value', function(snapshot) {
+  db.ref('horario').on('value', function(snapshot) {
     snapshot.forEach(element => {
       collection.push({ id: element.key, reservada: false, ...element.val() })
     })
@@ -12,7 +12,6 @@ export const getClases = () => dispatch => {
 }
 
 export const cancelarClase = ({ creditos, uid, id_clase }) => {
-  console.log(creditos, uid, id_clase)
   return db
     .ref('usuario')
     .child(uid)
