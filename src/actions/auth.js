@@ -68,11 +68,12 @@ export const getAuth = params => async dispatch => {
           .once('value', snap => {
             clases.clear()
             snap.forEach((clase, i) => {
-              clases.set(clase.val().id, {
-                ...clase.val(),
-                nombre: clase.val().clase.nombre,
+              const value = clase.val()
+              clases.set(value.id, {
+                ...value,
+                nombre: value.nombre,
                 id: clase.key,
-                profesor: clase.val().instructor.nombre
+                profesor: value.instructor.nombre
               })
             })
           })

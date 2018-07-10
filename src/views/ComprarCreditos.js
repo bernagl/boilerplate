@@ -8,21 +8,19 @@ import { logout } from '../actions/auth'
 import { comprarCreditos } from '../actions/creditos'
 import { updateProfile } from '../actions/perfil'
 import { Button, Divider, message, Radio, Select } from 'antd'
+import moment from 'moment'
 
 class ComprarCreditos extends Component {
   state = { nuevaTarjeta: false, paquete: null, metodo: null }
 
   pagar = async () => {
     const { uid } = this.props.auth
-    const {
-      metodo,
-      paquete: { creditos }
-    } = this.state
+    const { metodo, paquete } = this.state
     const r = await this.props.comprarCreditos({
       uid,
       metodo,
-      creditos,
-      fecha: Date.now()
+      paquete,
+      fecha: moment().format('L')
     })
     r &&
       (message.success('Créditos comprados'),
