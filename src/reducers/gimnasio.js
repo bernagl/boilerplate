@@ -1,5 +1,4 @@
 import { GET_GIMNASIOS } from '../types'
-import Gimnasio from '../views/Gimnasio'
 
 export default function(state = [], { type, payload }) {
   switch (type) {

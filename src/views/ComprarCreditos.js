@@ -4,14 +4,25 @@ import AnimationWrapper from '../components/AnimationWrapper'
 import Form from '../components/Form'
 import Input from '../components/Input'
 import Table from '../components/Table'
-import { logout } from '../actions/auth'
 import { comprarCreditos } from '../actions/creditos'
+import { getGimnasiosByStatus } from '../actions/gimnasio'
 import { updateProfile } from '../actions/perfil'
+import { getPaquetesByGym } from '../actions/paquete'
 import { Button, Divider, message, Radio, Select } from 'antd'
 import moment from 'moment'
 
+const { Option } = Select
+
 class ComprarCreditos extends Component {
-  state = { nuevaTarjeta: false, paquete: null, metodo: null }
+  state = { nuevaTarjeta: false, paquete: null, metodo: null, paquetes: [] }
+
+  componentDidMount() {
+    this.props.getGimnasiosByStatus(1)
+  }
+
+  handlePaquetes = async id => {
+    getPaquetesByGym(this)(id)
+  }
 
   pagar = async () => {
     const { uid } = this.props.auth
@@ -27,8 +38,8 @@ class ComprarCreditos extends Component {
       this.props.history.push('/perfil'))
   }
   render() {
-    const { metodo, nuevaTarjeta, paquete } = this.state
-    const { updateProfile } = this.props
+    const { metodo, nuevaTarjeta, paquete, paquetes } = this.state
+    const { updateProfile, gimnasios } = this.props
     const { creditos } = this.props.auth
     return (
       <AnimationWrapper>
@@ -37,38 +48,28 @@ class ComprarCreditos extends Component {
             <div className="container-shadow p-2 p-md-4">
               <h1>Comprar créditos</h1>
               <Divider />
+              <Select
+                className="fw mt-2 mb-4"
+                placeholder="Selecciona un gimnasio"
+                onChange={id => this.handlePaquetes(id)}
+              >
+                {gimnasios.map(({ nombre, id }) => (
+                  <Option value={id} key={id}>
+                    {nombre}
+                  </Option>
+                ))}
+              </Select>
               <Table
                 title="Mis clases"
-                data={[
-                  {
-                    id: 1,
-                    nombre: 'Paquete 1',
-                    creditos: 5,
-                    precio: '$150 MXN'
-                  },
-                  {
-                    id: 2,
-                    nombre: 'Paquete 2',
-                    creditos: 10,
-                    precio: '$250 MXN'
-                  },
-                  {
-                    id: 3,
-                    nombre: 'Paquete 3',
-                    creditos: 15,
-                    precio: '$300 MXN'
-                  },
-                  {
-                    id: 4,
-                    nombre: 'Paquete 4',
-                    creditos: 20,
-                    precio: '$400 MXN'
-                  }
-                ]}
+                data={paquetes}
                 cols={[
                   { label: 'Paquete', key: 'nombre' },
                   { label: 'Creditos', key: 'creditos' },
-                  { label: 'Precio', key: 'precio' },
+                  {
+                    label: 'Precio',
+                    key: 'precio',
+                    Render: ({ precio }) => <span>MXN{precio}</span>
+                  },
                   {
                     label: 'Seleccionar',
                     Render: item => (
@@ -122,10 +123,10 @@ class ComprarCreditos extends Component {
                     className="fw"
                     placeholder="Selecciona un método de pago"
                   >
-                    {/* <Select.Option value="0">Selecciona método de pago</Select.Option> */}
-                    <Select.Option value="1">Visa-6398</Select.Option>
-                    <Select.Option value="2">MasterCard-4568</Select.Option>
-                    <Select.Option value="3">Visa-1234</Select.Option>
+                    {/* <Option value="0">Selecciona método de pago</Option> */}
+                    <Option value="1">Visa-6398</Option>
+                    <Option value="2">MasterCard-4568</Option>
+                    <Option value="3">Visa-1234</Option>
                   </Select>
                 </div>
                 {paquete && (
@@ -211,9 +212,9 @@ class ComprarCreditos extends Component {
   }
 }
 
-const mapStateToProps = ({ auth }) => ({ auth })
+const mapStateToProps = ({ auth, gimnasios }) => ({ auth, gimnasios })
 
 export default connect(
   mapStateToProps,
-  { comprarCreditos, logout, updateProfile }
+  { comprarCreditos, getGimnasiosByStatus, updateProfile }
 )(ComprarCreditos)

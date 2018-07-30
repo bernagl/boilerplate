@@ -10,3 +10,18 @@ export const getGimnasios = () => async dispatch => {
     dispatch({ type: GET_GIMNASIOS, payload: collection })
   })
 }
+
+export const getGimnasiosByStatus = status => async dispatch => {
+  const ref = db.ref('sucursal')
+  return ref
+    .orderByChild('status')
+    .equalTo(status)
+    .once('value')
+    .then(snapshot => {
+      const collection = []
+      snapshot.forEach(snap => {
+        collection.push({ ...snap.val(), id: snap.key })
+      })
+      dispatch({ type: GET_GIMNASIOS, payload: collection })
+    })
+}

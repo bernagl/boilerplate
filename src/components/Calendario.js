@@ -82,7 +82,6 @@ export const Body = ({ clases, dates, dias, eventHandler }) => {
                           <br />
                           <span>Salón: {ev.salon.nombre}</span>
                           <br />
-                          {clase && <span>{clase.status}</span>}
                         </React.Fragment>
                       )}
                     </div>
