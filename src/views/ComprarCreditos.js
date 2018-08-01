@@ -7,6 +7,7 @@ import Table from '../components/Table'
 import { comprarCreditos } from '../actions/creditos'
 import { getGimnasiosByStatus } from '../actions/gimnasio'
 import { updateProfile } from '../actions/perfil'
+import { saveCard } from '../actions/tarjeta'
 import { getPaquetesByGym } from '../actions/paquete'
 import { Button, Divider, message, Radio, Select } from 'antd'
 import moment from 'moment'
@@ -14,14 +15,28 @@ import moment from 'moment'
 const { Option } = Select
 
 class ComprarCreditos extends Component {
-  state = { nuevaTarjeta: false, paquete: null, metodo: null, paquetes: [] }
+  state = {
+    nuevaTarjeta: false,
+    paquete: null,
+    metodo: null,
+    paquetes: [],
+    sucursal: null
+  }
 
   componentDidMount() {
     this.props.getGimnasiosByStatus(1)
   }
 
   handlePaquetes = async id => {
-    getPaquetesByGym(this)(id)
+    const { gimnasios } = this.props
+    const sucursal = gimnasios.find(gimnasio => gimnasio.id === id)
+    this.setState({ sucursal }, () => getPaquetesByGym(this)(id))
+  }
+
+  saveCard = async model => {
+    const { correo, nombre, uid } = this.props.auth
+    const r = saveCard({ ...model, uid, correo, nombre })
+    return r
   }
 
   pagar = async () => {
@@ -38,9 +53,10 @@ class ComprarCreditos extends Component {
       this.props.history.push('/perfil'))
   }
   render() {
-    const { metodo, nuevaTarjeta, paquete, paquetes } = this.state
+    const { metodo, nuevaTarjeta, paquete, paquetes, sucursal } = this.state
     const { updateProfile, gimnasios } = this.props
     const { creditos } = this.props.auth
+    console.log(this.props)
     return (
       <AnimationWrapper>
         <div className="row my-4">
@@ -97,18 +113,12 @@ class ComprarCreditos extends Component {
                   {paquete ? (
                     <React.Fragment>
                       <div>
+                        <span>Sucursal: {sucursal.nombre}</span>
+                        <br />
                         <span>Paquete: {paquete.nombre}</span> <br />
                         <span>Creditos: {paquete.creditos}</span> <br />
                         <span>Precio: {paquete.precio}</span>
                       </div>
-                      {/* <div className="mt-2">
-                        <span
-                          onClick={() => this.setState({ nuevaTarjeta: true })}
-                          className="a"
-                        >
-                          Agregar nueva tarjeta
-                        </span>
-                      </div> */}
                     </React.Fragment>
                   ) : (
                     <span>Selecciona un paquete para continuar</span>
@@ -128,6 +138,14 @@ class ComprarCreditos extends Component {
                     <Option value="2">MasterCard-4568</Option>
                     <Option value="3">Visa-1234</Option>
                   </Select>
+                  <div className="mt-2">
+                    <span
+                      onClick={() => this.setState({ nuevaTarjeta: true })}
+                      className="a"
+                    >
+                      Agregar nueva tarjeta
+                    </span>
+                  </div>
                 </div>
                 {paquete && (
                   <div className="col-12 my-2">
@@ -153,9 +171,9 @@ class ComprarCreditos extends Component {
                 )}
               </div>
               {nuevaTarjeta && (
-                <Form submitText="Pagar" action={updateProfile}>
+                <Form submitText="Pagar" action={model => this.saveCard(model)}>
                   <Input
-                    name="nombre"
+                    name="tarjeta"
                     label="Tarjeta"
                     validations={{
                       minLength: 16,

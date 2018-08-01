@@ -1799,6 +1799,10 @@ concat-stream@^1.6.0:
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
 
+conekta-card-tokenizer@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/conekta-card-tokenizer/-/conekta-card-tokenizer-1.0.1.tgz#ee7493d623716191148b1192e6665b2997e2999d"
+
 configstore@^3.0.0:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/configstore/-/configstore-3.1.2.tgz#c6f25defaeef26df12dd33414b001fe81a543f8f"

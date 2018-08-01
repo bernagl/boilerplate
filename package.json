@@ -2,10 +2,12 @@
   "name": "impulsefitness",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8888/",
   "dependencies": {
     "antd": "^3.5.4",
     "axios": "^0.18.0",
     "bootstrap-4-grid": "^2.4.0",
+    "conekta-card-tokenizer": "^1.0.1",
     "firebase": "^5.0.4",
     "formsy-react": "^1.1.4",
     "moment": "^2.22.2",

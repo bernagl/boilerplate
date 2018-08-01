@@ -1,0 +1,53 @@
+import { db } from './firebase-config'
+import axios from 'axios'
+
+export const saveCard = async model => {
+  var data = {
+    card: {
+      number: model.tarjeta,
+      name: model.nombre,
+      exp_year: model.ano,
+      exp_month: model.mes,
+      cvc: model.CVV
+    }
+  }
+
+  var successHandler = function({ id }) {
+    /* token keys: id, livemode, used, object */
+    console.log(id)
+    makeCharge({ ...model, token: id })
+  }
+
+  var errorHandler = function(err) {
+    /* err keys: object, type, message, message_to_purchaser, param, code */
+    console.log(err)
+  }
+
+  window.Conekta.Token.create(data, successHandler, errorHandler)
+}
+
+const makeCharge = async model => {
+  const userRef = db.ref('usuario').child(model.uid)
+
+  window.$.ajax({
+    type: 'POST',
+    url: 'ifs/_ctrl/ctrl.conekta.php',
+    data: { data: model, exec: 'save' },
+    dataType: 'json',
+    success: function(r) {
+      db.ref('tarjeta')
+        .push({ ...r.cc, uid: model.uid })
+        .then(tsnap => {
+          const id = tsnap.key
+          userRef.once('value').then(snapshot => {
+            const usuario = snapshot.val()
+            userRef.update({ tarjetas: { ...usuario.tarjetas, [id]: true } })
+          })
+        })
+        .catch(e => 404)
+    },
+    error: function(r) {
+      console.log(r)
+    }
+  })
+}
