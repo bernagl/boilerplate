@@ -151,8 +151,8 @@ class ComprarCreditos extends Component {
                       className="fw"
                       placeholder="Selecciona un método de pago"
                     >
-                      {tarjetas.map(({ brand, bin, last4 }, i) => (
-                        <Option value={i + 1}>
+                      {tarjetas.map(({ brand, bin, id, last4 }, i) => (
+                        <Option value={i + 1} key={id}>
                           {brand} - {bin}XXXXXX{last4}
                         </Option>
                       ))}

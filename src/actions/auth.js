@@ -79,38 +79,28 @@ export const getAuth = params => async dispatch => {
             })
           })
           .then(r => {
-            db.ref('usuario/' + user.uid)
-              .child('pagos')
-              .once('value', snapPagos => {
-                pagos = []
-                snapPagos.forEach(pago => {
-                  db.ref('pago/' + pago.val().id).once('value', snapPago => {
-                    pagos.push({ ...snapPago.val() })
-                  })
+            db.ref('usuario')
+              .child(user.uid)
+              .once('value')
+              .then(snap => {
+                const { tarjetas: cards } = snap.val()
+                Object.keys(cards).map(card =>
+                  db
+                    .ref('tarjeta')
+                    .child(card)
+                    .once('value')
+                    .then(r => tarjetas.push(r.val()))
+                )
+                dispatch({
+                  type: LOGIN,
+                  payload: {
+                    uid: user.uid,
+                    ...snapshot.val(),
+                    clases,
+                    tarjetas,
+                    pagos
+                  }
                 })
-                db.ref('usuario')
-                  .child(user.uid)
-                  .once('value')
-                  .then(snap => {
-                    const { tarjetas: cards } = snap.val()
-                    Object.keys(cards).map(card =>
-                      db
-                        .ref('tarjeta')
-                        .child(card)
-                        .once('value')
-                        .then(r => tarjetas.push(r.val()))
-                    )
-                    dispatch({
-                      type: LOGIN,
-                      payload: {
-                        uid: user.uid,
-                        ...snapshot.val(),
-                        clases,
-                        tarjetas,
-                        pagos
-                      }
-                    })
-                  })
               })
           })
 

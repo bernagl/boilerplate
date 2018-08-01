@@ -37,13 +37,13 @@ export const payWithCard = model => {
     success: function(r) {
       userRef.once('value').then(usnap => {
         const usuario = usnap.val()
-        db.ref('compra')
+        db.ref('pago')
           .push({ ...r.info })
           .then(r => {
             const cid = r.key
             userRef.update({
               creditos: usuario.creditos + model.creditos,
-              compras: { ...usuario.compras, [cid]: true }
+              pagos: { ...usuario.pagos, [cid]: true }
             })
           })
       })
