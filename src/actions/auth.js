@@ -1,5 +1,6 @@
 import { auth, db } from './firebase-config'
 import { LOGIN, LOGOUT, REGISTER } from '../types'
+import { Object } from 'core-js'
 
 export const register = ({ correo, contrasena, nombre }) => async dispatch => {
   try {
@@ -41,7 +42,6 @@ export const login = ({ correo, contrasena }) => async dispatch => {
                   profesor: clase.val().profesor.nombre
                 })
               )
-              console.log('clases', clases)
               dispatch({
                 type: LOGIN,
                 payload: { uid: user.uid, ...snapshot.val(), clases }
@@ -59,6 +59,7 @@ export const login = ({ correo, contrasena }) => async dispatch => {
 export const getAuth = params => async dispatch => {
   let clases = new Map()
   let pagos = []
+  let tarjetas = []
   auth.onAuthStateChanged(function(user) {
     console.log(user)
     if (user) {
@@ -87,10 +88,29 @@ export const getAuth = params => async dispatch => {
                     pagos.push({ ...snapPago.val() })
                   })
                 })
-                dispatch({
-                  type: LOGIN,
-                  payload: { uid: user.uid, ...snapshot.val(), clases, pagos }
-                })
+                db.ref('usuario')
+                  .child(user.uid)
+                  .once('value')
+                  .then(snap => {
+                    const { tarjetas: cards } = snap.val()
+                    Object.keys(cards).map(card =>
+                      db
+                        .ref('tarjeta')
+                        .child(card)
+                        .once('value')
+                        .then(r => tarjetas.push(r.val()))
+                    )
+                    dispatch({
+                      type: LOGIN,
+                      payload: {
+                        uid: user.uid,
+                        ...snapshot.val(),
+                        clases,
+                        tarjetas,
+                        pagos
+                      }
+                    })
+                  })
               })
           })
 
