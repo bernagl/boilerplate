@@ -59,7 +59,7 @@ export const login = ({ correo, contrasena }) => async dispatch => {
 export const getAuth = params => async dispatch => {
   let clases = new Map()
   let pagos = []
-  let tarjetas = []
+  // let tarjetas = []
   auth.onAuthStateChanged(function(user) {
     console.log(user)
     if (user) {
@@ -81,26 +81,28 @@ export const getAuth = params => async dispatch => {
           .then(r => {
             db.ref('usuario')
               .child(user.uid)
-              .once('value')
-              .then(snap => {
+              .on('value', snap => {
                 const { tarjetas: cards } = snap.val()
                 Object.keys(cards).map(card =>
                   db
                     .ref('tarjeta')
                     .child(card)
-                    .once('value')
-                    .then(r => tarjetas.push(r.val()))
+                    .on('value', r => {
+                      const tarjetas = []
+                      const tarjeta = r.val()
+                      tarjeta && tarjetas.push({ ...tarjeta, tid: r.key })
+                      dispatch({
+                        type: LOGIN,
+                        payload: {
+                          uid: user.uid,
+                          ...snapshot.val(),
+                          clases,
+                          tarjetas,
+                          pagos
+                        }
+                      })
+                    })
                 )
-                dispatch({
-                  type: LOGIN,
-                  payload: {
-                    uid: user.uid,
-                    ...snapshot.val(),
-                    clases,
-                    tarjetas,
-                    pagos
-                  }
-                })
               })
           })
 

@@ -26,6 +26,15 @@ export const saveCard = async model => {
   window.Conekta.Token.create(data, successHandler, errorHandler)
 }
 
+export const deleteCard = id => {
+  console.log(id)
+  return db.ref('tarjeta')
+    .child(id)
+    .remove()
+    .then(r => 202)
+    .catch(e => 404)
+}
+
 export const payWithCard = model => {
   console.log(model)
   const userRef = db.ref('usuario').child(model.uid)

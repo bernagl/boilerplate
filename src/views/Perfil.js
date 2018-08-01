@@ -8,6 +8,7 @@ import Table from '../components/Table'
 import { logout } from '../actions/auth'
 import { updateProfile } from '../actions/perfil'
 import { cancelarClase } from '../actions/clase'
+import { deleteCard } from '../actions/tarjeta'
 import { Icon, message, Popconfirm, Popover, Tabs, Tag } from 'antd'
 import moment from 'moment'
 
@@ -52,15 +53,7 @@ class Perfil extends Component {
           <Popconfirm
             placement="left"
             title={`Deseas eliminar el método de pago ${item.metodo}`}
-            onConfirm={() => {
-              this.setState(
-                ({ metodos }) => {
-                  metodos.splice(i, 1)
-                  return { metodos }
-                },
-                () => message.success('Método de pago eliminado')
-              )
-            }}
+            onConfirm={() => this.deleteCard(item)}
             okText="Si"
             cancelText="No"
           >
@@ -69,6 +62,13 @@ class Perfil extends Component {
         )
       }
     ]
+  }
+
+  deleteCard = async ({ tid }) => {
+    const r = await deleteCard(tid)
+    r === 202
+      ? message.success('La tarjeta se ha eliminado')
+      : message.error('Ocurrió un error, por favor vuelve a intentarlo')
   }
 
   cancelarClase = async (...props) => {
