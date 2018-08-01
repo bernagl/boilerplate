@@ -7,7 +7,7 @@ import Table from '../components/Table'
 import { comprarCreditos } from '../actions/creditos'
 import { getGimnasiosByStatus } from '../actions/gimnasio'
 import { updateProfile } from '../actions/perfil'
-import { saveCard } from '../actions/tarjeta'
+import { payWithCard, saveCard } from '../actions/tarjeta'
 import { getPaquetesByGym } from '../actions/paquete'
 import { Button, Divider, message, Radio, Select } from 'antd'
 import moment from 'moment'
@@ -39,6 +39,23 @@ class ComprarCreditos extends Component {
     return r
   }
 
+  payWithCard = async () => {
+    const { paquete, metodo, sucursal } = this.state
+    const { tarjetas, uid } = this.props.auth
+    const tarjeta = tarjetas[metodo - 1]
+    payWithCard({
+      uid,
+      precio: +paquete.precio,
+      creditos: +paquete.creditos,
+      name: paquete.nombre,
+      parent_id: tarjeta.parent_id,
+      conekta_id: tarjeta.id,
+      fecha: moment().format('L'),
+      tarjeta: tarjeta.brand,
+      sucursal: sucursal.nombre
+    })
+  }
+
   pagar = async () => {
     const { uid } = this.props.auth
     const { metodo, paquete } = this.state
@@ -55,8 +72,9 @@ class ComprarCreditos extends Component {
   render() {
     const { metodo, nuevaTarjeta, paquete, paquetes, sucursal } = this.state
     const { updateProfile, gimnasios } = this.props
-    const { creditos } = this.props.auth
+    const { creditos, tarjetas } = this.props.auth
     console.log(this.props)
+    console.log(this.state)
     return (
       <AnimationWrapper>
         <div className="row my-4">
@@ -126,18 +144,20 @@ class ComprarCreditos extends Component {
                 </div>
                 <div className="col-12 my-2">
                   <h4>Método de pago: </h4>
-                  <Select
-                    // defaultValue="0"
-                    onChange={metodo => this.setState({ metodo })}
-                    disabled={paquete ? false : true}
-                    className="fw"
-                    placeholder="Selecciona un método de pago"
-                  >
-                    {/* <Option value="0">Selecciona método de pago</Option> */}
-                    <Option value="1">Visa-6398</Option>
-                    <Option value="2">MasterCard-4568</Option>
-                    <Option value="3">Visa-1234</Option>
-                  </Select>
+                  {tarjetas.length > 0 && (
+                    <Select
+                      onChange={metodo => this.setState({ metodo })}
+                      disabled={paquete ? false : true}
+                      className="fw"
+                      placeholder="Selecciona un método de pago"
+                    >
+                      {tarjetas.map(({ brand, bin, last4 }, i) => (
+                        <Option value={i + 1}>
+                          {brand} - {bin}XXXXXX{last4}
+                        </Option>
+                      ))}
+                    </Select>
+                  )}
                   <div className="mt-2">
                     <span
                       onClick={() => this.setState({ nuevaTarjeta: true })}
@@ -163,7 +183,7 @@ class ComprarCreditos extends Component {
                       type="primary"
                       className="fw"
                       disabled={metodo ? false : true}
-                      onClick={this.pagar}
+                      onClick={this.payWithCard}
                     >
                       Pagar
                     </Button>

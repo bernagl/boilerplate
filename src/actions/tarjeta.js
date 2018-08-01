@@ -26,6 +26,34 @@ export const saveCard = async model => {
   window.Conekta.Token.create(data, successHandler, errorHandler)
 }
 
+export const payWithCard = model => {
+  console.log(model)
+  const userRef = db.ref('usuario').child(model.uid)
+  window.$.ajax({
+    type: 'POST',
+    url: 'ifs/_ctrl/ctrl.conekta.php',
+    data: { data: model, exec: 'compra_creditos' },
+    dataType: 'json',
+    success: function(r) {
+      userRef.once('value').then(usnap => {
+        const usuario = usnap.val()
+        db.ref('compra')
+          .push({ ...r.info })
+          .then(r => {
+            const cid = r.key
+            userRef.update({
+              creditos: usuario.creditos + model.creditos,
+              compras: { ...usuario.compras, [cid]: true }
+            })
+          })
+      })
+    },
+    error: function(r) {
+      console.log(r)
+    }
+  })
+}
+
 const makeCharge = async model => {
   const userRef = db.ref('usuario').child(model.uid)
 
