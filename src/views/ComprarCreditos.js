@@ -35,7 +35,13 @@ class ComprarCreditos extends Component {
 
   saveCard = async model => {
     const { correo, nombre, uid } = this.props.auth
-    const r = saveCard({ ...model, uid, correo, nombre })
+    const r = saveCard({
+      ...model,
+      uid,
+      correo,
+      nombre,
+      fecha: moment().format('L')
+    })
     return r
   }
 

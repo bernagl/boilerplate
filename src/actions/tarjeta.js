@@ -64,7 +64,7 @@ const makeCharge = async model => {
     dataType: 'json',
     success: function(r) {
       db.ref('tarjeta')
-        .push({ ...r.cc, uid: model.uid })
+        .push({ ...r.cc, uid: model.uid, fecha: model.fecha })
         .then(tsnap => {
           const id = tsnap.key
           userRef.once('value').then(snapshot => {

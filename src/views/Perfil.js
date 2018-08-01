@@ -28,7 +28,14 @@ class Perfil extends Component {
     ],
     metodosCol: [
       { label: 'Fecha', key: 'fecha' },
-      { label: 'Método', key: 'metodo' },
+      {
+        label: 'Tarjeta',
+        Render: ({ bin, last4, brand }) => (
+          <span>
+            {brand} - {bin}XXXXXX{last4}
+          </span>
+        )
+      },
       {
         label: 'Estatus',
         key: 'status',
@@ -208,7 +215,7 @@ class Perfil extends Component {
                 <TabPane tab="Métodos de pagos" key="3">
                   <Table
                     title="Métodos de pago"
-                    data={metodos}
+                    data={auth.tarjetas}
                     cols={metodosCol}
                   />
                 </TabPane>
