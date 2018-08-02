@@ -8,6 +8,7 @@ import Table from '../components/Table'
 import { logout } from '../actions/auth'
 import { updateProfile } from '../actions/perfil'
 import { cancelarClase } from '../actions/clase'
+import { getGimnasiosByStatus } from '../actions/gimnasio'
 import { deleteCard } from '../actions/tarjeta'
 import { Icon, message, Popconfirm, Popover, Tabs, Tag } from 'antd'
 import moment from 'moment'
@@ -62,6 +63,10 @@ class Perfil extends Component {
         )
       }
     ]
+  }
+
+  componentDidMount() {
+    this.props.getGimnasiosByStatus(1)
   }
 
   deleteCard = async ({ tid }) => {
@@ -149,9 +154,11 @@ class Perfil extends Component {
       }
     }
   ]
+
   render() {
-    const { auth, updateProfile } = this.props
+    const { auth, gimnasios, updateProfile } = this.props
     const { metodos, metodosCol } = this.state
+    const { creditos } = auth
     const clases = []
     auth.clases.forEach(clase =>
       clases.push({
@@ -187,7 +194,12 @@ class Perfil extends Component {
               <h5 className="mb-0">
                 Total de clases compradas: {clases.length}
               </h5>
-              <h5>Créditos disponibles: {auth.creditos}</h5>
+              <h5>Créditos disponibles:</h5>
+              {gimnasios.map(gym => (
+                <div>
+                  {gym.nombre} : {creditos[gym.id] ? creditos[gym.id] : 0}
+                </div>
+              ))}
             </div>
           </div>
           <div className="col-12 col-md-8 my-4 mt-md-0">
@@ -261,9 +273,9 @@ class Perfil extends Component {
   }
 }
 
-const mapStateToProps = ({ auth }) => ({ auth })
+const mapStateToProps = ({ auth, gimnasios }) => ({ auth, gimnasios })
 
 export default connect(
   mapStateToProps,
-  { logout, updateProfile }
+  { getGimnasiosByStatus, logout, updateProfile }
 )(Perfil)
