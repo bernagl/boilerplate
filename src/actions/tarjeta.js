@@ -28,7 +28,8 @@ export const saveCard = async model => {
 
 export const deleteCard = id => {
   console.log(id)
-  return db.ref('tarjeta')
+  return db
+    .ref('tarjeta')
     .child(id)
     .remove()
     .then(r => 202)
@@ -50,8 +51,12 @@ export const payWithCard = model => {
           .push({ ...r.info })
           .then(r => {
             const cid = r.key
+            let sucursalCreditos = usuario['creditos'][model.sid]
+            if (!sucursalCreditos) sucursalCreditos = model.creditos
+            else sucursalCreditos += model.creditos
             userRef.update({
               creditos: usuario.creditos + model.creditos,
+              creditos: { [model.sid]: sucursalCreditos },
               pagos: { ...usuario.pagos, [cid]: true }
             })
           })
@@ -71,14 +76,23 @@ const makeCharge = async model => {
     url: 'ifs/_ctrl/ctrl.conekta.php',
     data: { data: model, exec: 'save' },
     dataType: 'json',
-    success: function(r) {
+    success: function({ cc }) {
       db.ref('tarjeta')
-        .push({ ...r.cc, uid: model.uid, fecha: model.fecha, status: 1 })
+        .push({ ...cc, uid: model.uid, fecha: model.fecha, status: 1 })
         .then(tsnap => {
           const id = tsnap.key
           userRef.once('value').then(snapshot => {
             const usuario = snapshot.val()
-            userRef.update({ tarjetas: { ...usuario.tarjetas, [id]: true } })
+            userRef
+              .update({ tarjetas: { ...usuario.tarjetas, [id]: true } })
+              .then(r => {
+                payWithCard({
+                  ...model,
+                  parent_id: cc.parent_id,
+                  conekta_id: cc.id,
+                  tarjeta: cc.brand
+                })
+              })
           })
         })
         .catch(e => 404)

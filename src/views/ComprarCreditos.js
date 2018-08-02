@@ -35,12 +35,18 @@ class ComprarCreditos extends Component {
 
   saveCard = async model => {
     const { correo, nombre, uid } = this.props.auth
+    const { paquete, metodo, sucursal } = this.state
     const r = saveCard({
       ...model,
       uid,
+      precio: +paquete.precio,
+      creditos: +paquete.creditos,
+      name: paquete.nombre,
       correo,
-      nombre,
-      fecha: moment().format('L')
+      nombre, 
+      fecha: moment().format('L'),
+      sucursal: sucursal.nombre,
+      sid: sucursal.id
     })
     return r
   }
@@ -58,7 +64,8 @@ class ComprarCreditos extends Component {
       conekta_id: tarjeta.id,
       fecha: moment().format('L'),
       tarjeta: tarjeta.brand,
-      sucursal: sucursal.nombre
+      sucursal: sucursal.nombre,
+      sid: sucursal.id
     })
   }
 
@@ -176,10 +183,10 @@ class ComprarCreditos extends Component {
                 {paquete && (
                   <div className="col-12 my-2">
                     <div>
-                      <span>Saldo anterior: {creditos}</span>
+                      <span>Saldo anterior: {creditos[sucursal.id]}</span>
                     </div>
                     <div>
-                      <span>Saldo nuevo: {creditos + +paquete.creditos}</span>
+                      <span>Saldo nuevo: {creditos[sucursal.id] + +paquete.creditos}</span>
                     </div>
                   </div>
                 )}
