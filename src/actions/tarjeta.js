@@ -90,7 +90,8 @@ const makeCharge = async model => {
                   ...model,
                   parent_id: cc.parent_id,
                   conekta_id: cc.id,
-                  tarjeta: cc.brand
+                  tarjeta: cc.brand,
+                  last4: cc.last4,
                 })
               })
           })

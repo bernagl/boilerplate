@@ -44,7 +44,7 @@ class ComprarCreditos extends Component {
       name: paquete.nombre,
       correo,
       nombre, 
-      fecha: moment().format('L'),
+      fecha: moment().format(),
       sucursal: sucursal.nombre,
       sid: sucursal.id
     })
@@ -62,8 +62,9 @@ class ComprarCreditos extends Component {
       name: paquete.nombre,
       parent_id: tarjeta.parent_id,
       conekta_id: tarjeta.id,
-      fecha: moment().format('L'),
+      fecha: moment().format(),
       tarjeta: tarjeta.brand,
+      last4: tarjeta.last4,
       sucursal: sucursal.nombre,
       sid: sucursal.id
     })

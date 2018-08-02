@@ -6,7 +6,7 @@ import Form from '../components/Form'
 import Input from '../components/Input'
 import Table from '../components/Table'
 import { logout } from '../actions/auth'
-import { updateProfile } from '../actions/perfil'
+import { getPagos, updateProfile } from '../actions/perfil'
 import { cancelarClase } from '../actions/clase'
 import { getGimnasiosByStatus } from '../actions/gimnasio'
 import { deleteCard } from '../actions/tarjeta'
@@ -26,19 +26,32 @@ const { TabPane } = Tabs
 
 // const pagos = [{ fecha: '28/Octubre/2018', creditos: 4, metodo: 'visa-1234' }]
 const pagosCol = [
-  { label: 'Fecha', key: 'fecha' },
-  { label: 'Créditos', key: 'creditos' },
-  { label: 'Método', key: 'uid' }
+  {
+    label: 'Fecha',
+    Render: ({ fecha }) => <span>{moment(fecha).format('LL')}</span>
+  },
+  { label: 'Paquete', key: 'name' },
+  { label: 'Precio', Render: ({ precio }) => <span>MXN${precio}</span> },
+  { label: 'Créditos', Render: ({ creditos }) => <span>{creditos}</span> },
+  { label: 'Sucursal', Render: ({ sucursal }) => <span>{sucursal}</span> },
+  {
+    label: 'Método',
+    Render: ({ tarjeta, last4 }) => (
+      <span>
+        {tarjeta}-{last4}
+      </span>
+    )
+  }
 ]
 
 class Perfil extends Component {
   state = {
-    metodos: [
-      { fecha: '28/Octubre/2018', metodo: 'visa-1234', status: 1 },
-      { fecha: '28/Octubre/2018', metodo: 'visa-5678', status: 0 }
-    ],
+    metodos: [],
     metodosCol: [
-      { label: 'Fecha', key: 'fecha' },
+      {
+        label: 'Fecha',
+        Render: ({ fecha }) => <span>{moment(fecha).format('LL')}</span>
+      },
       {
         label: 'Tarjeta',
         Render: ({ bin, last4, brand }) => (
@@ -71,11 +84,13 @@ class Perfil extends Component {
           </Popconfirm>
         )
       }
-    ]
+    ],
+    pagos: []
   }
 
   componentDidMount() {
     this.props.getGimnasiosByStatus(1)
+    getPagos(this)(this.props.auth.uid)
   }
 
   deleteCard = async ({ tid }) => {
@@ -166,7 +181,7 @@ class Perfil extends Component {
 
   render() {
     const { auth, gimnasios, updateProfile } = this.props
-    const { metodos, metodosCol } = this.state
+    const { metodos, metodosCol, pagos } = this.state
     const { creditos } = auth
     const clases = []
     auth.clases.forEach(clase =>
@@ -184,9 +199,6 @@ class Perfil extends Component {
                 : clase.status
       })
     )
-
-    console.log(this.props)
-
     return (
       <AnimationWrapper>
         <div className="row">
@@ -202,7 +214,7 @@ class Perfil extends Component {
               <br />
               <div>
                 <span>
-                  Suscripción: {' '}
+                  Suscripción:{' '}
                   {auth.status === 1 ? (
                     <Badge status="success" text="Activa" />
                   ) : auth.status === 0 ? (
@@ -242,7 +254,7 @@ class Perfil extends Component {
                 <TabPane tab="Historial de pagos" key="2">
                   <Table
                     title="Historial de pagos"
-                    data={auth.pagos}
+                    data={pagos}
                     cols={pagosCol}
                   />
                 </TabPane>
