@@ -56,7 +56,7 @@ export const payWithCard = model => {
             else sucursalCreditos += model.creditos
             userRef.update({
               creditos: usuario.creditos + model.creditos,
-              creditos: { [model.sid]: sucursalCreditos },
+              creditos: { ...usuario.creditos, [model.sid]: sucursalCreditos },
               pagos: { ...usuario.pagos, [cid]: true }
             })
           })
@@ -91,7 +91,7 @@ const makeCharge = async model => {
                   parent_id: cc.parent_id,
                   conekta_id: cc.id,
                   tarjeta: cc.brand,
-                  last4: cc.last4,
+                  last4: cc.last4
                 })
               })
           })

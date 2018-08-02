@@ -43,7 +43,7 @@ class ComprarCreditos extends Component {
       creditos: +paquete.creditos,
       name: paquete.nombre,
       correo,
-      nombre, 
+      nombre,
       fecha: moment().format(),
       sucursal: sucursal.nombre,
       sid: sucursal.id
@@ -86,9 +86,9 @@ class ComprarCreditos extends Component {
   render() {
     const { metodo, nuevaTarjeta, paquete, paquetes, sucursal } = this.state
     const { updateProfile, gimnasios } = this.props
-    const { creditos, tarjetas } = this.props.auth
-    console.log(this.props)
-    console.log(this.state)
+    const { creditos: c, tarjetas } = this.props.auth
+    const creditos = sucursal ? (c[sucursal.id] ? c[sucursal.id] : 0) : 0
+    const defaultGimnasio = gimnasios.length > 0 ? gimnasios[0].id : null
     return (
       <AnimationWrapper>
         <div className="row my-4">
@@ -100,6 +100,7 @@ class ComprarCreditos extends Component {
                 className="fw mt-2 mb-4"
                 placeholder="Selecciona un gimnasio"
                 onChange={id => this.handlePaquetes(id)}
+                defaultValue={defaultGimnasio}
               >
                 {gimnasios.map(({ nombre, id }) => (
                   <Option value={id} key={id}>
@@ -184,10 +185,10 @@ class ComprarCreditos extends Component {
                 {paquete && (
                   <div className="col-12 my-2">
                     <div>
-                      <span>Saldo anterior: {creditos[sucursal.id]}</span>
+                      <span>Saldo anterior: {creditos}</span>
                     </div>
                     <div>
-                      <span>Saldo nuevo: {creditos[sucursal.id] + +paquete.creditos}</span>
+                      <span>Saldo nuevo: {creditos + +paquete.creditos}</span>
                     </div>
                   </div>
                 )}
