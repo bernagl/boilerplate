@@ -20,7 +20,7 @@ export const getGimnasiosByStatus = status => async dispatch => {
     .then(snapshot => {
       const collection = []
       snapshot.forEach(snap => {
-        collection.push({ ...snap.val(), id: snap.key })
+        collection.push({ ...snap.val(), id: snap.key, events: [] })
       })
       dispatch({ type: GET_GIMNASIOS, payload: collection })
     })

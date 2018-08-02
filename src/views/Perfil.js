@@ -30,7 +30,7 @@ const pagosCol = [
     label: 'Fecha',
     Render: ({ fecha }) => <span>{moment(fecha).format('LL')}</span>
   },
-  { label: 'Paquete', key: 'name' },
+  { label: 'Tipo', key: 'name' },
   { label: 'Precio', Render: ({ precio }) => <span>MXN${precio}</span> },
   { label: 'Créditos', Render: ({ creditos }) => <span>{creditos}</span> },
   { label: 'Sucursal', Render: ({ sucursal }) => <span>{sucursal}</span> },

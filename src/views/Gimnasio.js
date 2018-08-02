@@ -8,7 +8,7 @@ import moment from 'moment-timezone'
 import 'moment/locale/es'
 import { Body, Header } from '../components/Calendario'
 import { getClases } from '../actions/clase'
-import { getGimnasios } from '../actions/gimnasio'
+import { getGimnasiosByStatus } from '../actions/gimnasio'
 
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
@@ -43,7 +43,7 @@ class Gimnasio extends Component {
   }
 
   componentDidMount() {
-    this.props.getGimnasios()
+    this.props.getGimnasiosByStatus(1)
     this.props.getClases()
     const { creditos } = this.props.cart
     const { clases } = this.props.auth
@@ -54,11 +54,8 @@ class Gimnasio extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    const {
-      auth: { creditos },
-      clases,
-      gimnasios
-    } = newProps
+    const { clases, gimnasios } = newProps
+    const { gymSelected } = this.state
     const gyms = []
     if (clases.length > 0 && gimnasios.length > 0) {
       gimnasios.map((gym, i) => {
@@ -69,16 +66,20 @@ class Gimnasio extends Component {
         })
       })
 
-      this.setState({ creditos, gimnasios }, () =>
-        this.handleGym(this.state.gymSelected)
-      )
+      this.setState({ gimnasios }, () => this.handleGym(gymSelected))
     }
   }
 
   handleGym = i => {
     const { gimnasios } = this.state
-    this.setState({ events: gimnasios[i].events, gymSelected: i }, () =>
-      this.daysHandler()
+    const {
+      auth: { creditos: c }
+    } = this.props
+    const creditos =
+      gimnasios.length > 0 ? (c[gimnasios[i].id] ? c[gimnasios[i].id] : 0) : 0
+    this.setState(
+      { creditos, events: gimnasios[i].events, gymSelected: i },
+      () => this.daysHandler()
     )
   }
 
@@ -160,10 +161,10 @@ class Gimnasio extends Component {
   }
 
   setCheckout = () => {
-    const { clases, creditos } = this.state
+    const { clases, creditos, gimnasios } = this.state
     clases.size === 0
       ? message.error('Para proceder al pago debes agregar al menos una clase')
-      : (this.props.setCheckout({ clases, creditos }),
+      : (this.props.setCheckout({ clases, creditos, gimnasios }),
         this.props.history.push('/checkout'))
   }
 
@@ -178,7 +179,7 @@ class Gimnasio extends Component {
       gimnasios,
       menosCreditos
     } = this.state
-    // const { auth } = this.props
+
     return (
       <AnimationWrapper>
         {/* <div className="row align-items-center"> */}
@@ -200,7 +201,8 @@ class Gimnasio extends Component {
                   </Button>
                 </div>
                 <div className="col-12">
-                  <span>Créditos disponibles: {creditos}</span> <br />
+                  <span>Créditos disponibles: {creditos}</span>
+                  <br />
                   {clasesCount > 0 && <span>Tienes {clasesCount} clases</span>}
                   {creditos === 0 && (
                     <span className="no-credits-label fade">
@@ -266,5 +268,5 @@ const mapStateToProps = ({ auth, cart, clases, gimnasios }) => ({
 
 export default connect(
   mapStateToProps,
-  { getClases, getGimnasios, setCheckout }
+  { getClases, getGimnasiosByStatus, setCheckout }
 )(Gimnasio)

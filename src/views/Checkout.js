@@ -18,7 +18,7 @@ class Checkout extends Component {
       creditos,
       clases: c,
       uid,
-      fecha: moment().format('L')
+      fecha: moment().format()
     })
 
     setTimeout(() => {
@@ -28,7 +28,8 @@ class Checkout extends Component {
   }
 
   render() {
-    const { clases } = this.props.cart
+    const { clases, gimnasios } = this.props.cart
+    console.log(gimnasios)
     const { label, loading } = this.state
     const items = []
     let creditos = 0
