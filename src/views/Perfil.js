@@ -10,7 +10,16 @@ import { updateProfile } from '../actions/perfil'
 import { cancelarClase } from '../actions/clase'
 import { getGimnasiosByStatus } from '../actions/gimnasio'
 import { deleteCard } from '../actions/tarjeta'
-import { Icon, message, Popconfirm, Popover, Tabs, Tag } from 'antd'
+import {
+  Badge,
+  Divider,
+  Icon,
+  message,
+  Popconfirm,
+  Popover,
+  Tabs,
+  Tag
+} from 'antd'
 import moment from 'moment'
 
 const { TabPane } = Tabs
@@ -189,12 +198,25 @@ class Perfil extends Component {
                 className="profile-pic"
               />
               <h3 className="mt-2">{auth.nombre}</h3>
-              <span>Miembro desde: 28/Octubre/2017</span>
+              <span>Miembro desde: {moment(auth.created_at).format('LL')}</span>
               <br />
-              <h5 className="mb-0">
+              <div>
+                <span>
+                  Suscripción: {' '}
+                  {auth.status === 1 ? (
+                    <Badge status="success" text="Activa" />
+                  ) : auth.status === 0 ? (
+                    <Badge status="default" text="Inactiva" />
+                  ) : (
+                    <Badge status="error" text="Inactiva" />
+                  )}
+                </span>
+              </div>
+              <div className="mb-0">
                 Total de clases compradas: {clases.length}
-              </h5>
-              <h5>Créditos disponibles:</h5>
+              </div>
+              <Divider />
+              <div>Créditos</div>
               {gimnasios.map(gym => (
                 <div>
                   {gym.nombre} : {creditos[gym.id] ? creditos[gym.id] : 0}

@@ -83,12 +83,12 @@ export const getAuth = params => async dispatch => {
               .child(user.uid)
               .on('value', snap => {
                 const { tarjetas: cards } = snap.val()
+                const tarjetas = []
                 Object.keys(cards).map(card =>
                   db
                     .ref('tarjeta')
                     .child(card)
                     .on('value', r => {
-                      const tarjetas = []
                       const tarjeta = r.val()
                       tarjeta && tarjetas.push({ ...tarjeta, tid: r.key })
                       dispatch({
