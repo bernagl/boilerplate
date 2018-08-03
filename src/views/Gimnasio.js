@@ -47,7 +47,8 @@ class Gimnasio extends Component {
     this.props.getGimnasiosByStatus(1)
     this.props.getClases()
     const { creditos } = this.props.cart
-    const { clases } = this.props.auth
+    const { clases, status } = this.props.auth
+    if (status === 0) this.props.history.push('/comprar')
     this.setState({
       creditos,
       clases: new Map(clases)
@@ -63,7 +64,7 @@ class Gimnasio extends Component {
     const { gymSelected } = this.state
 
     let sucursales = {}
-    if(typeof creditos === 'undefined') creditos = {}
+    if (typeof creditos === 'undefined') creditos = {}
     gimnasios.map(
       gym =>
         (sucursales = {
