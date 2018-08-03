@@ -53,8 +53,9 @@ export const payWithCard = model => {
             const cid = r.key
             if (model.type === 'paquete') {
               let sucursalCreditos = 0
-              if (typeof usuario.creditos !== 'undefined')
-                usuario['creditos'][model.sid]
+              if (typeof usuario.creditos !== 'undefined') {
+                sucursalCreditos = usuario['creditos'][model.sid]
+              }
               if (!sucursalCreditos) sucursalCreditos = model.creditos
               else sucursalCreditos += model.creditos
               userRef.update({

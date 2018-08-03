@@ -91,7 +91,8 @@ class ComprarCreditos extends Component {
       uid,
       metodo,
       paquete,
-      fecha: moment().format('L')
+      fecha: moment().format('L'),
+      type: 'paquete'
     })
     r &&
       (message.success('Créditos comprados'),
