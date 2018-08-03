@@ -10,8 +10,10 @@ import { updateProfile } from '../actions/perfil'
 import { payWithCard, saveCard } from '../actions/tarjeta'
 import { getPaquetesByGym } from '../actions/paquete'
 import { Button, Divider, message, Radio, Select } from 'antd'
+import ModalSuscripcion from '../components/ModalSuscripcion'
 import moment from 'moment'
 import { db } from '../actions/firebase-config'
+import FormTarjeta from '../components/FormTarjeta'
 
 const { Option } = Select
 
@@ -21,10 +23,19 @@ class ComprarCreditos extends Component {
     paquete: null,
     metodo: null,
     paquetes: [],
-    sucursal: null
+    sucursal: null,
+    modal: false
   }
 
   componentDidMount() {
+    const { auth } = this.props
+    if (auth.status === 0) {
+      // notification.open({
+      //   message: 'Tu suscripción ha vencido',
+      //   description: 'Para poder utilizar tus créditos o comprar más renuevala'
+      // })
+      this.setState({ modal: true })
+    }
     this.props.getGimnasiosByStatus(1)
   }
 
@@ -90,15 +101,14 @@ class ComprarCreditos extends Component {
   }
   render() {
     const { metodo, nuevaTarjeta, paquete, paquetes, sucursal } = this.state
-    const { updateProfile, gimnasios } = this.props
+    const { auth, updateProfile, gimnasios } = this.props
     let { creditos: c, tarjetas } = this.props.auth
-    if(typeof c === 'undefined') c = {}
+    if (typeof c === 'undefined') c = {}
     const creditos = sucursal ? (c[sucursal.id] ? c[sucursal.id] : 0) : 0
     const defaultGimnasio = gimnasios.length > 0 ? gimnasios[0].id : null
     return (
       <AnimationWrapper>
-        <div className="row my-4">
-          {/* <button onClick={this.vaciar}>...</button> */}
+        <div className={`row my-4 ${auth.status === 0 && 'blur'}`}>
           <div className="col-12 col-md-6">
             <div className="container-shadow p-2 p-md-4">
               <h1>Comprar créditos</h1>
@@ -157,7 +167,8 @@ class ComprarCreditos extends Component {
                         <br />
                         <span>Paquete: {paquete.nombre}</span> <br />
                         <span>Creditos: {paquete.creditos}</span> <br />
-                        <span>Precio: {paquete.precio}</span>
+                        <span>Precio: MXN${paquete.precio}</span>
+                        {auth.status === 0 && <span>Suscripción: MXN$150</span>}
                       </div>
                     </React.Fragment>
                   ) : (
@@ -212,61 +223,16 @@ class ComprarCreditos extends Component {
                   </div>
                 )}
               </div>
-              {nuevaTarjeta && (
-                <Form submitText="Pagar" action={model => this.saveCard(model)}>
-                  <Input
-                    name="tarjeta"
-                    label="Tarjeta"
-                    validations={{
-                      minLength: 16,
-                      isNumeric: true,
-                      maxLength: 16
-                    }}
-                    validationError="Ingresa una tarjeta válida"
-                    required
-                  />
-                  <div className="row">
-                    <div className="col-4">
-                      <Input
-                        name="mes"
-                        label="Mes"
-                        validations={{
-                          minLength: 2,
-                          isNumeric: true,
-                          maxLength: 2
-                        }}
-                        validationError="Ingrese un mes válido"
-                        required
-                      />
-                    </div>
-                    <div className="col-4">
-                      <Input
-                        name="ano"
-                        label="Año"
-                        validations={{
-                          minLength: 2,
-                          isNumeric: true,
-                          maxLength: 2
-                        }}
-                        validationError="Ingresa una año válido"
-                        required
-                      />
-                    </div>
-                    <div className="col-4">
-                      <Input
-                        name="CVV"
-                        label="CVV"
-                        validations="isNumeric"
-                        validationError="Ingresa un CVV válido"
-                        required
-                      />
-                    </div>
-                  </div>
-                </Form>
-              )}
+              {nuevaTarjeta && <FormTarjeta action={this.saveCard} />}
             </div>
           </div>
         </div>
+        {auth.status === 0 && (
+          <ModalSuscripcion
+            tarjetas={auth.tarjetas}
+            push={this.props.history.push}
+          />
+        )}
       </AnimationWrapper>
     )
   }
