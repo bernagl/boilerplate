@@ -1,15 +1,26 @@
 import React from 'react'
 import { Alert, Divider, Modal } from 'antd'
+import moment from 'moment'
 import FormTarjeta from './FormTarjeta'
+import { saveCard } from '../actions/tarjeta'
 
 export default class Suscripcion extends React.Component {
   state = {
     visible: true
   }
 
-  paySubscription = model => {
-    const { uid } = this.props
-    console.log(model)
+  paySubscription = async model => {
+    const { correo, nombre, uid } = this.props.auth
+    const r = await saveCard({
+      ...model,
+      uid,
+      correo,
+      nombre,
+      precio: '700',
+      fecha: moment().format(),
+      name: 'Suscripción',
+      type: 'subscripcion'
+    })
   }
 
   render() {

@@ -58,7 +58,8 @@ class ComprarCreditos extends Component {
       nombre,
       fecha: moment().format(),
       sucursal: sucursal.nombre,
-      sid: sucursal.id
+      sid: sucursal.id,
+      type: 'paquete'
     })
     return r
   }
@@ -78,7 +79,8 @@ class ComprarCreditos extends Component {
       tarjeta: tarjeta.brand,
       last4: tarjeta.last4,
       sucursal: sucursal.nombre,
-      sid: sucursal.id
+      sid: sucursal.id,
+      type: 'paquete'
     })
   }
 
@@ -230,6 +232,7 @@ class ComprarCreditos extends Component {
         {auth.status === 0 && (
           <ModalSuscripcion
             tarjetas={auth.tarjetas}
+            auth={auth}
             push={this.props.history.push}
           />
         )}

@@ -1,5 +1,4 @@
 import { db } from './firebase-config'
-import axios from 'axios'
 
 export const saveCard = async model => {
   var data = {
@@ -47,20 +46,36 @@ export const payWithCard = model => {
     success: function(r) {
       userRef.once('value').then(usnap => {
         const usuario = usnap.val()
+        // if(model.type === 'paquete') {
         db.ref('pago')
           .push({ ...r.info })
           .then(r => {
             const cid = r.key
-            let sucursalCreditos = 0
-            if(typeof usuario.creditos !== 'undefined') usuario['creditos'][model.sid]
-            if (!sucursalCreditos) sucursalCreditos = model.creditos
-            else sucursalCreditos += model.creditos
-            userRef.update({
-              creditos: usuario.creditos + model.creditos,
-              creditos: { ...usuario.creditos, [model.sid]: sucursalCreditos },
-              pagos: { ...usuario.pagos, [cid]: true }
-            })
+            if (model.type === 'paquete') {
+              let sucursalCreditos = 0
+              if (typeof usuario.creditos !== 'undefined')
+                usuario['creditos'][model.sid]
+              if (!sucursalCreditos) sucursalCreditos = model.creditos
+              else sucursalCreditos += model.creditos
+              userRef.update({
+                creditos: usuario.creditos + model.creditos,
+                creditos: {
+                  ...usuario.creditos,
+                  [model.sid]: sucursalCreditos
+                },
+                pagos: { ...usuario.pagos, [cid]: true }
+              })
+            } else if (model.type === 'subscripcion') {
+              userRef.update({
+                status: 1,
+                last_class: model.fecha,
+                pagos: { ...usuario.pagos, [cid]: true }
+              })
+            }
           })
+        // } else if(model.type === 'subscripcion') {
+        // db.ref('pago').push({  })
+        // }
       })
     },
     error: function(r) {
@@ -68,6 +83,62 @@ export const payWithCard = model => {
     }
   })
 }
+
+// export const preSubscription = model => {
+//   var data = {
+//     card: {
+//       number: model.tarjeta,
+//       name: model.nombre,
+//       exp_year: model.ano,
+//       exp_month: model.mes,
+//       cvc: model.CVV
+//     }
+//   }
+
+//   var successHandler = function({ id }) {
+//     paySubscription({ ...model, token: id })
+//   }
+//   var errorHandler = function(err) {
+//     console.log(err)
+//   }
+
+//   window.Conekta.Token.create(data, successHandler, errorHandler)
+// }
+
+// const paySubscription = model => {
+//   const userRef = db.ref('usuario').child(model.uid)
+//   window.$.ajax({
+//     type: 'POST',
+//     url: 'ifs/_ctrl/ctrl.conekta.php',
+//     data: { data: model, exec: 'subscription' },
+//     dataType: 'json',
+//     success: function(r) {
+//       return db
+//         .ref('tarjeta')
+//         .push({ ...r.cc, uid: model.uid, fecha: model.fecha, status: 1 })
+//         .then(tsnap => {
+//           const id = tsnap.key
+//           return userRef.once('value').then(snapshot => {
+//             const usuario = snapshot.val()
+//             return userRef
+//               .update({
+//                 status: 1,
+//                 tarjetas: { ...usuario.tarjetas, [id]: true }
+//               })
+//               .then(r => {
+//                 db.ref('pago')
+//                   .push({ ...r.info })
+//                   .then(() => 202)
+//               })
+//           })
+//         })
+//         .catch(e => 404)
+//     },
+//     error: function(r) {
+//       console.log(r)
+//     }
+//   })
+// }
 
 const makeCharge = async model => {
   const userRef = db.ref('usuario').child(model.uid)
