@@ -6,7 +6,7 @@ import Form from '../components/Form'
 import Input from '../components/Input'
 import Table from '../components/Table'
 import { logout } from '../actions/auth'
-import { getPagos, updateProfile } from '../actions/perfil'
+import { getPagos, updateProfile, updateUserStatus } from '../actions/perfil'
 import { cancelarClase } from '../actions/clase'
 import { getGimnasiosByStatus } from '../actions/gimnasio'
 import { deleteCard } from '../actions/tarjeta'
@@ -89,8 +89,13 @@ class Perfil extends Component {
   }
 
   componentDidMount() {
+    const { auth } = this.props
+    const suscripcion =
+      moment().diff(moment(auth.last_class), 'days') >= 30 ? true : false
+    console.log('suscripcion', suscripcion)
+    if (suscripcion) updateUserStatus({ uid: auth.uid, status: 0 })
     this.props.getGimnasiosByStatus(1)
-    getPagos(this)(this.props.auth.uid)
+    getPagos(this)(auth.uid)
   }
 
   deleteCard = async ({ tid }) => {
@@ -117,7 +122,6 @@ class Perfil extends Component {
       label: 'Estatus',
       key: 'status',
       Render: item => {
-        console.log(item)
         return (
           <React.Fragment>
             <Popover
@@ -187,6 +191,8 @@ class Perfil extends Component {
     const { metodos, metodosCol, pagos } = this.state
     let { creditos } = auth
     const clases = []
+    const last_class = moment(auth.last_class)
+    const today = moment()
     if (typeof creditos === 'undefined') creditos = {}
     auth.clases.forEach(clase =>
       clases.push({
@@ -218,16 +224,23 @@ class Perfil extends Component {
               <br />
               <div>
                 <span>
-                  Suscripción:{' '}
                   {auth.status === 1 ? (
-                    <Badge status="success" text="Activa" />
+                    <Badge status="success" text="Suscripción Activa" />
                   ) : auth.status === 0 ? (
-                    <Badge status="default" text="Inactiva" />
+                    <Badge status="default" text="Suscripción Inactiva" />
                   ) : (
-                    <Badge status="error" text="Inactiva" />
+                    <Badge status="error" text="Suscripción Inactiva" />
                   )}
                 </span>
               </div>
+              {/* <div>
+                {today.diff(last_class, 'days') >= 30 && (
+                  <span>
+                    Última clase: {last_class.format('LL')} -{' '}
+                    {last_class.diff(today, 'days')}
+                  </span>
+                )}
+              </div> */}
               <div className="mb-0">
                 Total de clases compradas: {clases.length}
               </div>

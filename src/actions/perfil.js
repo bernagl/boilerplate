@@ -12,6 +12,12 @@ export const updateProfile = ({ uid, correo, ...args }) => async dispatch => {
   })
 }
 
+export const updateUserStatus = ({ uid, status }) => {
+  db.ref('usuario')
+    .child(uid)
+    .update({ status })
+}
+
 export const getPagos = context => async uid => {
   db.ref('usuario')
     .child(uid)

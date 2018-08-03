@@ -1,4 +1,5 @@
 import { db } from './firebase-config'
+import moment from 'moment'
 
 export const setCheckout = props => dispatch => {
   dispatch({ type: 'SET_CART', payload: props })
@@ -45,10 +46,16 @@ export const confirmCheckout = props => {
                     [clase.gimnasio.id]:
                       ucreditos[clase.gimnasio.id] - +creditos
                   }
+                  const last_class =
+                    moment(usuario.last_class).format() >
+                    moment(clase.inicio).format()
+                      ? moment(usuario.last_class).format()
+                      : moment(clase.inicio).format()
                   console.log(ucreditos)
                   return usuarioRef
                     .update({
-                      creditos: { ...ucreditos }
+                      creditos: { ...ucreditos },
+                      last_class
                     })
                     .then(r => {
                       usuarioRef

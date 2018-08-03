@@ -42,7 +42,7 @@ class Checkout extends Component {
             <Td>{item.instructor.nombre}</Td>
             <Td>{gimnasio.nombre}</Td>
             <Td>{item.costo}</Td>
-            <Td>{moment(item.fecha).format('LL')}</Td>
+            <Td>{moment(item.inicio).format('LL')}</Td>
           </Tr>
         ),
         (creditos += item.costo))
