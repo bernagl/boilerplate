@@ -106,10 +106,13 @@ class Perfil extends Component {
   }
 
   clasesCol = () => [
-    { label: 'Clase', key: 'nombre' },
+    {
+      label: 'Clase',
+      Render: ({ clase: { nombre } }) => <span>{nombre}</span>
+    },
     { label: 'Profesor', key: 'profesor' },
     { label: 'Fecha', key: 'fecha' },
-    { label: 'Créditos', key: 'costo_creditos' },
+    { label: 'Créditos', key: 'costo' },
     {
       label: 'Estatus',
       key: 'status',
@@ -182,8 +185,9 @@ class Perfil extends Component {
   render() {
     const { auth, gimnasios, updateProfile } = this.props
     const { metodos, metodosCol, pagos } = this.state
-    const { creditos } = auth
+    let { creditos } = auth
     const clases = []
+    if (typeof creditos === 'undefined') creditos = {}
     auth.clases.forEach(clase =>
       clases.push({
         ...clase,

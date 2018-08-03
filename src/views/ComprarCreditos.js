@@ -11,6 +11,7 @@ import { payWithCard, saveCard } from '../actions/tarjeta'
 import { getPaquetesByGym } from '../actions/paquete'
 import { Button, Divider, message, Radio, Select } from 'antd'
 import moment from 'moment'
+import { db } from '../actions/firebase-config'
 
 const { Option } = Select
 
@@ -83,15 +84,21 @@ class ComprarCreditos extends Component {
       (message.success('Créditos comprados'),
       this.props.history.push('/perfil'))
   }
+
+  vaciar = () => {
+    db.ref('horario').remove()
+  }
   render() {
     const { metodo, nuevaTarjeta, paquete, paquetes, sucursal } = this.state
     const { updateProfile, gimnasios } = this.props
-    const { creditos: c, tarjetas } = this.props.auth
+    let { creditos: c, tarjetas } = this.props.auth
+    if(typeof c === 'undefined') c = {}
     const creditos = sucursal ? (c[sucursal.id] ? c[sucursal.id] : 0) : 0
     const defaultGimnasio = gimnasios.length > 0 ? gimnasios[0].id : null
     return (
       <AnimationWrapper>
         <div className="row my-4">
+          {/* <button onClick={this.vaciar}>...</button> */}
           <div className="col-12 col-md-6">
             <div className="container-shadow p-2 p-md-4">
               <h1>Comprar créditos</h1>

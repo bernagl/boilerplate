@@ -29,21 +29,23 @@ class Checkout extends Component {
 
   render() {
     const { clases, gimnasios } = this.props.cart
-    console.log(gimnasios)
     const { label, loading } = this.state
     const items = []
     let creditos = 0
+    console.log(this.props)
     clases.forEach((item, i) => {
+      const gimnasio = gimnasios.find((gym) => gym.id === item.gimnasio.id)
       item.status === 1 &&
         (items.push(
           <Tr key={i}>
             <Td>{item.clase.nombre}</Td>
             <Td>{item.instructor.nombre}</Td>
+            <Td>{gimnasio.nombre}</Td>
             <Td>{item.costo}</Td>
             <Td>{moment(item.fecha).format('LL')}</Td>
           </Tr>
         ),
-        (creditos += item.costo_creditos))
+        (creditos += item.costo))
     })
     return (
       <AnimationWrapper>

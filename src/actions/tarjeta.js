@@ -51,7 +51,8 @@ export const payWithCard = model => {
           .push({ ...r.info })
           .then(r => {
             const cid = r.key
-            let sucursalCreditos = usuario['creditos'][model.sid]
+            let sucursalCreditos = 0
+            if(typeof usuario.creditos !== 'undefined') usuario['creditos'][model.sid]
             if (!sucursalCreditos) sucursalCreditos = model.creditos
             else sucursalCreditos += model.creditos
             userRef.update({

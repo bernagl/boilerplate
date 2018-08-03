@@ -9,37 +9,58 @@ export const confirmCheckout = props => {
   // const claseRef = db.ref('horario').child(clase.id)
   return usuarioRef.once('value').then(snapshot => {
     const usuario = snapshot.val()
+    let ucreditos = usuario.creditos
     console.log('usuario', usuario)
     props.clases.forEach(clase => {
-      if (usuario.creditos > 0) {
-        console.log('usuario.creditos', usuario.creditos)
+      const creditos = usuario.creditos[clase.gimnasio.id]
+        ? usuario.creditos[clase.gimnasio.id]
+        : 0
+      if (creditos > 0) {
+        console.log('usuario.creditos', creditos)
         db.ref('horario')
           .child(clase.id)
           .once('value')
           .then(snap => {
             const c = snap.val()
-            return db
-              .ref('horario/' + clase.id)
-              .child('inscritos')
-              .push(usuario)
-              .then(r => {
-                db.ref('horario')
-                  .child(clase.id)
-                  .update({ inscritos_numero: c.inscritos_numero + 1 })
-                  .then(r => {
-                    const creditos = clase.creditos ? clase.creditos : 1
-                    return usuarioRef
-                      .update({ creditos: usuario.creditos - creditos })
-                      .then(r => {
-                        usuarioRef
-                          .child('clases')
-                          .push({ ...clase, status: 0 })
-                          .then(r => 202)
-                      })
-                      .catch(e => 404)
-                  })
-              })
-              .catch(e => 404)
+            if (c.cupo <= c.inscritos_numero) return 404
+            const inscritos = c.inscritos
+              ? { ...c.inscritos, [props.uid]: true }
+              : { [props.uid]: true }
+            // return db
+            //   .ref('horario/' + clase.id)
+            //   .child('inscritos')
+            //   .push(usuario)
+            //   .then(r => {
+            return (
+              db
+                .ref('horario')
+                .child(clase.id)
+                .update({ inscritos, inscritos_numero: c.inscritos_numero + 1 })
+                .then(r => {
+                  const creditos = clase.costo ? clase.costo : 1
+                  console.log('creditosm', creditos)
+                  console.log('creditosn', ucreditos[clase.gimnasio.id])
+                  ucreditos = {
+                    ...ucreditos,
+                    [clase.gimnasio.id]:
+                      ucreditos[clase.gimnasio.id] - +creditos
+                  }
+                  console.log(ucreditos)
+                  return usuarioRef
+                    .update({
+                      creditos: { ...ucreditos }
+                    })
+                    .then(r => {
+                      usuarioRef
+                        .child('clases')
+                        .push({ ...clase, status: 0 })
+                        .then(r => 202)
+                    })
+                    .catch(e => 404)
+                })
+                // })
+                .catch(e => 404)
+            )
           })
           .catch(e => 404)
       } else {

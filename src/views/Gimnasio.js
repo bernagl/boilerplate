@@ -30,6 +30,7 @@ class Gimnasio extends Component {
     menosCreditos: 0,
     clases: new Map(),
     month: moment().format('MMMM'),
+    sucursalSelected: null,
     dates: [],
     dias: [
       { name: 'Lunes', events: [] },
@@ -54,9 +55,22 @@ class Gimnasio extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    const { clases, gimnasios } = newProps
+    let {
+      auth: { creditos },
+      clases,
+      gimnasios
+    } = newProps
     const { gymSelected } = this.state
-    const gyms = []
+
+    let sucursales = {}
+    if(typeof creditos === 'undefined') creditos = {}
+    gimnasios.map(
+      gym =>
+        (sucursales = {
+          ...sucursales,
+          [gym.id]: { creditos: creditos[gym.id], nombre: gym.nombre }
+        })
+    )
     if (clases.length > 0 && gimnasios.length > 0) {
       gimnasios.map((gym, i) => {
         clases.map(clase => {
@@ -66,7 +80,9 @@ class Gimnasio extends Component {
         })
       })
 
-      this.setState({ gimnasios }, () => this.handleGym(gymSelected))
+      this.setState({ gimnasios, sucursales }, () =>
+        this.handleGym(gymSelected)
+      )
     }
   }
 
@@ -75,10 +91,15 @@ class Gimnasio extends Component {
     const {
       auth: { creditos: c }
     } = this.props
-    const creditos =
-      gimnasios.length > 0 ? (c[gimnasios[i].id] ? c[gimnasios[i].id] : 0) : 0
+    // const creditos =
+    //   gimnasios.length > 0 ? (c[gimnasios[i].id] ? c[gimnasios[i].id] : 0) : 0
     this.setState(
-      { creditos, events: gimnasios[i].events, gymSelected: i },
+      {
+        events: gimnasios[i].events,
+        gymSelected: i
+        // sucursalSelected: { sucursal: gimnasios[i], creditos },
+        // sucursales: sucursalesC
+      },
       () => this.daysHandler()
     )
   }
@@ -116,7 +137,16 @@ class Gimnasio extends Component {
   }
 
   eventHandler = (event, cola) => {
-    const { clases, clasesCount: cc, creditos } = this.state
+    const {
+      gymSelected,
+      gimnasios,
+      clases,
+      clasesCount: cc,
+      sucursales
+    } = this.state
+    const gymId = gimnasios[gymSelected].id
+    const sucursalNombre = gimnasios[gymSelected].nombre
+    const creditos = sucursales[gymId].creditos ? sucursales[gymId].creditos : 0
     let c = creditos
     let isSet = clases.has(event.id)
     let clase = clases.get(event.id)
@@ -148,7 +178,14 @@ class Gimnasio extends Component {
           (c -= 1),
           (clasesCount += 1),
           message.success(`Clase ${event.clase.nombre} agregada`))
-      this.setState({ clases, creditos: c, clasesCount })
+      this.setState({
+        clases,
+        sucursales: {
+          ...sucursales,
+          [gymId]: { creditos: c, nombre: sucursalNombre }
+        },
+        clasesCount
+      })
     } else {
       isSet
         ? (clases.delete(event.id),
@@ -161,10 +198,10 @@ class Gimnasio extends Component {
   }
 
   setCheckout = () => {
-    const { clases, creditos, gimnasios } = this.state
+    const { clases, creditos, gimnasios, sucursales } = this.state
     clases.size === 0
       ? message.error('Para proceder al pago debes agregar al menos una clase')
-      : (this.props.setCheckout({ clases, creditos, gimnasios }),
+      : (this.props.setCheckout({ clases, creditos, gimnasios, sucursales }),
         this.props.history.push('/checkout'))
   }
 
@@ -172,14 +209,20 @@ class Gimnasio extends Component {
     const {
       dates,
       clasesCount,
-      creditos,
+      // creditos,
       dias,
       clases,
       gymSelected,
       gimnasios,
-      menosCreditos
+      sucursales
     } = this.state
-
+    console.log(this.state)
+    const creditos =
+      gimnasios.length > 0
+        ? sucursales[gimnasios[gymSelected].id]
+          ? sucursales[gimnasios[gymSelected].id].creditos
+          : 0
+        : 0
     return (
       <AnimationWrapper>
         {/* <div className="row align-items-center"> */}
