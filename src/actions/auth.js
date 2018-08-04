@@ -100,7 +100,7 @@ export const getAuth = params => async dispatch => {
         // .then(r => {
         db.ref('usuario')
           .child(user.uid)
-          .on('value', async snap => {
+          .once('value', async snap => {
             let { tarjetas: cards } = snap.val()
             // const tarjetas = []
             if (typeof cards === 'undefined') cards = {}
@@ -124,7 +124,7 @@ export const getAuth = params => async dispatch => {
               type: LOGIN,
               payload: {
                 uid: user.uid,
-                ...snap.val(),
+                ...snapshot.val(),
                 clases,
                 tarjetas,
                 pagos
