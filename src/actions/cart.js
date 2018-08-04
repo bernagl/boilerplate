@@ -11,6 +11,9 @@ export const confirmCheckout = props => {
   return usuarioRef.once('value').then(snapshot => {
     const usuario = snapshot.val()
     let ucreditos = usuario.creditos
+    let { uclases } = usuario
+    if (typeof uclases === 'undefined') uclases = {}
+
     console.log('usuario', usuario)
     props.clases.forEach(clase => {
       const creditos = usuario.creditos[clase.gimnasio.id]
@@ -46,6 +49,7 @@ export const confirmCheckout = props => {
                     [clase.gimnasio.id]:
                       ucreditos[clase.gimnasio.id] - +creditos
                   }
+                  uclases = { ...uclases, [clase.id]: 1 }
                   const last_class =
                     moment(usuario.last_class).format() >
                     moment(clase.inicio).format()
@@ -55,14 +59,18 @@ export const confirmCheckout = props => {
                   return usuarioRef
                     .update({
                       creditos: { ...ucreditos },
+                      clases: uclases,
                       last_class
                     })
-                    .then(r => {
-                      usuarioRef
-                        .child('clases')
-                        .push({ ...clase, status: 0 })
-                        .then(r => 202)
-                    })
+                    .then(
+                      r => 202
+                      //    {
+                      //   usuarioRef
+                      //     .child('clases')
+                      //     .push({ ...clase, status: 0 })
+                      //     .then(r => 202)
+                      // }
+                    )
                     .catch(e => 404)
                 })
                 // })

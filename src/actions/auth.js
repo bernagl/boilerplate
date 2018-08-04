@@ -63,56 +63,75 @@ export const getAuth = params => async dispatch => {
   auth.onAuthStateChanged(function(user) {
     console.log(user)
     if (user) {
-      db.ref(`usuario/${user.uid}`).on('value', snapshot => {
-        db.ref('usuario/' + user.uid)
-          .child('clases')
-          .once('value', snap => {
-            clases.clear()
-            snap.forEach((clase, i) => {
-              const value = clase.val()
-              clases.set(value.id, {
-                ...value,
-                nombre: value.nombre,
-                id: clase.key,
-                profesor: value.instructor.nombre
+      db.ref(`usuario/${user.uid}`).on('value', async snapshot => {
+        let { clases: uclases } = snapshot.val()
+        if (typeof uclases === 'undefined') uclases = {}
+        const clasesPromise = Object.keys(uclases).map(clase =>
+          db
+            .ref('horario')
+            .child(clase)
+            .once('value')
+            .then(c =>
+              clases.set(clase, {
+                ...c.val(),
+                id: c.key,
+                status: uclases[clase]
               })
+            )
+        )
+
+        const clasesResolve = await Promise.all(clasesPromise)
+        console.log(clases)
+        // db.ref('usuario/' + user.uid)
+        //   .child('clases')
+        //   .once('value', snap => {
+        //     clases.clear()
+        //     snap.forEach((clase, i) => {
+        //       const value = clase.val()
+        //       console.log(value)
+        //       clases.set(value.id, {
+        //         ...value,
+        //         nombre: value.nombre,
+        //         cuid: clase.key,
+        //         profesor: value.instructor.nombre
+        //       })
+        //     })
+        //   })
+        // .then(r => {
+        db.ref('usuario')
+          .child(user.uid)
+          .on('value', async snap => {
+            let { tarjetas: cards } = snap.val()
+            // const tarjetas = []
+            if (typeof cards === 'undefined') cards = {}
+            const tarjetasPromise = Object.keys(cards).map(card =>
+              db
+                .ref('tarjeta')
+                .child(card)
+                .once('value')
+                .then(r => {
+                  const tarjeta = r.val()
+                  if (tarjeta) return { ...tarjeta, tid: r.key }
+                  // return tarjeta && { ...tarjeta, tid: r.key }
+                })
+            )
+            const tarjetasResolve = await Promise.all(tarjetasPromise)
+            const tarjetas = tarjetasResolve.filter(
+              tarjeta => tarjeta && tarjeta
+            )
+            console.log(...snapshot.val())
+            dispatch({
+              type: LOGIN,
+              payload: {
+                uid: user.uid,
+                ...snap.val(),
+                clases,
+                tarjetas,
+                pagos
+              }
             })
           })
-          .then(r => {
-            db.ref('usuario')
-              .child(user.uid)
-              .on('value', async snap => {
-                let { tarjetas: cards } = snap.val()
-                // const tarjetas = []
-                if (typeof cards === 'undefined') cards = {}
-                const tarjetasPromise = Object.keys(cards).map(card =>
-                  db
-                    .ref('tarjeta')
-                    .child(card)
-                    .once('value')
-                    .then(r => {
-                      const tarjeta = r.val()
-                      if (tarjeta) return { ...tarjeta, tid: r.key }
-                      // return tarjeta && { ...tarjeta, tid: r.key }
-                    })
-                )
-                const tarjetasResolve = await Promise.all(tarjetasPromise)
-                const tarjetas = tarjetasResolve.filter(
-                  tarjeta => tarjeta && tarjeta
-                )
-                console.log(...snapshot.val())
-                dispatch({
-                  type: LOGIN,
-                  payload: {
-                    uid: user.uid,
-                    ...snap.val(),
-                    clases,
-                    tarjetas,
-                    pagos
-                  }
-                })
-              })
-          })
+        // })
 
         params.setState({ loading: false })
       })

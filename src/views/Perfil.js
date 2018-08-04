@@ -104,8 +104,14 @@ class Perfil extends Component {
       : message.error('Ocurrió un error, por favor vuelve a intentarlo')
   }
 
-  cancelarClase = async (...props) => {
-    const r = await cancelarClase(...props)
+  cancelarClase = async ({ gimnasio, id, costo, clase }) => {
+    const { uid } = this.props.auth
+    const r = await cancelarClase({
+      sid: gimnasio.id,
+      costo,
+      cid: id,
+      uid
+    })
     r && message.success('Clase cancelada, tus créditos han sido devueltos')
   }
 
@@ -114,7 +120,10 @@ class Perfil extends Component {
       label: 'Clase',
       Render: ({ clase: { nombre } }) => <span>{nombre}</span>
     },
-    { label: 'Profesor', key: 'profesor' },
+    {
+      label: 'Profesor',
+      Render: ({ instructor: { nombre } }) => <span>{nombre}</span>
+    },
     { label: 'Fecha', key: 'fecha' },
     { label: 'Créditos', key: 'costo' },
     {
@@ -168,13 +177,7 @@ class Perfil extends Component {
                 title="¿Deseas cancelar la clase?"
                 okText="Si"
                 cancelText="No"
-                onConfirm={() =>
-                  this.cancelarClase({
-                    uid: this.props.auth.uid,
-                    creditos: +this.props.auth.creditos + +item.costo_creditos,
-                    id_clase: item.id
-                  })
-                }
+                onConfirm={() => this.cancelarClase(item)}
               >
                 <Tag color="red">Cancelar</Tag>
               </Popconfirm>
@@ -193,19 +196,16 @@ class Perfil extends Component {
     const last_class = moment(auth.last_class)
     const today = moment()
     if (typeof creditos === 'undefined') creditos = {}
+    console.log(this.props)
     auth.clases.forEach(clase =>
       c.push({
         ...clase,
         status:
-          clase.status === 2
-            ? 2
-            : clase.cola
-              ? 3
-              : clase.status === 0
-                ? moment(clase.fin) > moment()
-                  ? 0
-                  : 1
-                : clase.status
+          clase.status === 1
+            ? moment(clase.fin) > moment()
+              ? 0
+              : 1
+            : clase.status
       })
     )
 
@@ -217,6 +217,8 @@ class Perfil extends Component {
             ? -1
             : 0
     )
+
+    console.log(clases)
 
     return (
       <AnimationWrapper>
