@@ -21,7 +21,6 @@ export const Header = ({ dates, dias }) => {
 }
 
 export const Body = ({ clases, dates, dias, eventHandler }) => {
-  console.log('clases', clases)
   return (
     <div className="week week-events">
       {dates.map((e, i) => (

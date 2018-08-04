@@ -1,8 +1,15 @@
 import { auth, db } from './firebase-config'
 import { LOGIN, LOGOUT, REGISTER } from '../types'
 import moment from 'moment'
+import { message } from 'antd'
 
-export const register = ({ correo, contrasena, nombre }) => async dispatch => {
+export const register = ({
+  correo,
+  contrasena,
+  nombre,
+  telefono,
+  edad
+}) => async dispatch => {
   try {
     const { user } = await auth.createUserWithEmailAndPassword(
       correo,
@@ -12,8 +19,10 @@ export const register = ({ correo, contrasena, nombre }) => async dispatch => {
       .ref(`usuario/${user.uid}`)
       .set({
         correo,
+        edad,
         nombre,
         status: 0,
+        telefono,
         clases: {},
         creditos: {},
         created_at: moment().format(),
@@ -24,55 +33,43 @@ export const register = ({ correo, contrasena, nombre }) => async dispatch => {
           type: REGISTER,
           payload: {
             correo,
+            edad,
             contrasena,
             nombre,
+            telefono,
             uid: user.uid,
-            creditos: 1,
+            // creditos: 1,
             status: 0,
             clases: new Map(),
-            creditos: {},
+            creditos: { '-LJ0vzCiwFniQ4co-RT8': 1 },
             tarjetas: []
           }
         })
         return user.uid
       })
-  } catch (e) {
-    return false
+  } catch ({ code }) {
+    var errorText = ''
+    switch (code) {
+      case 'auth/invalid-email':
+        errorText = 'El correo es inválido'
+        break
+      case 'auth/weak-password':
+        errorText = 'La contraseña es muy sencilla, intenta con otra'
+        break
+      case 'auth/email-already-in-use':
+        errorText = 'El correo ya está en uso, prueba con otro'
+        break
+      default:
+        errorText = 'Ocurrió un error, por favor vuelve a intentarlo'
+        break
+    }
+    message.error(errorText)
   }
 }
 
 export const login = ({ correo, contrasena }) => async dispatch => {
-  // try {
   const { user } = await auth.signInWithEmailAndPassword(correo, contrasena)
   return user.uid
-  //   const clases = []
-  //   return db
-  //     .ref(`usuario/${user.uid}`)
-  //     .update({ last_login: Date.now() })
-  //     .then(result => {
-  //       db.ref(`usuario/${user.uid}`).once('value', snapshot => {
-  //         db.ref('usuario/' + user.uid)
-  //           .child('clases')
-  //           .once('value', snap => {
-  //             snap.forEach(clase =>
-  //               clases.push({
-  //                 id: clase.key,
-  //                 ...clase.val(),
-  //                 profesor: clase.val().profesor.nombre
-  //               })
-  //             )
-  //             dispatch({
-  //               type: LOGIN,
-  //               payload: { uid: user.uid, ...snapshot.val(), clases }
-  //             })
-  //           })
-  //       })
-  //       return user.uid
-  //     })
-  // } catch (e) {
-  //   console.error(e)
-  //   return false
-  // }
 }
 
 export const getAuth = params => async dispatch => {
@@ -80,7 +77,6 @@ export const getAuth = params => async dispatch => {
   let pagos = []
   // let tarjetas = []
   auth.onAuthStateChanged(function(user) {
-    console.log(user)
     if (user) {
       db.ref(`usuario/${user.uid}`).on('value', async snapshot => {
         let { clases: uclases } = snapshot.val()
@@ -100,28 +96,10 @@ export const getAuth = params => async dispatch => {
         )
 
         const clasesResolve = await Promise.all(clasesPromise)
-        console.log(clases)
-        // db.ref('usuario/' + user.uid)
-        //   .child('clases')
-        //   .once('value', snap => {
-        //     clases.clear()
-        //     snap.forEach((clase, i) => {
-        //       const value = clase.val()
-        //       console.log(value)
-        //       clases.set(value.id, {
-        //         ...value,
-        //         nombre: value.nombre,
-        //         cuid: clase.key,
-        //         profesor: value.instructor.nombre
-        //       })
-        //     })
-        //   })
-        // .then(r => {
         db.ref('usuario')
           .child(user.uid)
           .once('value', async snap => {
             let { tarjetas: cards } = snap.val()
-            // const tarjetas = []
             if (typeof cards === 'undefined') cards = {}
             const tarjetasPromise = Object.keys(cards).map(card =>
               db
@@ -131,14 +109,12 @@ export const getAuth = params => async dispatch => {
                 .then(r => {
                   const tarjeta = r.val()
                   if (tarjeta) return { ...tarjeta, tid: r.key }
-                  // return tarjeta && { ...tarjeta, tid: r.key }
                 })
             )
             const tarjetasResolve = await Promise.all(tarjetasPromise)
             const tarjetas = tarjetasResolve.filter(
               tarjeta => tarjeta && tarjeta
             )
-            console.log(...snapshot.val())
             dispatch({
               type: LOGIN,
               payload: {
@@ -150,11 +126,8 @@ export const getAuth = params => async dispatch => {
               }
             })
           })
-        // })
-
         params.setState({ loading: false })
       })
-      // dispatch({ type: LOGIN, payload: user.uid })
     } else {
       dispatch({ type: LOGOUT })
       params.setState({ loading: false })
@@ -163,13 +136,6 @@ export const getAuth = params => async dispatch => {
 }
 
 export const recover = ({ correo }) => {
-  // try {
-  //   const r = await auth.sendPasswordResetEmail(correo)
-  //   return r && 202
-  // } catch (error) {
-  //   return false
-  // }
-
   return auth
     .sendPasswordResetEmail(correo)
     .then(r => 202)

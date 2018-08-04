@@ -211,8 +211,7 @@ class Gimnasio extends Component {
   }
 
   setCheckout = () => {
-    const { clases,clasesCount, creditos, gimnasios, sucursales } = this.state
-    console.log(clasesCount)
+    const { clases, clasesCount, creditos, gimnasios, sucursales } = this.state
     clasesCount === 0
       ? message.error('Para proceder al pago debes agregar al menos una clase')
       : (this.props.setCheckout({ clases, creditos, gimnasios, sucursales }),
@@ -230,13 +229,13 @@ class Gimnasio extends Component {
       gimnasios,
       sucursales
     } = this.state
-    console.log(this.state)
-    const creditos =
+    let creditos =
       gimnasios.length > 0
         ? sucursales[gimnasios[gymSelected].id]
           ? sucursales[gimnasios[gymSelected].id].creditos
           : 0
         : 0
+    if (typeof creditos === 'undefined') creditos = 0
     return (
       <AnimationWrapper>
         {/* <div className="row align-items-center"> */}

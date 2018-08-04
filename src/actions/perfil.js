@@ -23,7 +23,6 @@ export const getPagos = context => async uid => {
     .child(uid)
     .on('value', async snapshot => {
       const { pagos: p } = snapshot.val()
-      console.log(p)
       if (!p) return
       const pagosPromise = Object.keys(p).map(pago => {
         return db
@@ -34,11 +33,9 @@ export const getPagos = context => async uid => {
       })
 
       const pagosResolve = await Promise.all(pagosPromise)
-      console.table(pagosResolve)
       const pagos = pagosResolve.sort(
         (a, b) => (a.fecha > b.fecha ? -1 : a.fecha < b.fecha ? 1 : 0)
       )
-      console.log(pagos)
       context.setState({ pagos })
     })
 }

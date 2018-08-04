@@ -24,7 +24,6 @@ import moment from 'moment'
 
 const { TabPane } = Tabs
 
-// const pagos = [{ fecha: '28/Octubre/2018', creditos: 4, metodo: 'visa-1234' }]
 const pagosCol = [
   {
     label: 'Fecha',
@@ -199,13 +198,10 @@ class Perfil extends Component {
 
   render() {
     const { auth, gimnasios, updateProfile } = this.props
-    const { metodos, metodosCol, pagos } = this.state
+    const { metodosCol, pagos } = this.state
     let { creditos } = auth
     const c = []
-    const last_class = moment(auth.last_class)
-    const today = moment()
     if (typeof creditos === 'undefined') creditos = {}
-    console.log(this.props)
     auth.clases.forEach(clase =>
       c.push({
         ...clase,
@@ -226,8 +222,6 @@ class Perfil extends Component {
             ? -1
             : 0
     )
-
-    console.log(clases)
 
     return (
       <AnimationWrapper>
@@ -267,7 +261,7 @@ class Perfil extends Component {
               <Divider />
               <div>Créditos</div>
               {gimnasios.map(gym => (
-                <div>
+                <div key={gym.id}>
                   {gym.nombre} : {creditos[gym.id] ? creditos[gym.id] : 0}
                 </div>
               ))}
@@ -342,6 +336,14 @@ class Perfil extends Component {
                       validationError="Ingresa un telefono válido"
                       required
                       value={auth.telefono}
+                    />
+                    <Input
+                      name="edad"
+                      label="Edad (años)"
+                      validations={{ isNumeric: true, maxLength: 2 }}
+                      validationError="Ingresa una edad válida"
+                      required
+                      value={auth.edad}
                     />
                   </Form>
                 </TabPane>

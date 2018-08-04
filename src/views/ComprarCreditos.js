@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import AnimationWrapper from '../components/AnimationWrapper'
-import Form from '../components/Form'
-import Input from '../components/Input'
 import Table from '../components/Table'
 import { comprarCreditos } from '../actions/creditos'
 import { getGimnasiosByStatus } from '../actions/gimnasio'

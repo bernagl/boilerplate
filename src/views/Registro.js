@@ -22,6 +22,7 @@ export default class Registro extends Component {
                     redirect="/"
                     submitText="Registrarme"
                     success="Gracias por registrarte"
+                    dontShowError
                   >
                     <Input
                       name="nombre"
@@ -31,10 +32,24 @@ export default class Registro extends Component {
                       required
                     />
                     <Input
+                      name="edad"
+                      label="Edad (años)"
+                      validations={{ isNumeric: true, maxLength: 2 }}
+                      validationError="Ingresa una edad válida"
+                      required
+                    />
+                    <Input
                       name="correo"
                       label="Correo"
                       validations="isEmail"
                       validationError="Ingresa un email válido"
+                      required
+                    />
+                    <Input
+                      name="telefono"
+                      label="Teléfono"
+                      validations={{ isNumeric: true, maxLength: 10, minLength: 10 }}
+                      validationError="Ingresa una numero de teléfono válida"
                       required
                     />
                     <Input
@@ -53,15 +68,13 @@ export default class Registro extends Component {
                       validationError="Las contraseñas no coinciden"
                       required
                     />
-                    <Checkbox>
-                      Aceptas los
-                    </Checkbox>
+                    <Checkbox>Aceptas los</Checkbox>
                     <span
-                        onClick={() => this.setState({ terminos: !terminos })}
-                        className="terminos-text"
-                      >
-                        términos y condiciones
-                      </span>
+                      onClick={() => this.setState({ terminos: !terminos })}
+                      className="terminos-text"
+                    >
+                      términos y condiciones
+                    </span>
                   </Form>
                 </div>
                 <div className="col-12 mt-5 center-text">

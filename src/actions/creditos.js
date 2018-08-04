@@ -1,4 +1,4 @@
-import { auth, db } from './firebase-config'
+import { db } from './firebase-config'
 
 export const comprarCreditos = ({
   uid,
@@ -29,5 +29,4 @@ export const comprarCreditos = ({
         )
     })
     .then(r => true)
-  //   console.log(uid, metodo, creditos, fecha)
 }

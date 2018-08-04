@@ -33,7 +33,6 @@ class Checkout extends Component {
     const { label, loading } = this.state
     const items = []
     let creditos = 0
-    console.log(this.props)
     clases.forEach((item, i) => {
       const gimnasio = gimnasios.find(gym => gym.id === item.gimnasio.id)
       item.status === 3 &&

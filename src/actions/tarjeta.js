@@ -14,14 +14,12 @@ export const saveCard = push => async model => {
 
   var successHandler = function({ id }) {
     /* token keys: id, livemode, used, object */
-    // console.log(id)
     message.info('Generando token de seguridad')
     makeCharge(push)({ ...model, token: id })
   }
 
   var errorHandler = function({ message_to_purchaser }) {
     /* err keys: object, type, message, message_to_purchaser, param, code */
-    // console.log(err)
     message.error(message_to_purchaser)
   }
 
@@ -48,15 +46,12 @@ export const payWithCard = push => model => {
     data: { data: model, exec: 'compra_creditos' },
     dataType: 'json',
     success: function({ error, info, status }) {
-      console.log(status, error, info)
       if (+status === 500) {
-        console.log(status, error)
         message.error(error)
         return
       } else if (+status === 202) {
         userRef.once('value').then(usnap => {
           const usuario = usnap.val()
-          // if(model.type === 'paquete') {
           message.success('Generando la compra')
           db.ref('pago')
             .push({ ...info })
@@ -95,10 +90,6 @@ export const payWithCard = push => model => {
                   })
               }
             })
-
-          // } else if(model.type === 'subscripcion') {
-          // db.ref('pago').push({  })
-          // }
         })
       }
     },
@@ -107,62 +98,6 @@ export const payWithCard = push => model => {
     }
   })
 }
-
-// export const preSubscription = model => {
-//   var data = {
-//     card: {
-//       number: model.tarjeta,
-//       name: model.nombre,
-//       exp_year: model.ano,
-//       exp_month: model.mes,
-//       cvc: model.CVV
-//     }
-//   }
-
-//   var successHandler = function({ id }) {
-//     paySubscription({ ...model, token: id })
-//   }
-//   var errorHandler = function(err) {
-//     console.log(err)
-//   }
-
-//   window.Conekta.Token.create(data, successHandler, errorHandler)
-// }
-
-// const paySubscription = model => {
-//   const userRef = db.ref('usuario').child(model.uid)
-//   window.$.ajax({
-//     type: 'POST',
-//     url: 'ifs/_ctrl/ctrl.conekta.php',
-//     data: { data: model, exec: 'subscription' },
-//     dataType: 'json',
-//     success: function(r) {
-//       return db
-//         .ref('tarjeta')
-//         .push({ ...r.cc, uid: model.uid, fecha: model.fecha, status: 1 })
-//         .then(tsnap => {
-//           const id = tsnap.key
-//           return userRef.once('value').then(snapshot => {
-//             const usuario = snapshot.val()
-//             return userRef
-//               .update({
-//                 status: 1,
-//                 tarjetas: { ...usuario.tarjetas, [id]: true }
-//               })
-//               .then(r => {
-//                 db.ref('pago')
-//                   .push({ ...r.info })
-//                   .then(() => 202)
-//               })
-//           })
-//         })
-//         .catch(e => 404)
-//     },
-//     error: function(r) {
-//       console.log(r)
-//     }
-//   })
-// }
 
 const makeCharge = push => async model => {
   const userRef = db.ref('usuario').child(model.uid)
@@ -175,7 +110,6 @@ const makeCharge = push => async model => {
     success: function({ cc, status, error }) {
       if (+status === 500) {
         message.error(error)
-        console.log(status, error)
         return
       } else {
         db.ref('tarjeta')
