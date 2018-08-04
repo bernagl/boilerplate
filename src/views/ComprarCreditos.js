@@ -120,7 +120,8 @@ class ComprarCreditos extends Component {
                 className="fw mt-2 mb-4"
                 placeholder="Selecciona un gimnasio"
                 onChange={id => this.handlePaquetes(id)}
-                defaultValue={defaultGimnasio}
+                
+                // defaultValue={}
               >
                 {gimnasios.map(({ nombre, id }) => (
                   <Option value={id} key={id}>

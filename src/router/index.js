@@ -14,7 +14,7 @@ import PrivateRoute from './PrivateRoute'
 export const WithAuth = ({ auth }) => {
   return (
     <Switch>
-      <PrivateRoute path="/" component={Index} exact auth={auth} />
+      <PrivateRoute path="/" component={Perfil} exact auth={auth} />
       <PrivateRoute path="/perfil" component={Perfil} auth={auth} />
       <PrivateRoute path="/clase" component={Gimnasio} auth={auth} />
       <PrivateRoute path="/comprar" component={ComprarCreditos} auth={auth} />

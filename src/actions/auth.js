@@ -81,28 +81,36 @@ export const getAuth = params => async dispatch => {
           .then(r => {
             db.ref('usuario')
               .child(user.uid)
-              .on('value', snap => {
-                const { tarjetas: cards } = snap.val()
-                const tarjetas = []
-                Object.keys(cards).map(card =>
+              .on('value', async snap => {
+                let { tarjetas: cards } = snap.val()
+                // const tarjetas = []
+                if (typeof cards === 'undefined') cards = {}
+                const tarjetasPromise = Object.keys(cards).map(card =>
                   db
                     .ref('tarjeta')
                     .child(card)
-                    .on('value', r => {
+                    .once('value')
+                    .then(r => {
                       const tarjeta = r.val()
-                      tarjeta && tarjetas.push({ ...tarjeta, tid: r.key })
-                      dispatch({
-                        type: LOGIN,
-                        payload: {
-                          uid: user.uid,
-                          ...snapshot.val(),
-                          clases,
-                          tarjetas,
-                          pagos
-                        }
-                      })
+                      if (tarjeta) return { ...tarjeta, tid: r.key }
+                      // return tarjeta && { ...tarjeta, tid: r.key }
                     })
                 )
+                const tarjetasResolve = await Promise.all(tarjetasPromise)
+                const tarjetas = tarjetasResolve.filter(
+                  tarjeta => tarjeta && tarjeta
+                )
+                console.log(...snapshot.val())
+                dispatch({
+                  type: LOGIN,
+                  payload: {
+                    uid: user.uid,
+                    ...snap.val(),
+                    clases,
+                    tarjetas,
+                    pagos
+                  }
+                })
               })
           })
 

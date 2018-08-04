@@ -189,12 +189,12 @@ class Perfil extends Component {
     const { auth, gimnasios, updateProfile } = this.props
     const { metodos, metodosCol, pagos } = this.state
     let { creditos } = auth
-    const clases = []
+    const c = []
     const last_class = moment(auth.last_class)
     const today = moment()
     if (typeof creditos === 'undefined') creditos = {}
     auth.clases.forEach(clase =>
-      clases.push({
+      c.push({
         ...clase,
         status:
           clase.status === 2
@@ -208,6 +208,16 @@ class Perfil extends Component {
                 : clase.status
       })
     )
+
+    const clases = c.sort(
+      (a, b) =>
+        moment(a.inicio).format() > moment(b.inicio).format()
+          ? 1
+          : moment(a.inicio).format() < moment(b.inicio).format()
+            ? -1
+            : 0
+    )
+
     return (
       <AnimationWrapper>
         <div className="row">
@@ -250,6 +260,12 @@ class Perfil extends Component {
                   {gym.nombre} : {creditos[gym.id] ? creditos[gym.id] : 0}
                 </div>
               ))}
+              {auth.status === 0 && (
+                <div>
+                  Tus créditos los podrás utilizar hasta que actives tu
+                  suscripción <Link to="/comprar">aquí</Link>
+                </div>
+              )}
             </div>
           </div>
           <div className="col-12 col-md-8 my-4 mt-md-0">
