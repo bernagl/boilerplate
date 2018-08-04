@@ -20,6 +20,7 @@ export default () => {
                   redirect="/"
                   submitText="Iniciar sesión"
                   success="Bienvenido"
+                  dontShowError
                 >
                   {Login.map((input, i) => <Input key={i} {...input} />)}
                 </Form>
@@ -39,18 +40,15 @@ export default () => {
           </div>
           <div
             className="col-12 col-md-7 col-lg-8 col-xl-9 hidden-sm-up bg-cover"
-            style={{ backgroundImage: `url(http://impulse-fitnessstudio.com/wp-content/uploads/2018/01/2-Impulse.jpg)`, backgroundSize: 'cover' }}
+            style={{
+              backgroundImage: `url(http://impulse-fitnessstudio.com/wp-content/uploads/2018/01/2-Impulse.jpg)`,
+              backgroundSize: 'cover'
+            }}
           />
         </div>
       )}
     </AuthWrapper>
   )
 }
-
-
-
-
-
-
 
 // export default connect(null, { login })(Login)

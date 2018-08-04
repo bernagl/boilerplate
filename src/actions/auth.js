@@ -68,8 +68,15 @@ export const register = ({
 }
 
 export const login = ({ correo, contrasena }) => async dispatch => {
-  const { user } = await auth.signInWithEmailAndPassword(correo, contrasena)
-  return user.uid
+  try {
+    const { user } = await auth.signInWithEmailAndPassword(correo, contrasena)
+    return user.uid
+  } catch ({ code }) {
+    if (code === 'auth/user-not-found')
+      message.error('El correo no existe en nuestras base de datos')
+    else message.error('Usuario y/o contraseña incorrectos')
+    return false
+  }
 }
 
 export const getAuth = params => async dispatch => {
