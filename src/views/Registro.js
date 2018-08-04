@@ -48,7 +48,11 @@ export default class Registro extends Component {
                     <Input
                       name="telefono"
                       label="Teléfono"
-                      validations={{ isNumeric: true, maxLength: 10, minLength: 10 }}
+                      validations={{
+                        isNumeric: true,
+                        maxLength: 10,
+                        minLength: 10
+                      }}
                       validationError="Ingresa una numero de teléfono válida"
                       required
                     />
@@ -68,13 +72,13 @@ export default class Registro extends Component {
                       validationError="Las contraseñas no coinciden"
                       required
                     />
-                    <Checkbox>Aceptas los</Checkbox>
+                    {/* <Checkbox>Aceptas los</Checkbox>
                     <span
                       onClick={() => this.setState({ terminos: !terminos })}
                       className="terminos-text"
                     >
                       términos y condiciones
-                    </span>
+                    </span> */}
                   </Form>
                 </div>
                 <div className="col-12 mt-5 center-text">
@@ -85,7 +89,7 @@ export default class Registro extends Component {
               </div>
             </div>
             <div className="col-12 col-md-7 col-lg-8 col-xl-9 hidden-sm-up bg-cover">
-              {terminos ? (
+              {/* {terminos ? (
                 <div className="row justify-content-center align-items-center fade container-shadow fh-login">
                   <div className="col-10">
                     <span>
@@ -109,17 +113,17 @@ export default class Registro extends Component {
                     </p>
                   </div>
                 </div>
-              ) : (
-                <div>
-                  <div
-                    className="row fh-login fade"
-                    style={{
-                      backgroundImage: `url(http://impulse-fitnessstudio.com/wp-content/uploads/2018/01/1-Impulse-copy.jpg)`,
-                      backgroundSize: 'cover'
-                    }}
-                  />
-                </div>
-              )}
+              ) : ( */}
+              <div>
+                <div
+                  className="row fh-login fade"
+                  style={{
+                    backgroundImage: `url(http://impulse-fitnessstudio.com/wp-content/uploads/2018/01/1-Impulse-copy.jpg)`,
+                    backgroundSize: 'cover'
+                  }}
+                />
+              </div>
+              {/* )} */}
             </div>
           </div>
         )}
