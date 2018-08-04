@@ -42,23 +42,16 @@ export const Body = ({ clases, dates, dias, eventHandler }) => {
                   let clase = false
                   if (clases.has(ev.id)) {
                     clase = clases.get(ev.id)
-                    active =
-                      clase.status === 0
-                        ? 1
-                        : clase.status === 2
-                          ? null
-                          : clase.status === 1
-                            ? 0
-                            : null
+                    active = clase.status
                   }
-                  const cola = ev.cupo <= ev.inscritos ? true : false
+                  const cola = ev.cupo <= ev.inscritos_cantidad ? true : false
                   const future = moment(ev.fin) >= moment()
                   return (
                     <div
                       className={`col-12 day-event fade ${
                         active === 1
                           ? 'active-reservada'
-                          : active === 0
+                          : active === 3
                             ? 'active'
                             : ''
                       } ${!future && 'disabled'}

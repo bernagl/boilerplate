@@ -152,7 +152,8 @@ class Gimnasio extends Component {
     let isSet = clases.has(event.id)
     let clase = clases.get(event.id)
     let clasesCount = cc
-    if (isSet && clase.status === 0) {
+    console.log(clase)
+    if (isSet && clase.status === 1) {
       message.error('Para cancelar la clase debe ser desde tu perfil')
       return
     } else if (isSet && clase.status === 2) {
@@ -175,7 +176,7 @@ class Gimnasio extends Component {
           (clasesCount -= 1),
           (c += 1),
           message.warning('Clase devuelta'))
-        : (clases.set(event.id, { status: 1, cola, ...event }),
+        : (clases.set(event.id, { status: 3, cola, ...event }),
           (c -= 1),
           (clasesCount += 1),
           message.success(`Clase ${event.clase.nombre} agregada`))

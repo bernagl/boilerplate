@@ -13,7 +13,7 @@ class Checkout extends Component {
     this.setState({ loading: true, label: 'Asignando clases' })
     const { uid } = this.props.auth
     const c = []
-    clases.forEach(item => item.status === 1 && c.push(item))
+    clases.forEach(item => item.status === 3 && c.push(item))
     const r = await confirmCheckout({
       creditos,
       clases: c,
@@ -35,7 +35,7 @@ class Checkout extends Component {
     console.log(this.props)
     clases.forEach((item, i) => {
       const gimnasio = gimnasios.find((gym) => gym.id === item.gimnasio.id)
-      item.status === 1 &&
+      item.status === 3 &&
         (items.push(
           <Tr key={i}>
             <Td>{item.clase.nombre}</Td>

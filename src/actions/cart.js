@@ -11,16 +11,16 @@ export const confirmCheckout = props => {
   return usuarioRef.once('value').then(snapshot => {
     const usuario = snapshot.val()
     let ucreditos = usuario.creditos
-    let { uclases } = usuario
+    let { clases: uclases } = usuario
     if (typeof uclases === 'undefined') uclases = {}
 
-    console.log('usuario', usuario)
+    console.log(props.clases)
     props.clases.forEach(clase => {
       const creditos = usuario.creditos[clase.gimnasio.id]
         ? usuario.creditos[clase.gimnasio.id]
         : 0
       if (creditos > 0) {
-        console.log('usuario.creditos', creditos)
+        // console.log('usuario.creditos', creditos)
         db.ref('horario')
           .child(clase.id)
           .once('value')
@@ -42,8 +42,8 @@ export const confirmCheckout = props => {
                 .update({ inscritos, inscritos_numero: c.inscritos_numero + 1 })
                 .then(r => {
                   const creditos = clase.costo ? clase.costo : 1
-                  console.log('creditosm', creditos)
-                  console.log('creditosn', ucreditos[clase.gimnasio.id])
+                  // console.log('creditosm', creditos)
+                  // console.log('creditosn', ucreditos[clase.gimnasio.id])
                   ucreditos = {
                     ...ucreditos,
                     [clase.gimnasio.id]:
@@ -55,7 +55,7 @@ export const confirmCheckout = props => {
                     moment(clase.inicio).format()
                       ? moment(usuario.last_class).format()
                       : moment(clase.inicio).format()
-                  console.log(ucreditos)
+                  // console.log(ucreditos)
                   return usuarioRef
                     .update({
                       creditos: { ...ucreditos },
