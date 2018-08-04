@@ -43,7 +43,7 @@ export const payWithCard = push => model => {
   window.$.ajax({
     type: 'POST',
     // url: 'ifs/_ctrl/ctrl.conekta.php',
-    url: 'api/_ctrl/ctrl.conekta.php',
+    url: 'ifsapi/_ctrl/ctrl.conekta.php',
     data: { data: model, exec: 'compra_creditos' },
     dataType: 'json',
     success: function({ error, info, status }) {
@@ -106,7 +106,7 @@ const makeCharge = push => async model => {
   window.$.ajax({
     type: 'POST',
     // url: 'ifs/_ctrl/ctrl.conekta.php',
-    url: 'api/_ctrl/ctrl.conekta.php',
+    url: 'ifsapi/_ctrl/ctrl.conekta.php',
     data: { data: model, exec: 'save' },
     dataType: 'json',
     success: function({ cc, status, error }) {
