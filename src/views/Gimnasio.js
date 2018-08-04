@@ -152,7 +152,6 @@ class Gimnasio extends Component {
     let isSet = clases.has(event.id)
     let clase = clases.get(event.id)
     let clasesCount = cc
-    console.log(event)
     if (isSet && clase.status === 1) {
       message.error('Para cancelar la clase debe ser desde tu perfil')
       return
@@ -212,8 +211,9 @@ class Gimnasio extends Component {
   }
 
   setCheckout = () => {
-    const { clases, creditos, gimnasios, sucursales } = this.state
-    clases.size === 0
+    const { clases,clasesCount, creditos, gimnasios, sucursales } = this.state
+    console.log(clasesCount)
+    clasesCount === 0
       ? message.error('Para proceder al pago debes agregar al menos una clase')
       : (this.props.setCheckout({ clases, creditos, gimnasios, sucursales }),
         this.props.history.push('/checkout'))

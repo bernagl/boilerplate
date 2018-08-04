@@ -4,7 +4,7 @@ import AnimationWrapper from '../components/AnimationWrapper'
 import { Button, message } from 'antd'
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table'
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css'
-import { confirmCheckout } from '../actions/cart'
+import { confirmCheckout, setCheckout } from '../actions/cart'
 import moment from 'moment'
 
 class Checkout extends Component {
@@ -23,7 +23,8 @@ class Checkout extends Component {
 
     setTimeout(() => {
       message.success('Tus clases se han comprado'),
-        this.props.history.push('/perfil')
+        this.props.history.push('/perfil'),
+        this.props.setCheckout({})
     }, 1000)
   }
 
@@ -34,7 +35,7 @@ class Checkout extends Component {
     let creditos = 0
     console.log(this.props)
     clases.forEach((item, i) => {
-      const gimnasio = gimnasios.find((gym) => gym.id === item.gimnasio.id)
+      const gimnasio = gimnasios.find(gym => gym.id === item.gimnasio.id)
       item.status === 3 &&
         (items.push(
           <Tr key={i}>
@@ -76,11 +77,17 @@ class Checkout extends Component {
                     <div className="col-12">
                       <div className="row">
                         <div className="col-6">
-                          <Button type="secondary">Cancelar</Button>
+                          <Button
+                            type="secondary"
+                            onClick={() => this.props.history.push('/clase')}
+                          >
+                            Cancelar
+                          </Button>
                         </div>
                         <div className="col-6 ">
                           <Button
                             type="primary"
+                            disabled={items.length > 0 ? false : true}
                             onClick={() =>
                               this.confirm({ clases, creditos, items })
                             }
@@ -104,4 +111,7 @@ class Checkout extends Component {
 
 const mapStateToProps = ({ auth, cart }) => ({ auth, cart })
 
-export default connect(mapStateToProps)(Checkout)
+export default connect(
+  mapStateToProps,
+  { setCheckout }
+)(Checkout)

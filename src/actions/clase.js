@@ -39,7 +39,7 @@ export const cancelarClase = ({ sid, costo, cid, uid }) => {
       const inscritos_numero = cin > 0 ? cin - 1 : 0
       const inscritos = { ...ci, [uid]: false }
       return classRef.update({ inscritos, inscritos_numero }).then(r => {
-        userRef.update({ clases, creditos }).then(r => 202)
+        return userRef.update({ clases, creditos }).then(r => 202)
       })
     })
   })
