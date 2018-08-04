@@ -333,7 +333,7 @@ class Perfil extends Component {
                       name="telefono"
                       label="Teléfono"
                       validations="isNumeric"
-                      validationError="Ingresa un telefono válido"
+                      validationError="Ingresa un número teléfono válido"
                       required
                       value={auth.telefono}
                     />

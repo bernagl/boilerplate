@@ -53,7 +53,7 @@ export default class Registro extends Component {
                         maxLength: 10,
                         minLength: 10
                       }}
-                      validationError="Ingresa una numero de teléfono válida"
+                      validationError="Ingresa un número de teléfono válido"
                       required
                     />
                     <Input
