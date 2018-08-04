@@ -234,11 +234,11 @@ class Perfil extends Component {
         <div className="row">
           <div className="col-12 col-md-4">
             <div className="container-shadow p-2 p-md-4 center-text">
-              <img
+              {/* <img
                 src="https://pbs.twimg.com/profile_images/953277124558770176/MkOOnpFn_400x400.jpg"
                 alt="Profile pic"
                 className="profile-pic"
-              />
+              /> */}
               <h3 className="mt-2">{auth.nombre}</h3>
               <span>Miembro desde: {moment(auth.created_at).format('LL')}</span>
               <br />
