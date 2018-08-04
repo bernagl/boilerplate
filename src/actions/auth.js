@@ -125,8 +125,8 @@ export const getAuth = params => async dispatch => {
                 pagos
               }
             })
+            params.setState({ loading: false })
           })
-        params.setState({ loading: false })
       })
     } else {
       dispatch({ type: LOGOUT })
