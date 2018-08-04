@@ -277,6 +277,10 @@ class Perfil extends Component {
                   suscripción <Link to="/comprar">aquí</Link>
                 </div>
               )}
+              <Divider />
+              <div>
+                <a onClick={this.props.logout}>Cerrar sesión</a>
+              </div>
             </div>
           </div>
           <div className="col-12 col-md-8 my-4 mt-md-0">

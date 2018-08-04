@@ -6,7 +6,7 @@ import AuthWrapper from '../components/AuthWrapper'
 
 export default () => {
   return (
-    <AuthWrapper type="recuperar">
+    <AuthWrapper type="recover">
       {action => (
         <div className="row margin-auto">
           <div className="col-12 col-md-5 col-lg-4 col-xl-3 login-box">

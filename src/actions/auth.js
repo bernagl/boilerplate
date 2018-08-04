@@ -1,6 +1,6 @@
 import { auth, db } from './firebase-config'
 import { LOGIN, LOGOUT, REGISTER } from '../types'
-import { Object } from 'core-js'
+import moment from 'moment'
 
 export const register = ({ correo, contrasena, nombre }) => async dispatch => {
   try {
@@ -10,11 +10,29 @@ export const register = ({ correo, contrasena, nombre }) => async dispatch => {
     )
     return db
       .ref(`usuario/${user.uid}`)
-      .set({ correo, nombre })
+      .set({
+        correo,
+        nombre,
+        status: 0,
+        clases: {},
+        creditos: {},
+        created_at: moment().format(),
+        tarjetas: {}
+      })
       .then(result => {
         dispatch({
           type: REGISTER,
-          payload: { correo, contrasena, nombre, uid: user.uid, creditos: 1 }
+          payload: {
+            correo,
+            contrasena,
+            nombre,
+            uid: user.uid,
+            creditos: 1,
+            status: 0,
+            clases: new Map(),
+            creditos: {},
+            tarjetas: []
+          }
         })
         return user.uid
       })
@@ -24,36 +42,37 @@ export const register = ({ correo, contrasena, nombre }) => async dispatch => {
 }
 
 export const login = ({ correo, contrasena }) => async dispatch => {
-  try {
-    const { user } = await auth.signInWithEmailAndPassword(correo, contrasena)
-    const clases = []
-    return db
-      .ref(`usuario/${user.uid}`)
-      .update({ last_login: Date.now() })
-      .then(result => {
-        db.ref(`usuario/${user.uid}`).once('value', snapshot => {
-          db.ref('usuario/' + user.uid)
-            .child('clases')
-            .once('value', snap => {
-              snap.forEach(clase =>
-                clases.push({
-                  id: clase.key,
-                  ...clase.val(),
-                  profesor: clase.val().profesor.nombre
-                })
-              )
-              dispatch({
-                type: LOGIN,
-                payload: { uid: user.uid, ...snapshot.val(), clases }
-              })
-            })
-        })
-        return user.uid
-      })
-  } catch (e) {
-    console.error(e)
-    return false
-  }
+  // try {
+  const { user } = await auth.signInWithEmailAndPassword(correo, contrasena)
+  return user.uid
+  //   const clases = []
+  //   return db
+  //     .ref(`usuario/${user.uid}`)
+  //     .update({ last_login: Date.now() })
+  //     .then(result => {
+  //       db.ref(`usuario/${user.uid}`).once('value', snapshot => {
+  //         db.ref('usuario/' + user.uid)
+  //           .child('clases')
+  //           .once('value', snap => {
+  //             snap.forEach(clase =>
+  //               clases.push({
+  //                 id: clase.key,
+  //                 ...clase.val(),
+  //                 profesor: clase.val().profesor.nombre
+  //               })
+  //             )
+  //             dispatch({
+  //               type: LOGIN,
+  //               payload: { uid: user.uid, ...snapshot.val(), clases }
+  //             })
+  //           })
+  //       })
+  //       return user.uid
+  //     })
+  // } catch (e) {
+  //   console.error(e)
+  //   return false
+  // }
 }
 
 export const getAuth = params => async dispatch => {

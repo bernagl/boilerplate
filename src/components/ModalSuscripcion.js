@@ -3,15 +3,16 @@ import { Alert, Divider, Modal } from 'antd'
 import moment from 'moment'
 import FormTarjeta from './FormTarjeta'
 import { saveCard } from '../actions/tarjeta'
+import { withRouter } from 'react-router-dom'
 
-export default class Suscripcion extends React.Component {
+class Suscripcion extends React.Component {
   state = {
     visible: true
   }
 
   paySubscription = async model => {
     const { correo, nombre, uid } = this.props.auth
-    const r = await saveCard({
+    const r = await saveCard(this.props.history.push)({
       ...model,
       uid,
       correo,
@@ -52,3 +53,5 @@ export default class Suscripcion extends React.Component {
     )
   }
 }
+
+export default withRouter(Suscripcion)

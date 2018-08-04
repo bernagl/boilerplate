@@ -4,12 +4,12 @@ import Input from './Input'
 
 export default ({ action }) => {
   return (
-    <Form submitText="Pagar" action={model => action(model)}>
+    <Form submitText="Pagar" dontShowError action={model => action(model)}>
       <Input
         name="tarjeta"
         label="Tarjeta"
         validations={{
-          minLength: 16,
+          minLength: 15,
           isNumeric: true,
           maxLength: 16
         }}

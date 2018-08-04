@@ -48,7 +48,11 @@ class ComprarCreditos extends Component {
   saveCard = async model => {
     const { correo, nombre, uid } = this.props.auth
     const { paquete, metodo, sucursal } = this.state
-    const r = saveCard({
+    if (!paquete) {
+      message.error('Debes seleccionar un paquete')
+      return
+    }
+    const r = saveCard(this.props.history.push)({
       ...model,
       uid,
       precio: +paquete.precio,
@@ -68,7 +72,7 @@ class ComprarCreditos extends Component {
     const { paquete, metodo, sucursal } = this.state
     const { tarjetas, uid } = this.props.auth
     const tarjeta = tarjetas[metodo - 1]
-    payWithCard({
+    payWithCard(this.props.history.push)({
       uid,
       precio: +paquete.precio,
       creditos: +paquete.creditos,
@@ -120,7 +124,7 @@ class ComprarCreditos extends Component {
                 className="fw mt-2 mb-4"
                 placeholder="Selecciona un gimnasio"
                 onChange={id => this.handlePaquetes(id)}
-                
+
                 // defaultValue={}
               >
                 {gimnasios.map(({ nombre, id }) => (
@@ -183,7 +187,9 @@ class ComprarCreditos extends Component {
                   <h4>Método de pago: </h4>
                   {tarjetas.length > 0 && (
                     <Select
-                      onChange={metodo => this.setState({ metodo })}
+                      onChange={metodo =>
+                        this.setState({ metodo, nuevaTarjeta: false })
+                      }
                       disabled={paquete ? false : true}
                       className="fw"
                       placeholder="Selecciona un método de pago"
@@ -195,14 +201,16 @@ class ComprarCreditos extends Component {
                       ))}
                     </Select>
                   )}
-                  <div className="mt-2">
-                    <span
-                      onClick={() => this.setState({ nuevaTarjeta: true })}
-                      className="a"
-                    >
-                      Agregar nueva tarjeta
-                    </span>
-                  </div>
+                  {!nuevaTarjeta && (
+                    <div className="mt-2">
+                      <span
+                        onClick={() => this.setState({ nuevaTarjeta: true })}
+                        className="a"
+                      >
+                        Agregar nueva tarjeta
+                      </span>
+                    </div>
+                  )}
                 </div>
                 {paquete && (
                   <div className="col-12 my-2">

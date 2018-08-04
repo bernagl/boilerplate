@@ -15,17 +15,26 @@ class Form extends Component {
   }
 
   submit = async model => {
-    const { action, uid, error, history, redirect, success } = this.props
+    const {
+      action,
+      uid,
+      error,
+      history,
+      redirect,
+      success,
+      dontShowError
+    } = this.props
     this.setState({ loading: true })
-    const r = await action({...model, uid})
+    const r = await action({ ...model, uid })
     // this.setState(() => {
     r
       ? (message.success(success),
         redirect ? history.push(redirect) : this.setState({ loading: false }))
       : (this.setState({ loading: false }),
-        message.error(
-          error ? error : 'Ocurrio un error, por favor intentalo de nuevo'
-        ))
+        !dontShowError &&
+          message.error(
+            error ? error : 'Ocurrio un error, por favor intentalo de nuevo'
+          ))
 
     // !redirect && this.setState({ loading: false })
     // },
