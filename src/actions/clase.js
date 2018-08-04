@@ -11,6 +11,22 @@ export const getClases = () => dispatch => {
   })
 }
 
+export const agregarEnEspera = ({ uid, cid }) => {
+  const horarioRef = db.ref('horario').child(cid)
+  const usuarioRef = db.ref('usuario').child(uid)
+  return horarioRef.once('value').then(hsnap => {
+    const { espera: cespera } = hsnap.val()
+    const espera = { ...cespera, [uid]: true }
+    return horarioRef.update({ espera }).then(r => {
+      return usuarioRef.once('value').then(usnap => {
+        const { clases: uclases } = usnap.val()
+        const clases = { ...uclases, [cid]: 3 }
+        return usuarioRef.update({ clases }).then(r => 202)
+      })
+    })
+  })
+}
+
 export const cancelarClase = ({ sid, costo, cid, uid }) => {
   const userRef = db.ref('usuario').child(uid)
   const classRef = db.ref('horario').child(cid)

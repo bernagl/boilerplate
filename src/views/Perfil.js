@@ -124,7 +124,16 @@ class Perfil extends Component {
       label: 'Profesor',
       Render: ({ instructor: { nombre } }) => <span>{nombre}</span>
     },
-    { label: 'Fecha', key: 'fecha' },
+    {
+      label: 'Fecha',
+      key: 'fecha',
+      Render: ({ inicio }) => <span>{moment(inicio).format('LL')}</span>
+    },
+    {
+      label: 'Hora',
+      key: 'hora',
+      Render: ({ inicio }) => <span>{moment(inicio).format('LT')}</span>
+    },
     { label: 'Créditos', key: 'costo' },
     {
       label: 'Estatus',
@@ -168,11 +177,11 @@ class Perfil extends Component {
                   : item.status === 2
                     ? 'Cancelada'
                     : item.status === 3
-                      ? 'En cola'
+                      ? 'En lista de espera'
                       : 'Cumplida'}
               </Tag>
             </Popover>
-            {(item.status === 0 || item.status === 3) && (
+            {item.status === 0 && (
               <Popconfirm
                 title="¿Deseas cancelar la clase?"
                 okText="Si"

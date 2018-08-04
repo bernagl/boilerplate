@@ -44,7 +44,7 @@ export const Body = ({ clases, dates, dias, eventHandler }) => {
                     clase = clases.get(ev.id)
                     active = clase.status
                   }
-                  const cola = ev.cupo <= ev.inscritos_cantidad ? true : false
+                  const cola = ev.cupo <= ev.inscritos_numero ? true : false
                   const future = moment(ev.fin) >= moment()
                   return (
                     <div
@@ -67,7 +67,7 @@ export const Body = ({ clases, dates, dias, eventHandler }) => {
                       <span>{ev.instructor.nombre}</span>
                       <br />
                       <span>
-                        {moment(ev.inicio).format('LT')} -{' '}
+                        {moment(ev.inicio).format('LT')} - {' '}
                         {moment(ev.fin).format('LT')}
                       </span>
                       {ev.salon && (

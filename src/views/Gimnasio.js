@@ -7,7 +7,7 @@ import { Button, Icon, message, Radio } from 'antd'
 import moment from 'moment-timezone'
 import 'moment/locale/es'
 import { Body, Header } from '../components/Calendario'
-import { getClases } from '../actions/clase'
+import { agregarEnEspera, getClases } from '../actions/clase'
 import { getGimnasiosByStatus } from '../actions/gimnasio'
 
 const RadioButton = Radio.Button
@@ -137,7 +137,7 @@ class Gimnasio extends Component {
     })
   }
 
-  eventHandler = (event, cola) => {
+  eventHandler = async (event, cola) => {
     const {
       gymSelected,
       gimnasios,
@@ -152,7 +152,7 @@ class Gimnasio extends Component {
     let isSet = clases.has(event.id)
     let clase = clases.get(event.id)
     let clasesCount = cc
-    console.log(clase)
+    console.log(event)
     if (isSet && clase.status === 1) {
       message.error('Para cancelar la clase debe ser desde tu perfil')
       return
@@ -168,6 +168,18 @@ class Gimnasio extends Component {
         )
       )
         return
+      else {
+        const r = await agregarEnEspera({
+          uid: this.props.auth.uid,
+          cid: event.id
+        })
+        r === 202
+          ? message.success(
+              'Fuiste agregado a la lista de espera, si un usuario cancela la clase se t enotificará'
+            )
+          : message.error('Ocurrió un error, por favor vuelve a intentarlo')
+        return
+      }
     }
 
     if (creditos >= 1) {
