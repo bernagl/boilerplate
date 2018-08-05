@@ -24,9 +24,10 @@ export const register = ({
         status: 0,
         telefono,
         clases: {},
-        creditos: {},
+        creditos: { '-LJ5w7hFuZxYmwiprTIY': 1 },
         created_at: moment().format(),
-        tarjetas: {}
+        tarjetas: {},
+        invitado: true
       })
       .then(result => {
         dispatch({
@@ -37,11 +38,12 @@ export const register = ({
             contrasena,
             nombre,
             telefono,
+            invitado: true,
             uid: user.uid,
             // creditos: 1,
             status: 0,
             clases: new Map(),
-            creditos: { '-LJ0vzCiwFniQ4co-RT8': 1 },
+            creditos: { '-LJ5w7hFuZxYmwiprTIY': 1 },
             tarjetas: []
           }
         })

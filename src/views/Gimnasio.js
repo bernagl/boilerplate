@@ -47,8 +47,8 @@ class Gimnasio extends Component {
     this.props.getGimnasiosByStatus(1)
     this.props.getClases()
     const { creditos } = this.props.cart
-    const { clases, status } = this.props.auth
-    if (status === 0) this.props.history.push('/comprar')
+    const { clases, invitado, status } = this.props.auth
+    if (status === 0 && !invitado) this.props.history.push('/comprar')
     this.setState({
       creditos,
       clases: new Map(clases)
