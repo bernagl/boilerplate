@@ -18,7 +18,8 @@ import {
   Popconfirm,
   Popover,
   Tabs,
-  Tag
+  Tag,
+  Tooltip
 } from 'antd'
 import moment from 'moment'
 
@@ -199,7 +200,7 @@ class Perfil extends Component {
   render() {
     const { auth, gimnasios, updateProfile } = this.props
     const { metodosCol, pagos } = this.state
-    let { creditos } = auth
+    let { creditos, ilimitado, isIlimitado } = auth
     const c = []
     if (typeof creditos === 'undefined') creditos = {}
     auth.clases.forEach(clase =>
@@ -258,6 +259,19 @@ class Perfil extends Component {
               <div className="mb-0">
                 Total de clases compradas: {clases.length}
               </div>
+              {isIlimitado && (
+                <div className="cp my-3">
+                  <Tooltip
+                    title="Podrás reservar las clases que quieras hasta que finalice tu paquete ilimitado"
+                    placement="bottom"
+                  >
+                    <span>
+                      <b>Paquete ilimitado (?)</b>
+                    </span>
+                  </Tooltip>
+                  <div><span>Vence: {moment(ilimitado.fin).format('LL')}</span></div>
+                </div>
+              )}
               <Divider />
               <div>Créditos</div>
               {gimnasios.map(gym => (

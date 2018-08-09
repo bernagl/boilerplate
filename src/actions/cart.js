@@ -33,27 +33,36 @@ export const confirmCheckout = props => {
               .child(clase.id)
               .update({ inscritos, inscritos_numero: c.inscritos_numero + 1 })
               .then(r => {
-                const creditos = clase.costo ? clase.costo : 1
-                ucreditos = {
-                  ...ucreditos,
-                  [clase.gimnasio.id]: ucreditos[clase.gimnasio.id] - +creditos
-                }
                 uclases = { ...uclases, [clase.id]: 1 }
-                if (invitado) invitado = !invitado
                 const last_class =
                   moment(usuario.last_class).format() >
                   moment(clase.inicio).format()
                     ? moment(usuario.last_class).format()
                     : moment(clase.inicio).format()
-                return usuarioRef
-                  .update({
-                    creditos: { ...ucreditos },
-                    clases: uclases,
-                    last_class,
-                    invitado
-                  })
-                  .then(r => 202)
-                  .catch(e => 404)
+                if (!props.isIlimitado) {
+                  const creditos = clase.costo ? clase.costo : 1
+                  ucreditos = {
+                    ...ucreditos,
+                    [clase.gimnasio.id]:
+                      ucreditos[clase.gimnasio.id] - +creditos
+                  }
+
+                  if (invitado) invitado = !invitado
+                  return usuarioRef
+                    .update({
+                      creditos: { ...ucreditos },
+                      clases: uclases,
+                      last_class,
+                      invitado
+                    })
+                    .then(r => 202)
+                    .catch(e => 404)
+                } else {
+                  return usuarioRef
+                    .update({ clases: uclases, last_class })
+                    .then(r => 202)
+                    .catch(e => 404)
+                }
               })
               .catch(e => 404)
           })

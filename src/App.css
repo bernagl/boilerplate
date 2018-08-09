@@ -30,6 +30,10 @@ body {
   cursor: pointer;
 }
 
+.cp {
+  cursor: pointer;
+}
+
 .inline-block {
   display: inline-block;
 }

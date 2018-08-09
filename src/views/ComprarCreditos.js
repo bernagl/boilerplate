@@ -50,11 +50,13 @@ class ComprarCreditos extends Component {
       message.error('Debes seleccionar un paquete')
       return
     }
+    const { meses, creditos } = paquete
     const r = saveCard(this.props.history.push)({
       ...model,
       uid,
       precio: +paquete.precio,
-      creditos: +paquete.creditos,
+      creditos,
+      meses,
       name: paquete.nombre,
       correo,
       nombre,
@@ -70,10 +72,12 @@ class ComprarCreditos extends Component {
     const { paquete, metodo, sucursal } = this.state
     const { tarjetas, uid } = this.props.auth
     const tarjeta = tarjetas[metodo - 1]
+    const { meses, creditos } = paquete
     payWithCard(this.props.history.push)({
       uid,
       precio: +paquete.precio,
-      creditos: +paquete.creditos,
+      meses,
+      creditos,
       name: paquete.nombre,
       parent_id: tarjeta.parent_id,
       conekta_id: tarjeta.id,
@@ -106,7 +110,7 @@ class ComprarCreditos extends Component {
   }
   render() {
     const { metodo, nuevaTarjeta, paquete, paquetes, sucursal } = this.state
-    const { auth, updateProfile, gimnasios } = this.props
+    const { auth, gimnasios } = this.props
     let { creditos: c, tarjetas } = this.props.auth
     if (typeof c === 'undefined') c = {}
     const creditos = sucursal ? (c[sucursal.id] ? c[sucursal.id] : 0) : 0
@@ -172,7 +176,9 @@ class ComprarCreditos extends Component {
                         <span>Sucursal: {sucursal.nombre}</span>
                         <br />
                         <span>Paquete: {paquete.nombre}</span> <br />
-                        <span>Creditos: {paquete.creditos}</span> <br />
+                        {paquete['creditos'] && (
+                          <div>Creditos: {paquete.creditos}</div>
+                        )}
                         <span>Precio: MXN${paquete.precio}</span>
                         {auth.status === 0 && <span>Suscripción: MXN$150</span>}
                       </div>
@@ -210,16 +216,17 @@ class ComprarCreditos extends Component {
                     </div>
                   )}
                 </div>
-                {paquete && (
-                  <div className="col-12 my-2">
-                    <div>
-                      <span>Saldo anterior: {creditos}</span>
+                {paquete &&
+                  (paquete['creditos'] && (
+                    <div className="col-12 my-2">
+                      <div>
+                        <span>Saldo anterior: {creditos}</span>
+                      </div>
+                      <div>
+                        <span>Saldo nuevo: {creditos + +paquete.creditos}</span>
+                      </div>
                     </div>
-                    <div>
-                      <span>Saldo nuevo: {creditos + +paquete.creditos}</span>
-                    </div>
-                  </div>
-                )}
+                  ))}
                 {!nuevaTarjeta && (
                   <div className="col-12 my-2">
                     <Button

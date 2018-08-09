@@ -86,10 +86,20 @@ export const getAuth = params => async dispatch => {
   let pagos = []
   // let tarjetas = []
   auth.onAuthStateChanged(function(user) {
+    console.log(user)
     if (user) {
       db.ref(`usuario/${user.uid}`).on('value', async snapshot => {
-        let { clases: uclases } = snapshot.val()
+        let { clases: uclases, ilimitado } = snapshot.val()
+        let isIlimitado = false
         if (typeof uclases === 'undefined') uclases = {}
+        if (typeof ilimitado === 'undefined') isIlimitado = false
+        else {
+          if (moment().format() > moment(ilimitado.fin).format()) {
+            isIlimitado = false
+          } else {
+            isIlimitado = true
+          }
+        }
         const clasesPromise = Object.keys(uclases).map(clase =>
           db
             .ref('horario')
@@ -130,6 +140,7 @@ export const getAuth = params => async dispatch => {
                 uid: user.uid,
                 ...snapshot.val(),
                 clases,
+                isIlimitado,
                 tarjetas,
                 pagos
               }

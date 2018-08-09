@@ -11,7 +11,7 @@ class Checkout extends Component {
   state = { loading: false, label: 'Confirmar' }
   confirm = async ({ clases, creditos, items }) => {
     this.setState({ loading: true, label: 'Asignando clases' })
-    const { invitado, uid } = this.props.auth
+    const { invitado, uid, isIlimitado } = this.props.auth
     const c = []
     clases.forEach(item => item.status === 3 && c.push(item))
     const r = await confirmCheckout({
@@ -19,6 +19,7 @@ class Checkout extends Component {
       clases: c,
       invitado,
       uid,
+      isIlimitado,
       fecha: moment().format()
     })
 

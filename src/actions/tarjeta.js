@@ -1,5 +1,6 @@
 import { db } from './firebase-config'
 import { message } from 'antd'
+import moment from 'moment'
 
 export const saveCard = push => async model => {
   var data = {
@@ -58,32 +59,62 @@ export const payWithCard = push => model => {
             .push({ ...info })
             .then(r => {
               const cid = r.key
+              const pagos = { ...usuario.pagos, [cid]: true }
               if (model.type === 'paquete') {
-                let sucursalCreditos = 0
-                if (typeof usuario.creditos !== 'undefined') {
-                  sucursalCreditos = usuario['creditos'][model.sid]
+                if (model.meses) {
+                  const { ilimitado } = usuario
+                  let inicio, fin
+                  const now = moment()
+                  if (typeof ilimitado === 'undefined') {
+                    inicio = now.format()
+                    fin = now.add(model.meses, 'M')
+                  } else {
+                    if (moment(fin).format() < now.format()) {
+                      inicio = now.format()
+                      fin = now.add(model.meses, 'M')
+                    } else {
+                      inicio = ilimitado['inicio']
+                      fin = moment(ilimitado.fin).add(model.meses, 'M')
+                    }
+                  }
+                  userRef
+                    .update({
+                      pagos,
+                      ilimitado: {
+                        inicio: moment(inicio).format(),
+                        fin: moment(fin).format()
+                      }
+                    })
+                    .then(r => {
+                      message.success('El paquete ilímitado se ha comprado')
+                      push('/')
+                    })
+                } else {
+                  let sucursalCreditos = 0
+                  if (typeof usuario.creditos !== 'undefined') {
+                    sucursalCreditos = usuario['creditos'][model.sid]
+                  }
+                  if (!sucursalCreditos) sucursalCreditos = +model.creditos
+                  else sucursalCreditos += +model.creditos
+                  userRef
+                    .update({
+                      creditos: {
+                        ...usuario.creditos,
+                        [model.sid]: sucursalCreditos
+                      },
+                      pagos
+                    })
+                    .then(() => {
+                      message.success('El paquete se ha comprado')
+                      push('/')
+                    })
                 }
-                if (!sucursalCreditos) sucursalCreditos = model.creditos
-                else sucursalCreditos += model.creditos
-                userRef
-                  .update({
-                    creditos: usuario.creditos + model.creditos,
-                    creditos: {
-                      ...usuario.creditos,
-                      [model.sid]: sucursalCreditos
-                    },
-                    pagos: { ...usuario.pagos, [cid]: true }
-                  })
-                  .then(() => {
-                    message.success('El paquete se ha comprado')
-                    push('/')
-                  })
               } else if (model.type === 'subscripcion') {
                 userRef
                   .update({
                     status: 1,
                     last_class: model.fecha,
-                    pagos: { ...usuario.pagos, [cid]: true }
+                    pagos
                   })
                   .then(() => {
                     message.success('Gracias por renovar tu suscripción')
