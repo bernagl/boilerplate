@@ -224,6 +224,8 @@ class Perfil extends Component {
             : 0
     )
 
+
+
     return (
       <AnimationWrapper>
         <div className="row">

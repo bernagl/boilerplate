@@ -1,5 +1,6 @@
 import { db } from './firebase-config'
 import { GET_CLASES } from '../types'
+import moment from 'moment'
 
 export const getClases = () => dispatch => {
   const collection = []
@@ -31,8 +32,14 @@ export const cancelarClase = ({ sid, costo, cid, uid }) => {
   const userRef = db.ref('usuario').child(uid)
   const classRef = db.ref('horario').child(cid)
   return userRef.once('value').then(snapshot => {
-    const { clases: uclases, creditos: ucreditos } = snapshot.val()
-    const creditos = { ...ucreditos, [sid]: ucreditos[sid] + costo }
+    const { clases: uclases, creditos: ucreditos, ilimitado } = snapshot.val()
+    let isIlimitado = false
+    if (typeof ilimitado === 'undefined') isIlimitado = false
+    else isIlimitado = moment(ilimitado.fin) > moment() ? true : false
+    const creditos = {
+      ...ucreditos,
+      [sid]: isIlimitado ? ucreditos[sid] : ucreditos[sid] + costo
+    }
     const clases = { ...uclases, [cid]: 2 }
     return classRef.once('value').then(sclase => {
       const { inscritos: ci, inscritos_numero: cin } = sclase.val()

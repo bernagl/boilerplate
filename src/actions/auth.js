@@ -86,7 +86,6 @@ export const getAuth = params => async dispatch => {
   let pagos = []
   // let tarjetas = []
   auth.onAuthStateChanged(function(user) {
-    console.log(user)
     if (user) {
       db.ref(`usuario/${user.uid}`).on('value', async snapshot => {
         let { clases: uclases, ilimitado } = snapshot.val()

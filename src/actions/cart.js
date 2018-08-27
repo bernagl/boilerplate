@@ -18,7 +18,7 @@ export const confirmCheckout = props => {
       const creditos = usuario.creditos[clase.gimnasio.id]
         ? usuario.creditos[clase.gimnasio.id]
         : 0
-      if (creditos > 0) {
+      if (creditos > 0 || props.isIlimitado) {
         db.ref('horario')
           .child(clase.id)
           .once('value')
