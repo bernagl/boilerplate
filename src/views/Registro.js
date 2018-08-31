@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Form from '../components/Form'
 import Input from '../components/Input'
 import AuthWrapper from '../components/AuthWrapper'
-import { Checkbox } from 'antd'
+import Datepicker from '../components/Datepicker'
 
 export default class Registro extends Component {
   state = { terminos: false }
@@ -31,13 +31,14 @@ export default class Registro extends Component {
                       validationError="Ingresa un nombre válido"
                       required
                     />
-                    <Input
+                    {/* <Input
                       name="edad"
                       label="Edad (años)"
                       validations={{ isNumeric: true, maxLength: 2 }}
                       validationError="Ingresa una edad válida"
                       required
-                    />
+                    /> */}
+                    <Datepicker name="fecha_nacimiento" label="Fecha de nacimiento" />
                     <Input
                       name="correo"
                       label="Correo"
@@ -47,13 +48,13 @@ export default class Registro extends Component {
                     />
                     <Input
                       name="telefono"
-                      label="Teléfono"
+                      label="Celular"
                       validations={{
                         isNumeric: true,
                         maxLength: 10,
                         minLength: 10
                       }}
-                      validationError="Ingresa un número de teléfono válido"
+                      validationError="Ingresa un número de celular válido"
                       required
                     />
                     <Input

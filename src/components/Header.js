@@ -43,12 +43,6 @@ export default class extends React.Component {
               </label>
             </li>
             <li className="luxbar-item" onClick={this.handleCheck}>
-              <NavLink to="/perfil" activeClassName="active">
-                Mi cuenta
-              </NavLink>
-            </li>
-            {/* <li className="luxbar-item" onClick={this.handleCheck} onClick={() => openModal()}> */}
-            <li className="luxbar-item" onClick={this.handleCheck}>
               <NavLink to="/clase" activeClassName="active">
                 Clases
               </NavLink>
@@ -58,6 +52,12 @@ export default class extends React.Component {
                 Comprar créditos
               </NavLink>
             </li>
+            <li className="luxbar-item" onClick={this.handleCheck}>
+              <NavLink to="/perfil" activeClassName="active">
+                Mi cuenta
+              </NavLink>
+            </li>
+            {/* <li className="luxbar-item" onClick={this.handleCheck} onClick={() => openModal()}> */}
           </ul>
         </div>
       </header>

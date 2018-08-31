@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import AnimationWrapper from '../components/AnimationWrapper'
 import Form from '../components/Form'
 import Input from '../components/Input'
+import Datepicker from '../components/Datepicker'
 import Table from '../components/Table'
 import { logout } from '../actions/auth'
 import { getPagos, updateProfile, updateUserStatus } from '../actions/perfil'
@@ -31,7 +32,15 @@ const pagosCol = [
     Render: ({ fecha }) => <span>{moment(fecha).format('LL')}</span>
   },
   { label: 'Tipo', key: 'name' },
-  { label: 'Precio', Render: ({ precio }) => <span>MXN${precio}</span> },
+  {
+    label: 'Precio',
+    Render: ({ precio }) => (
+      <span>
+        MXN$
+        {precio}
+      </span>
+    )
+  },
   { label: 'Créditos', Render: ({ creditos }) => <span>{creditos}</span> },
   { label: 'Sucursal', Render: ({ sucursal }) => <span>{sucursal}</span> },
   {
@@ -56,7 +65,9 @@ class Perfil extends Component {
         label: 'Tarjeta',
         Render: ({ bin, last4, brand }) => (
           <span>
-            {brand} - {bin}XXXXXX{last4}
+            {brand} - {bin}
+            XXXXXX
+            {last4}
           </span>
         )
       },
@@ -224,8 +235,6 @@ class Perfil extends Component {
             : 0
     )
 
-
-
     return (
       <AnimationWrapper>
         <div className="row">
@@ -271,7 +280,9 @@ class Perfil extends Component {
                       <b>Paquete ilimitado (?)</b>
                     </span>
                   </Tooltip>
-                  <div><span>Vence: {moment(ilimitado.fin).format('LL')}</span></div>
+                  <div>
+                    <span>Vence: {moment(ilimitado.fin).format('LL')}</span>
+                  </div>
                 </div>
               )}
               <Divider />
@@ -353,14 +364,19 @@ class Perfil extends Component {
                       required
                       value={auth.telefono}
                     />
-                    <Input
+                    <Datepicker
+                      name="fecha_nacimiento"
+                      label="Fecha de nacimiento"
+                      defaultValue={auth.fecha_nacimiento}
+                    />
+                    {/* <Input
                       name="edad"
                       label="Edad (años)"
                       validations={{ isNumeric: true, maxLength: 2 }}
                       validationError="Ingresa una edad válida"
                       required
                       value={auth.edad}
-                    />
+                    /> */}
                   </Form>
                 </TabPane>
               </Tabs>

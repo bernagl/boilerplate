@@ -8,7 +8,8 @@ export const register = ({
   contrasena,
   nombre,
   telefono,
-  edad
+  // edad,
+  fecha_nacimiento
 }) => async dispatch => {
   try {
     const { user } = await auth.createUserWithEmailAndPassword(
@@ -19,7 +20,7 @@ export const register = ({
       .ref(`usuario/${user.uid}`)
       .set({
         correo,
-        edad,
+        // edad,
         nombre,
         status: 0,
         telefono,
@@ -27,14 +28,15 @@ export const register = ({
         creditos: { '-LJ5w7hFuZxYmwiprTIY': 1 },
         created_at: moment().format(),
         tarjetas: {},
-        invitado: true
+        invitado: true,
+        fecha_nacimiento
       })
       .then(result => {
         dispatch({
           type: REGISTER,
           payload: {
             correo,
-            edad,
+            // edad,
             contrasena,
             nombre,
             telefono,
@@ -44,7 +46,8 @@ export const register = ({
             status: 0,
             clases: new Map(),
             creditos: { '-LJ5w7hFuZxYmwiprTIY': 1 },
-            tarjetas: []
+            tarjetas: [],
+            fecha_nacimiento
           }
         })
         return user.uid

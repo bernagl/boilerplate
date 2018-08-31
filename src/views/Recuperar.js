@@ -24,7 +24,7 @@ export default () => {
                     name="correo"
                     label="Correo"
                     validations="isEmail"
-                    validationError="Ingresa un email válido"
+                    validationError="Ingresa un correo válido"
                     required
                   />
                 </Form>
@@ -36,7 +36,7 @@ export default () => {
               </div>
               <div className="col-12 mt-4 center-text">
                 <span>
-                  <Link to="/registro">Registrate</Link>
+                  <Link to="/registro">Regístrate</Link>
                 </span>
               </div>
             </div>

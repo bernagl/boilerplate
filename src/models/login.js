@@ -4,7 +4,7 @@ export default [
     label: 'Correo',
     validations: 'isEmail',
     type: 'email',
-    validationError: 'Ingrese un correo válido',
+    validationError: 'Ingresa un correo válido',
     required: true
   },
   {
@@ -12,7 +12,7 @@ export default [
     label: 'Contraseña',
     validations: 'minLength:6',
     type: 'password',
-    validationError: 'Ingrese una contraseña válida',
+    validationError: 'Ingresa una contraseña válida',
     required: true
   }
 ]

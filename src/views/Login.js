@@ -22,13 +22,15 @@ export default () => {
                   success="Bienvenido"
                   dontShowError
                 >
-                  {Login.map((input, i) => <Input key={i} {...input} />)}
+                  {Login.map((input, i) => (
+                    <Input key={i} {...input} />
+                  ))}
                 </Form>
               </div>
               <div className="col-12 mt-2 mt-md-5 center-text">
                 <p>
                   <span>¿Aún no tienes tu cuenta? </span>
-                  <Link to="/registro">Registrate</Link>
+                  <Link to="/registro">Regístrate</Link>
                 </p>
               </div>
               <div className="col-12 mt-3 center-text">
