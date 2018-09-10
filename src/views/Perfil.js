@@ -132,7 +132,7 @@ class Perfil extends Component {
       Render: ({ clase: { nombre } }) => <span>{nombre}</span>
     },
     {
-      label: 'Profesor',
+      label: 'Coach',
       Render: ({ instructor: { nombre } }) => <span>{nombre}</span>
     },
     {
@@ -307,9 +307,9 @@ class Perfil extends Component {
           <div className="col-12 col-md-8 my-4 mt-md-0">
             <div className="container-shadow p-2 p-md-4">
               <Tabs defaultActiveKey="1">
-                <TabPane tab="Mis clases" key="1">
+                <TabPane tab="Clase(s)" key="1">
                   <Table
-                    title="Mis clases"
+                    title="Clase(s)"
                     data={clases}
                     Render={() => (
                       <div className="mt-2 mb-3">

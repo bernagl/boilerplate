@@ -8,7 +8,17 @@ export const getClases = () => dispatch => {
     snapshot.forEach(element => {
       collection.push({ id: element.key, reservada: false, ...element.val() })
     })
-    dispatch({ type: GET_CLASES, payload: collection })
+
+    const clasesOrdered = collection.sort(
+      (a, b) =>
+        moment(a.inicio) > moment(b.inicio)
+          ? 1
+          : moment(a.inicio) < moment(b.inicio)
+            ? -1
+            : 0
+    )
+
+    dispatch({ type: GET_CLASES, payload: clasesOrdered })
   })
 }
 

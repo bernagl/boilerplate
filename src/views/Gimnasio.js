@@ -49,7 +49,7 @@ class Gimnasio extends Component {
     const { creditos } = this.props.cart
     const { clases, invitado, isIlimitado, ilimitado, status } = this.props.auth
 
-    if (status === 0 && !invitado) this.props.history.push('/comprar')
+    // if (status === 0 && !invitado) this.props.history.push('/comprar')
     this.setState({
       creditos,
       isIlimitado,
@@ -217,7 +217,15 @@ class Gimnasio extends Component {
           (clasesCount -= 1),
           message.warning('Clase devuelta'))
         : message.error('No tienes suficientes créditos')
-      this.setState({ clases, creditos: c, clasesCount })
+      this.setState({
+        clases,
+        creditos: c,
+        clasesCount,
+        sucursales: {
+          ...sucursales,
+          [gymId]: { creditos: c, nombre: sucursalNombre }
+        }
+      })
     }
   }
 
@@ -231,6 +239,10 @@ class Gimnasio extends Component {
 
   render() {
     const {
+      auth: { invitado, status }
+    } = this.props
+
+    const {
       dates,
       clasesCount,
       isIlimitado,
@@ -238,7 +250,8 @@ class Gimnasio extends Component {
       clases,
       gymSelected,
       gimnasios,
-      sucursales
+      sucursales,
+      creditos: c
     } = this.state
     let creditos =
       gimnasios.length > 0
@@ -246,7 +259,8 @@ class Gimnasio extends Component {
           ? sucursales[gimnasios[gymSelected].id].creditos
           : 0
         : 0
-    if (typeof creditos === 'undefined') creditos = 0
+
+    if (typeof creditos === 'undefined') creditos = c
     return (
       <AnimationWrapper>
         {/* <div className="row align-items-center"> */}
@@ -262,10 +276,22 @@ class Gimnasio extends Component {
                     onClick={this.setCheckout}
                     style={{ float: 'right' }}
                     className="btn-morado"
+                    disabled={status === 0 && !invitado ? true : false}
                   >
                     Checkout
                     <Icon type="right" />
                   </Button>
+                  {status === 0 &&
+                    !invitado && (
+                      <div>
+                        <span
+                          className="no-credits-label fade"
+                          style={{ color: '#ed174f' }}
+                        >
+                          Debes tener una suscripción activa para poder reservar
+                        </span>
+                      </div>
+                    )}
                 </div>
                 <div className="col-12">
                   <span>

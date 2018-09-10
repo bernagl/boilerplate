@@ -45,6 +45,7 @@ class Checkout extends Component {
             <Td>{gimnasio.nombre}</Td>
             <Td>{item.costo}</Td>
             <Td>{moment(item.inicio).format('LL')}</Td>
+            <Td>{moment(item.inicio).format('LT')}</Td>
           </Tr>
         ),
         (creditos += item.costo))
@@ -60,9 +61,11 @@ class Checkout extends Component {
                     <Thead>
                       <Tr>
                         <Th>Clase</Th>
-                        <Th>Profesor</Th>
+                        <Th>Coach</Th>
+                        <Th>Gimnasio</Th>
                         <Th>Créditos</Th>
                         <Th>Fecha</Th>
+                        <Th>Hora</Th>
                       </Tr>
                     </Thead>
                     <Tbody>{items}</Tbody>
