@@ -7,7 +7,7 @@ import Loading from './components/Loading'
 import { withRouter } from 'react-router-dom'
 
 class App extends Component {
-  state = { loading: true }
+  state = { loading: false }
   async componentDidMount() {
     this.props.getAuth(this)
   }

@@ -25,7 +25,7 @@ export const register = ({
         status: 0,
         telefono,
         clases: {},
-        creditos: { '-LJ5w7hFuZxYmwiprTIY': 1 },
+        creditos: { '-LJ5w7hFuZxYmwiprTIY': 1, '-LPrNpstwZt7J3NLUJXc': 1 },
         created_at: moment().format(),
         tarjetas: {},
         invitado: true,
@@ -45,7 +45,7 @@ export const register = ({
             // creditos: 1,
             status: 0,
             clases: new Map(),
-            creditos: { '-LJ5w7hFuZxYmwiprTIY': 1 },
+            creditos: { '-LJ5w7hFuZxYmwiprTIY': 1, '-LPrNpstwZt7J3NLUJXc': 1 },
             tarjetas: [],
             fecha_nacimiento
           }
@@ -120,7 +120,7 @@ export const getAuth = params => async dispatch => {
         db.ref('usuario')
           .child(user.uid)
           .once('value', async snap => {
-            let { tarjetas: cards } = snap.val()
+            let { tarjetas: cards, logs: userLogs } = snap.val()
             if (typeof cards === 'undefined') cards = {}
             const tarjetasPromise = Object.keys(cards).map(card =>
               db
@@ -132,6 +132,20 @@ export const getAuth = params => async dispatch => {
                   if (tarjeta) return { ...tarjeta, tid: r.key }
                 })
             )
+            const logsPromise =
+              typeof userLogs === 'undefined'
+                ? []
+                : Object.keys(userLogs).map(id =>
+                    db
+                      .ref('log')
+                      .child(id)
+                      .once('value')
+                      .then(r => {
+                        const log = r.val()
+                        if (log) return { ...log, lid: r.key }
+                      })
+                  )
+            const logs = await Promise.all(logsPromise)
             const tarjetasResolve = await Promise.all(tarjetasPromise)
             const tarjetas = tarjetasResolve.filter(
               tarjeta => tarjeta && tarjeta
@@ -142,6 +156,7 @@ export const getAuth = params => async dispatch => {
                 uid: user.uid,
                 ...snapshot.val(),
                 clases,
+                logs,
                 isIlimitado,
                 tarjetas,
                 pagos

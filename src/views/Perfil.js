@@ -208,6 +208,12 @@ class Perfil extends Component {
     }
   ]
 
+  logsCol = () => [
+    { label: 'Log', key: 'log' },
+    { label: 'Mótivo', key: 'motivo' },
+    { label: 'Fecha', Render: ({ fecha }) => moment(fecha).format('LLL') }
+  ]
+
   render() {
     const { auth, gimnasios, updateProfile } = this.props
     const { metodosCol, pagos } = this.state
@@ -378,6 +384,13 @@ class Perfil extends Component {
                       value={auth.edad}
                     /> */}
                   </Form>
+                </TabPane>
+                <TabPane tab="Logs" key="5">
+                  <Table
+                    title="Log(s)"
+                    data={auth.logs}
+                    cols={this.logsCol()}
+                  />
                 </TabPane>
               </Tabs>
             </div>

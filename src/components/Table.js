@@ -3,6 +3,7 @@ import { Table, Thead, Tbody, Tr, Td } from 'react-super-responsive-table'
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css'
 
 export default ({ title, cols, data, Render }) => {
+  console.log(title, cols)
   return (
     <div>
       {/* <h2 className="inline-block my-2">{title}</h2> */}
