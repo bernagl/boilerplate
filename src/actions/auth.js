@@ -87,7 +87,6 @@ export const login = ({ correo, contrasena }) => async dispatch => {
 export const getAuth = params => async dispatch => {
   let clases = new Map()
   let pagos = []
-  // let tarjetas = []
   auth.onAuthStateChanged(function(user) {
     if (user) {
       db.ref(`usuario/${user.uid}`).on('value', async snapshot => {
@@ -146,6 +145,9 @@ export const getAuth = params => async dispatch => {
                       })
                   )
             const logs = await Promise.all(logsPromise)
+            // const logs = this.orderByDate('fecha')(logsResolve)
+            console.log(logs)
+
             const tarjetasResolve = await Promise.all(tarjetasPromise)
             const tarjetas = tarjetasResolve.filter(
               tarjeta => tarjeta && tarjeta
