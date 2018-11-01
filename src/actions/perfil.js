@@ -21,7 +21,7 @@ export const updateUserStatus = ({ uid, status }) => {
 export const getPagos = context => async uid => {
   db.ref('usuario')
     .child(uid)
-    .on('value', async snapshot => {
+    .once('value', async snapshot => {
       const { pagos: p } = snapshot.val()
       if (!p) return
       const pagosPromise = Object.keys(p).map(pago => {

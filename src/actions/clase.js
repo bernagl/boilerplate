@@ -4,7 +4,7 @@ import moment from 'moment'
 
 export const getClases = () => dispatch => {
   const collection = []
-  db.ref('horario').on('value', function(snapshot) {
+  db.ref('horario').once('value', function(snapshot) {
     snapshot.forEach(element => {
       collection.push({ id: element.key, reservada: false, ...element.val() })
     })

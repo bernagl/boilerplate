@@ -8,48 +8,51 @@ import { confirmCheckout, setCheckout } from '../actions/cart'
 import moment from 'moment'
 
 class Checkout extends Component {
-  state = { loading: false, label: 'Confirmar' }
-  confirm = async ({ clases, creditos, items }) => {
-    this.setState({ loading: true, label: 'Asignando clases' })
-    const { invitado, uid, isIlimitado } = this.props.auth
-    const c = []
-    clases.forEach(item => item.status === 3 && c.push(item))
-    const r = await confirmCheckout({
-      creditos,
-      clases: c,
-      invitado,
-      uid,
-      isIlimitado,
-      fecha: moment().format()
+  state = { loading: false, label: 'Confirmar', clases: [], creditos: 0 }
+
+  componentDidMount() {
+    const { clases: c } = this.props.cart
+    const clases = []
+    let creditos = 0
+    c.forEach((item, i) => {
+      item.status === 3 && (clases.push(item), (creditos += item.costo))
     })
 
-    setTimeout(() => {
-      message.success('Tus clases se han comprado'),
-        this.props.history.push('/perfil'),
-        this.props.setCheckout({})
-    }, 1000)
+    this.setState({ clases, creditos })
+  }
+
+  confirm = () => {
+    const { clases, creditos } = this.state
+    this.setState({ loading: true, label: 'Asignando clases' })
+    console.log('state updated')
+    const { invitado, uid, isIlimitado } = this.props.auth
+    confirmCheckout(
+      {
+        creditos,
+        clases,
+        invitado,
+        uid,
+        isIlimitado,
+        fecha: moment().format()
+      },
+      this.successCheckout
+    )
+
+    console.log('post async request')
+
+    // setTimeout(() => {}, 1000)
+  }
+
+  successCheckout = () => {
+    message.success('Tus clases se han comprado')
+    this.props.setCheckout({})
+    this.props.history.push('/perfil')
   }
 
   render() {
-    const { clases, gimnasios } = this.props.cart
-    const { label, loading } = this.state
-    const items = []
-    let creditos = 0
-    clases.forEach((item, i) => {
-      const gimnasio = gimnasios.find(gym => gym.id === item.gimnasio.id)
-      item.status === 3 &&
-        (items.push(
-          <Tr key={i}>
-            <Td>{item.clase.nombre}</Td>
-            <Td>{item.instructor.nombre}</Td>
-            <Td>{gimnasio.nombre}</Td>
-            <Td>{item.costo}</Td>
-            <Td>{moment(item.inicio).format('LL')}</Td>
-            <Td>{moment(item.inicio).format('LT')}</Td>
-          </Tr>
-        ),
-        (creditos += item.costo))
-    })
+    const { clases, creditos, label, loading } = this.state
+    console.log(this.props)
+    console.log(this.state)
     return (
       <AnimationWrapper>
         <div className="row my-4">
@@ -68,13 +71,24 @@ class Checkout extends Component {
                         <Th>Hora</Th>
                       </Tr>
                     </Thead>
-                    <Tbody>{items}</Tbody>
+                    <Tbody>
+                      {clases.map((item, i) => (
+                        <Tr key={i}>
+                          <Td>{item.clase.nombre}</Td>
+                          <Td>{item.instructor.nombre}</Td>
+                          <Td>{item.gimnasio.nombre}</Td>
+                          <Td>{item.costo}</Td>
+                          <Td>{moment(item.inicio).format('LL')}</Td>
+                          <Td>{moment(item.inicio).format('LT')}</Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
                   </Table>
                 </div>
                 <div className="col-12 col-md-4 offset-md-8 my-4">
                   <div className="row">
                     <div className="col-12">
-                      <h3>Clases: {items.length}</h3>
+                      <h3>Clases: {clases.length}</h3>
                       <hr />
                       <h3>Total: {creditos} créditos</h3>
                     </div>
@@ -91,10 +105,8 @@ class Checkout extends Component {
                         <div className="col-6 ">
                           <Button
                             type="primary"
-                            disabled={items.length > 0 ? false : true}
-                            onClick={() =>
-                              this.confirm({ clases, creditos, items })
-                            }
+                            disabled={clases.length > 0 ? false : true}
+                            onClick={this.confirm}
                             loading={loading ? true : false}
                           >
                             {label}

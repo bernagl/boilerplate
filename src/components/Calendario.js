@@ -43,7 +43,7 @@ export const Body = ({ clases, dates, dias, eventHandler }) => {
                     clase = clases.get(ev.id)
                     active = clase.status
                   }
-                  const cola = ev.cupo <= ev.inscritos_numero ? true : false
+                  const cola = ev.cupo === ev.inscritos_numero ? true : false
                   const future = moment(ev.fin) >= moment()
                   return (
                     <div

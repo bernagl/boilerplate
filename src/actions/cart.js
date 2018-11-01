@@ -5,7 +5,7 @@ export const setCheckout = props => dispatch => {
   dispatch({ type: 'SET_CART', payload: props })
 }
 
-export const confirmCheckout = props => {
+export const confirmCheckout = (props, callback) => {
   const usuarioRef = db.ref('usuario').child(props.uid)
   return usuarioRef.once('value').then(snapshot => {
     const usuario = snapshot.val()
@@ -55,12 +55,12 @@ export const confirmCheckout = props => {
                       last_class,
                       invitado
                     })
-                    .then(r => 202)
+                    .then(r => callback())
                     .catch(e => 404)
                 } else {
                   return usuarioRef
                     .update({ clases: uclases, last_class })
-                    .then(r => 202)
+                    .then(r => callback())
                     .catch(e => 404)
                 }
               })
