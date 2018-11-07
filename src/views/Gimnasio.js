@@ -47,9 +47,8 @@ class Gimnasio extends Component {
     this.props.getGimnasiosByStatus(1)
     this.props.getClases()
     const { creditos } = this.props.cart
-    const { clases, invitado, isIlimitado, ilimitado, status } = this.props.auth
+    const { clases, isIlimitado, ilimitado } = this.props.auth
 
-    // if (status === 0 && !invitado) this.props.history.push('/comprar')
     this.setState({
       creditos,
       isIlimitado,
@@ -65,7 +64,7 @@ class Gimnasio extends Component {
       gimnasios
     } = newProps
     const { gymSelected } = this.state
-
+    if (clases === this.props.clases) return
     let sucursales = {}
     if (typeof creditos === 'undefined') creditos = {}
     gimnasios.map(
@@ -95,14 +94,10 @@ class Gimnasio extends Component {
     const {
       auth: { creditos: c }
     } = this.props
-    // const creditos =
-    //   gimnasios.length > 0 ? (c[gimnasios[i].id] ? c[gimnasios[i].id] : 0) : 0
     this.setState(
       {
         events: gimnasios[i].events,
         gymSelected: i
-        // sucursalSelected: { sucursal: gimnasios[i], creditos },
-        // sucursales: sucursalesC
       },
       () => this.daysHandler()
     )
@@ -127,7 +122,7 @@ class Gimnasio extends Component {
     }
     let d = [...dias]
     days.map((day, i) => {
-      const evts = events.filter((e, j) => moment(day).format('L') === e.fecha)
+      const evts = events.filter((e, j) => moment(day).format() === e.fecha)
       d[i] = { events: evts, name: d[i].name }
     })
 
@@ -259,11 +254,10 @@ class Gimnasio extends Component {
           ? sucursales[gimnasios[gymSelected].id].creditos
           : 0
         : 0
-
+    console.log(this.state.events)
     if (typeof creditos === 'undefined') creditos = c
     return (
       <AnimationWrapper>
-        {/* <div className="row align-items-center"> */}
         <div className="col-12 my-4">
           <div className="row">
             <div className="col-12 container-shadow p-2 p-md-4">
@@ -350,7 +344,6 @@ class Gimnasio extends Component {
             </div>
           </div>
         </div>
-        {/* </div> */}
       </AnimationWrapper>
     )
   }

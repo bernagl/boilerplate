@@ -136,6 +136,10 @@ class Perfil extends Component {
       Render: ({ instructor: { nombre } }) => <span>{nombre}</span>
     },
     {
+      label: 'Sucursal',
+      Render: ({ gimnasio: { nombre } }) => <span>{nombre}</span>
+    },
+    {
       label: 'Fecha',
       key: 'fecha',
       Render: ({ inicio }) => <span>{moment(inicio).format('LL')}</span>
@@ -232,25 +236,13 @@ class Perfil extends Component {
       })
     )
 
-    const clases = c.sort(
-      (a, b) =>
-        moment(a.inicio).format() > moment(b.inicio).format()
-          ? 1
-          : moment(a.inicio).format() < moment(b.inicio).format()
-            ? -1
-            : 0
-    )
+    const clases = c.sort((a, b) => moment(b.inicio) - moment(a.inicio))
 
     return (
       <AnimationWrapper>
         <div className="row">
           <div className="col-12 col-md-4">
             <div className="container-shadow p-2 p-md-4 center-text">
-              {/* <img
-                src="https://pbs.twimg.com/profile_images/953277124558770176/MkOOnpFn_400x400.jpg"
-                alt="Profile pic"
-                className="profile-pic"
-              /> */}
               <h3 className="mt-2">{auth.nombre}</h3>
               <span>Miembro desde: {moment(auth.created_at).format('LL')}</span>
               <br />
@@ -265,14 +257,6 @@ class Perfil extends Component {
                   )}
                 </span>
               </div>
-              {/* <div>
-                {today.diff(last_class, 'days') >= 30 && (
-                  <span>
-                    Última clase: {last_class.format('LL')} -{' '}
-                    {last_class.diff(today, 'days')}
-                  </span>
-                )}
-              </div> */}
               <div className="mb-0">
                 Total de clases compradas: {clases.length}
               </div>
@@ -375,14 +359,6 @@ class Perfil extends Component {
                       label="Fecha de nacimiento"
                       defaultValue={auth.fecha_nacimiento}
                     />
-                    {/* <Input
-                      name="edad"
-                      label="Edad (años)"
-                      validations={{ isNumeric: true, maxLength: 2 }}
-                      validationError="Ingresa una edad válida"
-                      required
-                      value={auth.edad}
-                    /> */}
                   </Form>
                 </TabPane>
                 <TabPane tab="Logs" key="5">
