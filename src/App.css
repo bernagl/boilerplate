@@ -108,13 +108,16 @@ body {
   .show-sm {
     display: block !important;
   }
+
   .hidden-sm {
     display: none !important;
   }
+
   .week {
     display: block !important;
     width: 100%;
   }
+
   .day {
     max-width: 100% !important;
     width: 100%;
@@ -244,6 +247,7 @@ body {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -271,4 +275,22 @@ body {
 .btn-morado {
   background-color: #745af2 !important;
   border-color: #745af2 !important;
+}
+
+
+/* Comprar créditos */
+.cardform {
+  position: relative;
+  /* padding:10px; */
+}
+
+.cardform .cardform__loader {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: lightgray;
+  z-index: 99;
+  opacity: .5;
 }

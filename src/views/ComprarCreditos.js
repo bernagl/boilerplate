@@ -22,7 +22,8 @@ class ComprarCreditos extends Component {
     metodo: null,
     paquetes: [],
     sucursal: null,
-    modal: false
+    modal: false,
+    loadingPayment: false
   }
 
   componentDidMount() {
@@ -51,20 +52,25 @@ class ComprarCreditos extends Component {
       return
     }
     const { meses, creditos } = paquete
-    const r = saveCard(this.props.history.push)({
-      ...model,
-      uid,
-      precio: +paquete.precio,
-      creditos,
-      meses,
-      name: paquete.nombre,
-      correo,
-      nombre,
-      fecha: moment().format(),
-      sucursal: sucursal.nombre,
-      sid: sucursal.id,
-      type: 'paquete'
-    })
+    this.setState({ loadingPayment: true })
+    const r = await saveCard(this.props.history.push)(
+      {
+        ...model,
+        uid,
+        precio: +paquete.precio,
+        creditos,
+        meses,
+        name: paquete.nombre,
+        correo,
+        nombre,
+        fecha: moment().format(),
+        sucursal: sucursal.nombre,
+        sid: sucursal.id,
+        type: 'paquete'
+      },
+      this
+    )
+    console.log(r)
     return r
   }
 
@@ -73,21 +79,25 @@ class ComprarCreditos extends Component {
     const { tarjetas, uid } = this.props.auth
     const tarjeta = tarjetas[metodo - 1]
     const { meses, creditos } = paquete
-    payWithCard(this.props.history.push)({
-      uid,
-      precio: +paquete.precio,
-      meses,
-      creditos,
-      name: paquete.nombre,
-      parent_id: tarjeta.parent_id,
-      conekta_id: tarjeta.id,
-      fecha: moment().format(),
-      tarjeta: tarjeta.brand,
-      last4: tarjeta.last4,
-      sucursal: sucursal.nombre,
-      sid: sucursal.id,
-      type: 'paquete'
-    })
+    this.setState({ loadingPayment: true })
+    payWithCard(this.props.history.push)(
+      {
+        uid,
+        precio: +paquete.precio,
+        meses,
+        creditos,
+        name: paquete.nombre,
+        parent_id: tarjeta.parent_id,
+        conekta_id: tarjeta.id,
+        fecha: moment().format(),
+        tarjeta: tarjeta.brand,
+        last4: tarjeta.last4,
+        sucursal: sucursal.nombre,
+        sid: sucursal.id,
+        type: 'paquete'
+      },
+      this
+    )
   }
 
   pagar = async () => {
@@ -109,7 +119,14 @@ class ComprarCreditos extends Component {
     db.ref('horario').remove()
   }
   render() {
-    const { metodo, nuevaTarjeta, paquete, paquetes, sucursal } = this.state
+    const {
+      metodo,
+      nuevaTarjeta,
+      loadingPayment,
+      paquete,
+      paquetes,
+      sucursal
+    } = this.state
     const { auth, gimnasios } = this.props
     let { creditos: c, tarjetas } = this.props.auth
     if (typeof c === 'undefined') c = {}
@@ -232,15 +249,21 @@ class ComprarCreditos extends Component {
                     <Button
                       type="primary"
                       className="fw"
-                      disabled={metodo ? false : true}
+                      disabled={metodo ? false : loadingPayment ? true : false}
+                      loading={loadingPayment}
                       onClick={this.payWithCard}
                     >
-                      Pagar
+                      Pagarrr
                     </Button>
                   </div>
                 )}
               </div>
-              {nuevaTarjeta && <FormTarjeta action={this.saveCard} />}
+              {nuevaTarjeta && (
+                <div className="cardform">
+                  {loadingPayment && <div className="cardform__loader" />}
+                  <FormTarjeta action={this.saveCard} />
+                </div>
+              )}
             </div>
           </div>
         </div>

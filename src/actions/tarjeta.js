@@ -2,7 +2,7 @@ import { db } from './firebase-config'
 import { message } from 'antd'
 import moment from 'moment'
 
-export const saveCard = push => async model => {
+export const saveCard = push => async (model, context) => {
   var data = {
     card: {
       number: model.tarjeta,
@@ -13,15 +13,19 @@ export const saveCard = push => async model => {
     }
   }
 
-  var successHandler = function({ id }) {
+  var successHandler = async ({ id }) => {
     /* token keys: id, livemode, used, object */
     message.info('Generando token de seguridad')
-    makeCharge(push)({ ...model, token: id })
+    // context.setState({ loadingPayment: true })
+    await makeCharge(push)({ ...model, token: id })
+    context.setState({ loadingPayment: false })
   }
 
-  var errorHandler = function({ message_to_purchaser }) {
+  var errorHandler = async ({ message_to_purchaser }) => {
     /* err keys: object, type, message, message_to_purchaser, param, code */
-    message.error(message_to_purchaser)
+    await message.error(message_to_purchaser)
+    console.log(context)
+    context.setState({ loadingPayment: false })
   }
 
   window.Conekta.Token.create(data, successHandler, errorHandler)
@@ -38,7 +42,7 @@ export const deleteCard = id => {
     )
 }
 
-export const payWithCard = push => model => {
+export const payWithCard = push => (model, context) => {
   message.info('Estamos validando tu información')
   const userRef = db.ref('usuario').child(model.uid)
   window.$.ajax({
@@ -50,6 +54,7 @@ export const payWithCard = push => model => {
     success: function({ error, info, status }) {
       if (+status === 500) {
         message.error(error)
+        context.setState({ loadingPayment: false })
         return
       } else if (+status === 202) {
         userRef.once('value').then(usnap => {
@@ -126,6 +131,7 @@ export const payWithCard = push => model => {
       }
     },
     error: function(r) {
+      context.setState({ loadingPayment: false })
       console.log(r)
     }
   })
