@@ -122,7 +122,11 @@ class Gimnasio extends Component {
     }
     let d = [...dias]
     days.map((day, i) => {
-      const evts = events.filter((e, j) => moment(day).format() === e.fecha)
+      const evts = events.filter(
+        (e, j) =>
+          moment(day).format() === e.fecha ||
+          moment(day).format('L') === e.fecha
+      )
       d[i] = { events: evts, name: d[i].name }
     })
 
@@ -275,17 +279,16 @@ class Gimnasio extends Component {
                     Checkout
                     <Icon type="right" />
                   </Button>
-                  {status === 0 &&
-                    !invitado && (
-                      <div>
-                        <span
-                          className="no-credits-label fade"
-                          style={{ color: '#ed174f' }}
-                        >
-                          Debes tener una suscripción activa para poder reservar
-                        </span>
-                      </div>
-                    )}
+                  {status === 0 && !invitado && (
+                    <div>
+                      <span
+                        className="no-credits-label fade"
+                        style={{ color: '#ed174f' }}
+                      >
+                        Debes tener una suscripción activa para poder reservar
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <div className="col-12">
                   <span>
@@ -294,13 +297,12 @@ class Gimnasio extends Component {
                   </span>
                   <br />
                   {clasesCount > 0 && <span>Tienes {clasesCount} clases</span>}
-                  {creditos === 0 &&
-                    !isIlimitado && (
-                      <span className="no-credits-label fade">
-                        Ya no tienes créditos disponibles,{' '}
-                        <Link to="/comprar">comprar créditos</Link>
-                      </span>
-                    )}
+                  {creditos === 0 && !isIlimitado && (
+                    <span className="no-credits-label fade">
+                      Ya no tienes créditos disponibles,{' '}
+                      <Link to="/comprar">comprar créditos</Link>
+                    </span>
+                  )}
                 </div>
                 <div className="col-12 center-text my-4 my-md-0">
                   <RadioGroup defaultValue={gymSelected} size="large">
