@@ -149,7 +149,11 @@ class Perfil extends Component {
       key: 'hora',
       Render: ({ inicio }) => <span>{moment(inicio).format('LT')}</span>
     },
-    { label: 'Créditos', key: 'costo' },
+    {
+      label: 'Créditos',
+      key: 'costo',
+      Render: ({ costo, status }) => <span>{status === 4 ? 0 : costo}</span>
+    },
     {
       label: 'Estatus',
       key: 'status',
@@ -162,20 +166,22 @@ class Perfil extends Component {
                   {item.status === 0
                     ? 'La fecha aún no se cumple'
                     : item.status === 2
-                      ? 'Cancelaste la clase'
-                      : item.status === 3
-                        ? 'Estas en la lista de espera, si algún usuario cancela se te notificará por correo'
-                        : 'La clase ya pasó'}
+                    ? 'Cancelaste la clase'
+                    : item.status === 3
+                    ? 'Estas en la lista de espera, si algún usuario cancela se te notificará por correo'
+                    : item.status === 4
+                    ? 'Cancelada por la Administración'
+                    : 'La clase ya pasó'}
                 </p>
               }
               title={
                 item.status === 0
                   ? 'Pendiente'
                   : item.status === 1
-                    ? 'Cumplida'
-                    : item.status === 3
-                      ? 'En cola'
-                      : 'Cancelada'
+                  ? 'Cumplida'
+                  : item.status === 3
+                  ? 'En cola'
+                  : 'Cancelada'
               }
             >
               <Tag
@@ -183,17 +189,19 @@ class Perfil extends Component {
                   item.status === 0
                     ? 'green'
                     : item.status === 3
-                      ? 'blue'
-                      : 'volcano'
+                    ? 'blue'
+                    : 'volcano'
                 }`}
               >
                 {item.status === 0
                   ? 'Pendiente'
                   : item.status === 2
-                    ? 'Cancelada'
-                    : item.status === 3
-                      ? 'En lista de espera'
-                      : 'Cumplida'}
+                  ? 'Cancelada'
+                  : item.status === 3
+                  ? 'En lista de espera'
+                  : item.status === 4
+                  ? 'Cancelada [Admin]'
+                  : 'Cumplida'}
               </Tag>
             </Popover>
             {item.status === 0 && (

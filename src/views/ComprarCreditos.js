@@ -161,7 +161,7 @@ class ComprarCreditos extends Component {
                   {
                     label: 'Precio',
                     key: 'precio',
-                    Render: ({ precio }) => <span>MXN{precio}</span>
+                    Render: ({ precio }) => <span>MXN${precio}</span>
                   },
                   {
                     label: 'Seleccionar',
@@ -253,7 +253,7 @@ class ComprarCreditos extends Component {
                       loading={loadingPayment}
                       onClick={this.payWithCard}
                     >
-                      Pagarrr
+                      Pagar
                     </Button>
                   </div>
                 )}

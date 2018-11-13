@@ -106,13 +106,19 @@ export const getAuth = params => async dispatch => {
             .ref('horario')
             .child(clase)
             .once('value')
-            .then(c =>
+            .then(csnap => {
+              const c = csnap.val()
+              const status = c['status']
+                ? c['status'] === 2
+                  ? 4
+                  : uclases[clase]
+                : uclases[clase]
               clases.set(clase, {
-                ...c.val(),
-                id: c.key,
-                status: uclases[clase]
+                ...c,
+                id: csnap.key,
+                status
               })
-            )
+            })
         )
 
         const clasesResolve = await Promise.all(clasesPromise)

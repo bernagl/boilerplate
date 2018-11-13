@@ -25,9 +25,7 @@ class Form extends Component {
       dontShowError
     } = this.props
     this.setState({ loading: true })
-    console.log('está cargando')
     const r = await action({ ...model, uid })
-    console.log('r', r)
     // this.setState(() => {
     r
       ? (message.success(success),
@@ -46,7 +44,6 @@ class Form extends Component {
   render() {
     const { canSubmit, loading } = this.state
     const { children, submitText } = this.props
-    console.log('loading', this.state.loading)
     return (
       <Formsy
         onValidSubmit={this.submit}
