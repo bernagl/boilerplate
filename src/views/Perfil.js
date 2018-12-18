@@ -115,15 +115,24 @@ class Perfil extends Component {
       : message.error('Ocurrió un error, por favor vuelve a intentarlo')
   }
 
-  cancelarClase = async ({ gimnasio, id, costo, clase }) => {
+  cancelarClase = async ({ inicio, gimnasio, id, costo, clase }) => {
+    console.log(inicio)
     const { uid } = this.props.auth
-    const r = await cancelarClase({
-      sid: gimnasio.id,
-      costo,
-      cid: id,
-      uid
-    })
-    r && message.success('Clase cancelada, tus créditos han sido devueltos')
+    const difference = moment.duration(moment(inicio).diff(moment()))
+    const cancelClass = difference.asHours() > 3 ? true : false
+    // console.log(difference, cancelClass)
+    if (cancelClass) {
+      const r = await cancelarClase({
+        sid: gimnasio.id,
+        costo,
+        cid: id,
+        uid
+      })
+      r && message.success('Clase cancelada, tus créditos han sido devueltos')
+    } else
+      message.error(
+        'Sólo puedes cancelar una clase 3 horas antes de que esta comience'
+      )
   }
 
   clasesCol = () => [
