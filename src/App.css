@@ -294,3 +294,22 @@ body {
   z-index: 99;
   opacity: .5;
 }
+
+/* Gimnasio calendar */
+@media (max-width: 600px) {
+  .container-shadow {
+    padding: 16px;
+  }
+
+  .fixed {
+    position: sticky;
+    top: 58px;
+    z-index: 999;
+    background-color: white;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    /* background-color: yellow; */
+    /* padding: 50px; */
+    /* font-size: 20px; */
+  }
+}

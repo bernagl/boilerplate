@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import AnimationWrapper from '../components/AnimationWrapper'
 import { setCheckout } from '../actions/cart'
 import { Button, Icon, message, Radio } from 'antd'
+import Affix from 'antd/lib/affix'
 import moment from 'moment-timezone'
 import 'moment/locale/es'
 import { Body, Header } from '../components/Calendario'
@@ -264,45 +265,52 @@ class Gimnasio extends Component {
       <AnimationWrapper>
         <div className="col-12 my-4">
           <div className="row">
-            <div className="col-12 container-shadow p-2 p-md-4">
+            <div className="col-12 container-shadow p-md-4">
               <div className="row">
-                <div className="col-12">
-                  <h1 className="inline-block">Clases</h1>
-                  <Button
-                    type="primary"
-                    size="large"
-                    onClick={this.setCheckout}
-                    style={{ float: 'right' }}
-                    className="btn-morado"
-                    disabled={status === 0 && !invitado ? true : false}
-                  >
-                    Checkout
-                    <Icon type="right" />
-                  </Button>
-                  {status === 0 && !invitado && (
-                    <div>
-                      <span
-                        className="no-credits-label fade"
-                        style={{ color: '#ed174f' }}
+                <div class="fixed col-12">
+                  <div className="row">
+                    <div className="col-12">
+                      <h1 className="inline-block">Clases</h1>
+                      <Button
+                        type="primary"
+                        size="large"
+                        onClick={this.setCheckout}
+                        style={{ float: 'right' }}
+                        className="btn-morado"
+                        disabled={status === 0 && !invitado ? true : false}
                       >
-                        Debes tener una suscripción activa para poder reservar
-                      </span>
+                        Checkout
+                        <Icon type="right" />
+                      </Button>
+                      {status === 0 && !invitado && (
+                        <div>
+                          <span
+                            className="no-credits-label fade"
+                            style={{ color: '#ed174f' }}
+                          >
+                            Debes tener una suscripción activa para poder
+                            reservar
+                          </span>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-                <div className="col-12">
-                  <span>
-                    Créditos disponibles:{' '}
-                    {isIlimitado ? 'Ilimitados' : creditos}
-                  </span>
-                  <br />
-                  {clasesCount > 0 && <span>Tienes {clasesCount} clases</span>}
-                  {creditos === 0 && !isIlimitado && (
-                    <span className="no-credits-label fade">
-                      Ya no tienes créditos disponibles,{' '}
-                      <Link to="/comprar">comprar créditos</Link>
-                    </span>
-                  )}
+                    <div className="col-12">
+                      <span>
+                        Créditos disponibles:{' '}
+                        {isIlimitado ? 'Ilimitados' : creditos}
+                      </span>
+                      <br />
+                      {clasesCount > 0 && (
+                        <span>Tienes {clasesCount} clases</span>
+                      )}
+                      {creditos === 0 && !isIlimitado && (
+                        <span className="no-credits-label fade">
+                          Ya no tienes créditos disponibles,{' '}
+                          <Link to="/comprar">comprar créditos</Link>
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </div>
                 <div className="col-12 center-text my-4 my-md-0">
                   <RadioGroup defaultValue={gymSelected} size="large">
