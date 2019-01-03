@@ -151,8 +151,14 @@ export const getAuth = params => async dispatch => {
                       })
                   )
             const logs = await Promise.all(logsPromise)
+            logs.sort((a, b) =>
+              moment(a.fecha) - moment(b.fecha)
+                ? -1
+                : moment(a.fecha) > moment(b.fecha)
+                ? 1
+                : 0
+            )
             // const logs = this.orderByDate('fecha')(logsResolve)
-            console.log(logs)
 
             const tarjetasResolve = await Promise.all(tarjetasPromise)
             const tarjetas = tarjetasResolve.filter(

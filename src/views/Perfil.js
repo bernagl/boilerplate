@@ -238,7 +238,7 @@ class Perfil extends Component {
   render() {
     const { auth, gimnasios, updateProfile } = this.props
     const { metodosCol, pagos } = this.state
-    let { creditos, ilimitado, isIlimitado } = auth
+    let { creditos, expires, ilimitado, isIlimitado } = auth
     const c = []
     if (typeof creditos === 'undefined') creditos = {}
     auth.clases.forEach(clase =>
@@ -277,7 +277,7 @@ class Perfil extends Component {
               <div className="mb-0">
                 Total de clases compradas: {clases.length}
               </div>
-              {isIlimitado && (
+              {isIlimitado ? (
                 <div className="cp my-3">
                   <Tooltip
                     title="Podrás reservar las clases que quieras hasta que finalice tu paquete ilimitado"
@@ -290,6 +290,19 @@ class Perfil extends Component {
                   <div>
                     <span>Vence: {moment(ilimitado.fin).format('LL')}</span>
                   </div>
+                </div>
+              ) : (
+                <div className="cp my-3">
+                  <Tooltip
+                    title="Podrás reservar clases antes de que finalice la fecha de tus créditos"
+                    placement="bottom"
+                  >
+                    <div>
+                      <span>
+                        Créditos vencen: {moment(expires).format('LL')}
+                      </span>
+                    </div>
+                  </Tooltip>
                 </div>
               )}
               <Divider />

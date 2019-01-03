@@ -48,10 +48,11 @@ class Gimnasio extends Component {
     this.props.getGimnasiosByStatus(1)
     this.props.getClases()
     const { creditos } = this.props.cart
-    const { clases, isIlimitado, ilimitado } = this.props.auth
+    const { expires, clases, isIlimitado, ilimitado } = this.props.auth
 
     this.setState({
       creditos,
+      expires,
       isIlimitado,
       ilimitadoFin: isIlimitado ? ilimitado.fin : null,
       clases: new Map(clases)
@@ -149,7 +150,8 @@ class Gimnasio extends Component {
       clasesCount: cc,
       sucursales,
       isIlimitado,
-      ilimitadoFin
+      ilimitadoFin,
+      expires
     } = this.state
     const gymId = gimnasios[gymSelected].id
     const sucursalNombre = gimnasios[gymSelected].nombre
@@ -191,6 +193,11 @@ class Gimnasio extends Component {
       if (isIlimitado) {
         if (moment(ilimitadoFin).format() < moment(event.inicio).format()) {
           message.error('El paquete ilimitado no abarca esta fecha')
+          return
+        }
+      } else {
+        if (moment(expires).format() < moment(event.inicio).format()) {
+          message.error('Tus créditos expiran antes de la clase seleccionada')
           return
         }
       }
