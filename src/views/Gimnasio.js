@@ -125,7 +125,8 @@ class Gimnasio extends Component {
     days.map((day, i) => {
       const evts = events.filter(
         (e, j) =>
-          moment(day).format() === e.fecha ||
+          moment(day).format('MM-DD-YYYY') ===
+            moment(e.fecha).format('MM-DD-YYYY') ||
           moment(day).format('L') === e.fecha
       )
       d[i] = { events: evts, name: d[i].name }
@@ -259,7 +260,7 @@ class Gimnasio extends Component {
           ? sucursales[gimnasios[gymSelected].id].creditos
           : 0
         : 0
-    console.log(this.state.events)
+
     if (typeof creditos === 'undefined') creditos = c
     return (
       <AnimationWrapper>
