@@ -241,17 +241,17 @@ class Perfil extends Component {
     let { creditos, expires, ilimitado, isIlimitado } = auth
     const c = []
     if (typeof creditos === 'undefined') creditos = {}
-    auth.clases.forEach(clase =>
-      c.push({
-        ...clase,
-        status:
-          clase.status === 1
-            ? moment(clase.fin) > moment()
-              ? 0
-              : 1
-            : clase.status
-      })
-    )
+    let classesCounter = 0
+    auth.clases.forEach(clase => {
+      const status =
+        clase.status === 1
+          ? moment(clase.fin) > moment()
+            ? 0
+            : 1
+          : clase.status
+      if (status === 0) classesCounter++
+      c.push({ ...clase, status })
+    })
 
     const clases = c.sort((a, b) => moment(b.inicio) - moment(a.inicio))
     // console.log(auth)
@@ -275,7 +275,7 @@ class Perfil extends Component {
                 </span>
               </div>
               <div className="mb-0">
-                Total de clases compradas: {clases.length}
+                Total de clases compradas: {classesCounter}
               </div>
               {isIlimitado ? (
                 <div className="cp my-3">
