@@ -20,7 +20,6 @@ export const register = ({
       .ref(`usuario/${user.uid}`)
       .set({
         correo,
-        // edad,
         nombre,
         status: 0,
         telefono,
@@ -29,25 +28,24 @@ export const register = ({
         created_at: moment().format(),
         tarjetas: {},
         invitado: true,
-        fecha_nacimiento
+        fecha_nacimiento: fecha_nacimiento || moment().format()
       })
       .then(result => {
         dispatch({
           type: REGISTER,
           payload: {
             correo,
-            // edad,
             contrasena,
             nombre,
             telefono,
             invitado: true,
             uid: user.uid,
-            // creditos: 1,
             status: 0,
             clases: new Map(),
             creditos: { '-LJ5w7hFuZxYmwiprTIY': 1, '-LPrNpstwZt7J3NLUJXc': 1 },
             tarjetas: [],
-            fecha_nacimiento
+            logs: [],
+            fecha_nacimiento: fecha_nacimiento || moment().format()
           }
         })
         return user.uid

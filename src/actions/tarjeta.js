@@ -70,6 +70,7 @@ export const payWithCard = push => (model, context) => {
                   const { ilimitado } = usuario
                   let inicio, fin
                   const now = moment()
+
                   if (typeof ilimitado === 'undefined') {
                     inicio = now.format()
                     fin = now.add(model.meses, 'M')
@@ -82,13 +83,17 @@ export const payWithCard = push => (model, context) => {
                       fin = moment(ilimitado.fin).add(model.meses, 'M')
                     }
                   }
+
+                  const expires = moment(fin).add(1, 'M')
+
                   userRef
                     .update({
                       pagos,
                       ilimitado: {
                         inicio: moment(inicio).format(),
                         fin: moment(fin).format()
-                      }
+                      },
+                      expires
                     })
                     .then(r => {
                       message.success('El paquete ilímitado se ha comprado')
@@ -96,6 +101,7 @@ export const payWithCard = push => (model, context) => {
                     })
                 } else {
                   let sucursalCreditos = 0
+                  const expires = moment().add(1, 'M')
                   if (typeof usuario.creditos !== 'undefined') {
                     sucursalCreditos = usuario['creditos'][model.sid]
                   }
@@ -107,6 +113,7 @@ export const payWithCard = push => (model, context) => {
                         ...usuario.creditos,
                         [model.sid]: sucursalCreditos
                       },
+                      expires,
                       pagos
                     })
                     .then(() => {
@@ -115,11 +122,13 @@ export const payWithCard = push => (model, context) => {
                     })
                 }
               } else if (model.type === 'subscripcion') {
+                const expires = moment().add(1, 'M')
                 userRef
                   .update({
                     status: 1,
                     last_class: model.fecha,
-                    pagos
+                    pagos,
+                    expires
                   })
                   .then(() => {
                     message.success('Gracias por renovar tu suscripción')

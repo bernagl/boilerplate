@@ -240,7 +240,7 @@ class ComprarCreditos extends Component {
                         <span>Saldo anterior: {creditos}</span>
                       </div>
                       <div>
-                        <span>Saldo nuevo: {creditos + +paquete.creditos}</span>
+                        <span>Saldo nuevo: {+creditos + +paquete.creditos}</span>
                       </div>
                     </div>
                   ))}
