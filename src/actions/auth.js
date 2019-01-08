@@ -27,6 +27,9 @@ export const register = ({
         creditos: { '-LJ5w7hFuZxYmwiprTIY': 1, '-LPrNpstwZt7J3NLUJXc': 1 },
         created_at: moment().format(),
         tarjetas: {},
+        expires: moment()
+          .add(1, 'M')
+          .format(),
         invitado: true,
         fecha_nacimiento: fecha_nacimiento || moment().format()
       })
@@ -39,6 +42,9 @@ export const register = ({
             nombre,
             telefono,
             invitado: true,
+            expires:  moment()
+            .add(1, 'M')
+            .format(),
             uid: user.uid,
             status: 0,
             clases: new Map(),
@@ -86,8 +92,10 @@ export const getAuth = params => async dispatch => {
   let clases = new Map()
   let pagos = []
   auth.onAuthStateChanged(function(user) {
+    // console.log(user.uid)
     if (user) {
       db.ref(`usuario/${user.uid}`).on('value', async snapshot => {
+        console.log(snapshot.val())
         let { clases: uclases, ilimitado } = snapshot.val()
         let isIlimitado = false
         if (typeof uclases === 'undefined') uclases = {}
