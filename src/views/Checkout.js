@@ -5,6 +5,7 @@ import { Button, message } from 'antd'
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table'
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css'
 import { confirmCheckout, setCheckout } from '../actions/cart'
+import { updateAuth } from '../actions/auth'
 import moment from 'moment'
 
 class Checkout extends Component {
@@ -43,9 +44,11 @@ class Checkout extends Component {
   }
 
   successCheckout = () => {
+    const { auth, history, setCheckout, updateAuth } = this.props
     message.success('Tus clases se han comprado')
-    this.props.setCheckout({})
-    this.props.history.push('/perfil')
+    setCheckout({})
+    updateAuth(this, auth.uid)
+    history.push('/perfil')
   }
 
   render() {
@@ -128,5 +131,5 @@ const mapStateToProps = ({ auth, cart }) => ({ auth, cart })
 
 export default connect(
   mapStateToProps,
-  { setCheckout }
+  { setCheckout, updateAuth }
 )(Checkout)

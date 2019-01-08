@@ -42,9 +42,9 @@ export const register = ({
             nombre,
             telefono,
             invitado: true,
-            expires:  moment()
-            .add(1, 'M')
-            .format(),
+            expires: moment()
+              .add(1, 'M')
+              .format(),
             uid: user.uid,
             status: 0,
             clases: new Map(),
@@ -89,107 +89,19 @@ export const login = ({ correo, contrasena }) => async dispatch => {
 }
 
 export const getAuth = params => async dispatch => {
-  let clases = new Map()
-  let pagos = []
   auth.onAuthStateChanged(function(user) {
     // console.log(user.uid)
     if (user) {
-      db.ref(`usuario/${user.uid}`).on('value', async snapshot => {
-        console.log(snapshot.val())
-        let { clases: uclases, ilimitado } = snapshot.val()
-        let isIlimitado = false
-        if (typeof uclases === 'undefined') uclases = {}
-        if (typeof ilimitado === 'undefined') isIlimitado = false
-        else {
-          if (moment().format() > moment(ilimitado.fin).format()) {
-            isIlimitado = false
-          } else {
-            isIlimitado = true
-          }
-        }
-        const clasesPromise = Object.keys(uclases).map(clase =>
-          db
-            .ref('horario')
-            .child(clase)
-            .once('value')
-            .then(csnap => {
-              const c = csnap.val()
-              const status = c['status']
-                ? c['status'] === 2
-                  ? 4
-                  : uclases[clase]
-                : uclases[clase]
-              clases.set(clase, {
-                ...c,
-                id: csnap.key,
-                status
-              })
-            })
-        )
-
-        const clasesResolve = await Promise.all(clasesPromise)
-        db.ref('usuario')
-          .child(user.uid)
-          .once('value', async snap => {
-            let { tarjetas: cards, logs: userLogs } = snap.val()
-            if (typeof cards === 'undefined') cards = {}
-            const tarjetasPromise = Object.keys(cards).map(card =>
-              db
-                .ref('tarjeta')
-                .child(card)
-                .once('value')
-                .then(r => {
-                  const tarjeta = r.val()
-                  if (tarjeta) return { ...tarjeta, tid: r.key }
-                })
-            )
-            const logsPromise =
-              typeof userLogs === 'undefined'
-                ? []
-                : Object.keys(userLogs).map(id =>
-                    db
-                      .ref('log')
-                      .child(id)
-                      .once('value')
-                      .then(r => {
-                        const log = r.val()
-                        if (log) return { ...log, lid: r.key }
-                      })
-                  )
-            const logs = await Promise.all(logsPromise)
-            logs.sort((a, b) =>
-              moment(a.fecha) - moment(b.fecha)
-                ? -1
-                : moment(a.fecha) > moment(b.fecha)
-                ? 1
-                : 0
-            )
-            // const logs = this.orderByDate('fecha')(logsResolve)
-
-            const tarjetasResolve = await Promise.all(tarjetasPromise)
-            const tarjetas = tarjetasResolve.filter(
-              tarjeta => tarjeta && tarjeta
-            )
-            dispatch({
-              type: LOGIN,
-              payload: {
-                uid: user.uid,
-                ...snapshot.val(),
-                clases,
-                logs,
-                isIlimitado,
-                tarjetas,
-                pagos
-              }
-            })
-            params.setState({ loading: false })
-          })
-      })
+      getUser(params, user.uid)(dispatch)
     } else {
       dispatch({ type: LOGOUT })
       params.setState({ loading: false })
     }
   })
+}
+
+export const updateAuth = (params, uid) => async dispatch => {
+  getUser(params, uid)(dispatch)
 }
 
 export const recover = ({ correo }) => {
@@ -214,4 +126,96 @@ export const logout = () => async dispatch => {
     .catch(function(error) {
       console.log('An error happened.')
     })
+}
+
+const getUser = (params, uid) => dispatch => {
+  let clases = new Map()
+  let pagos = []
+
+  db.ref(`usuario/${uid}`).on('value', async snapshot => {
+    let { clases: uclases, ilimitado } = snapshot.val()
+    let isIlimitado = false
+    if (typeof uclases === 'undefined') uclases = {}
+    if (typeof ilimitado === 'undefined') isIlimitado = false
+    else {
+      if (moment().format() > moment(ilimitado.fin).format()) {
+        isIlimitado = false
+      } else {
+        isIlimitado = true
+      }
+    }
+    const clasesPromise = Object.keys(uclases).map(clase =>
+      db
+        .ref('horario')
+        .child(clase)
+        .once('value')
+        .then(csnap => {
+          const c = csnap.val()
+          const status = c['status']
+            ? c['status'] === 2
+              ? 4
+              : uclases[clase]
+            : uclases[clase]
+          clases.set(clase, {
+            ...c,
+            id: csnap.key,
+            status
+          })
+        })
+    )
+
+    const clasesResolve = await Promise.all(clasesPromise)
+    db.ref('usuario')
+      .child(uid)
+      .once('value', async snap => {
+        let { tarjetas: cards, logs: userLogs } = snap.val()
+        if (typeof cards === 'undefined') cards = {}
+        const tarjetasPromise = Object.keys(cards).map(card =>
+          db
+            .ref('tarjeta')
+            .child(card)
+            .once('value')
+            .then(r => {
+              const tarjeta = r.val()
+              if (tarjeta) return { ...tarjeta, tid: r.key }
+            })
+        )
+        const logsPromise =
+          typeof userLogs === 'undefined'
+            ? []
+            : Object.keys(userLogs).map(id =>
+                db
+                  .ref('log')
+                  .child(id)
+                  .once('value')
+                  .then(r => {
+                    const log = r.val()
+                    if (log) return { ...log, lid: r.key }
+                  })
+              )
+        const logs = await Promise.all(logsPromise)
+        logs.sort((a, b) =>
+          moment(a.fecha) - moment(b.fecha)
+            ? -1
+            : moment(a.fecha) > moment(b.fecha)
+            ? 1
+            : 0
+        )
+        const tarjetasResolve = await Promise.all(tarjetasPromise)
+        const tarjetas = tarjetasResolve.filter(tarjeta => tarjeta && tarjeta)
+        dispatch({
+          type: LOGIN,
+          payload: {
+            uid: uid,
+            ...snapshot.val(),
+            clases,
+            logs,
+            isIlimitado,
+            tarjetas,
+            pagos
+          }
+        })
+        params.setState({ loading: false })
+      })
+  })
 }

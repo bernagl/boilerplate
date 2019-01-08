@@ -254,7 +254,7 @@ class Perfil extends Component {
     )
 
     const clases = c.sort((a, b) => moment(b.inicio) - moment(a.inicio))
-    console.log(auth)
+    // console.log(auth)
     return (
       <AnimationWrapper>
         <div className="row">

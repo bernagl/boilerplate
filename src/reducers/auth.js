@@ -11,6 +11,7 @@ import { LOGIN, LOGOUT, REGISTER } from '../types'
 export default (state = null, { payload, type }) => {
   switch (type) {
     case LOGIN:
+      console.log('payload', payload)
       return payload
     case LOGOUT:
       return null
