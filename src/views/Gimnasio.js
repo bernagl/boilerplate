@@ -275,7 +275,7 @@ class Gimnasio extends Component {
           <div className="row">
             <div className="col-12 container-shadow p-md-4">
               <div className="row">
-                <div class="fixed col-12">
+                <div className="fixed col-12">
                   <div className="row">
                     <div className="col-12">
                       <h1 className="inline-block">Clases</h1>

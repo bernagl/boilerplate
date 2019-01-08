@@ -11,44 +11,53 @@ class Suscripcion extends React.Component {
   state = {
     visible: true,
     metodo: null,
-    nuevaTarjeta: false
+    nuevaTarjeta: false,
+    loadingPayment: false
   }
 
   paySubscription = async model => {
     const { correo, nombre, uid } = this.props.auth
-    const r = await saveCard(this.props.history.push)({
-      ...model,
-      uid,
-      correo,
-      nombre,
-      precio: '700',
-      fecha: moment().format(),
-      name: 'Suscripción',
-      type: 'subscripcion'
-    })
+    this.setState({ loadingPayment: true })
+    const r = await saveCard(this.props.history.push)(
+      {
+        ...model,
+        uid,
+        correo,
+        nombre,
+        precio: '700',
+        fecha: moment().format(),
+        name: 'Suscripción',
+        type: 'subscripcion'
+      },
+      this
+    )
   }
 
   payWithCard = async () => {
     const { metodo } = this.state
     const { correo, nombre, tarjetas, uid } = this.props.auth
     const tarjeta = tarjetas[metodo - 1]
-    payWithCard(this.props.history.push)({
-      uid,
-      correo,
-      parent_id: tarjeta.parent_id,
-      conekta_id: tarjeta.id,
-      tarjeta: tarjeta.brand,
-      last4: tarjeta.last4,
-      nombre,
-      precio: '700',
-      fecha: moment().format(),
-      name: 'Suscripción',
-      type: 'subscripcion'
-    })
+    this.setState({ loadingPayment: true })
+    payWithCard(this.props.history.push)(
+      {
+        uid,
+        correo,
+        parent_id: tarjeta.parent_id,
+        conekta_id: tarjeta.id,
+        tarjeta: tarjeta.brand,
+        last4: tarjeta.last4,
+        nombre,
+        precio: '700',
+        fecha: moment().format(),
+        name: 'Suscripción',
+        type: 'subscripcion'
+      },
+      this
+    )
   }
 
   render() {
-    const { metodo, nuevaTarjeta, visible } = this.state
+    const { loadingPayment, metodo, nuevaTarjeta, visible } = this.state
     const { auth, push } = this.props
     const { tarjetas } = auth
     return (
@@ -92,7 +101,7 @@ class Suscripcion extends React.Component {
                   <Button
                     type="primary"
                     className="fw"
-                    disabled={metodo ? false : true}
+                    disabled={loadingPayment ? true : metodo ? false : true}
                     onClick={this.payWithCard}
                   >
                     Pagar
@@ -111,7 +120,10 @@ class Suscripcion extends React.Component {
           </div>
           {nuevaTarjeta && (
             <div className="col-12">
-              <FormTarjeta action={this.paySubscription} />
+              <FormTarjeta
+                action={this.paySubscription}
+                loading={loadingPayment}
+              />
             </div>
           )}
         </div>

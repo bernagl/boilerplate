@@ -240,7 +240,9 @@ class ComprarCreditos extends Component {
                         <span>Saldo anterior: {creditos}</span>
                       </div>
                       <div>
-                        <span>Saldo nuevo: {+creditos + +paquete.creditos}</span>
+                        <span>
+                          Saldo nuevo: {+creditos + +paquete.creditos}
+                        </span>
                       </div>
                     </div>
                   ))}
@@ -249,7 +251,7 @@ class ComprarCreditos extends Component {
                     <Button
                       type="primary"
                       className="fw"
-                      disabled={metodo ? false : loadingPayment ? true : false}
+                      disabled={metodo ? false : loadingPayment ? true : true}
                       loading={loadingPayment}
                       onClick={this.payWithCard}
                     >
@@ -260,8 +262,11 @@ class ComprarCreditos extends Component {
               </div>
               {nuevaTarjeta && (
                 <div className="cardform">
-                  {loadingPayment && <div className="cardform__loader" />}
-                  <FormTarjeta action={this.saveCard} />
+                  {/* {loadingPayment && <div className="cardform__loader" />} */}
+                  <FormTarjeta
+                    action={this.saveCard}
+                    loading={loadingPayment}
+                  />
                 </div>
               )}
             </div>

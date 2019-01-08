@@ -17,14 +17,13 @@ export const saveCard = push => async (model, context) => {
     /* token keys: id, livemode, used, object */
     message.info('Generando token de seguridad')
     // context.setState({ loadingPayment: true })
-    await makeCharge(push)({ ...model, token: id })
-    context.setState({ loadingPayment: false })
+    await makeCharge(push)({ ...model, token: id }, context)
+    // context.setState({ loadingPayment: false })
   }
 
   var errorHandler = async ({ message_to_purchaser }) => {
     /* err keys: object, type, message, message_to_purchaser, param, code */
     await message.error(message_to_purchaser)
-    console.log(context)
     context.setState({ loadingPayment: false })
   }
 
@@ -84,7 +83,9 @@ export const payWithCard = push => (model, context) => {
                     }
                   }
 
-                  const expires = moment(fin).add(1, 'M')
+                  const expires = moment(fin)
+                    .add(1, 'M')
+                    .format()
 
                   userRef
                     .update({
@@ -97,16 +98,19 @@ export const payWithCard = push => (model, context) => {
                     })
                     .then(r => {
                       message.success('El paquete ilímitado se ha comprado')
-                      push('/')
+                      push('/perfil')
                     })
                 } else {
                   let sucursalCreditos = 0
-                  const expires = moment().add(1, 'M')
+                  const expires = moment()
+                    .add(1, 'M')
+                    .format()
                   if (typeof usuario.creditos !== 'undefined') {
                     sucursalCreditos = usuario['creditos'][model.sid]
                   }
                   if (!sucursalCreditos) sucursalCreditos = +model.creditos
                   else sucursalCreditos += +model.creditos
+
                   userRef
                     .update({
                       creditos: {
@@ -118,11 +122,13 @@ export const payWithCard = push => (model, context) => {
                     })
                     .then(() => {
                       message.success('El paquete se ha comprado')
-                      push('/')
+                      push('/perfil')
                     })
                 }
               } else if (model.type === 'subscripcion') {
-                const expires = moment().add(1, 'M')
+                const expires = moment()
+                  .add(1, 'M')
+                  .format()
                 userRef
                   .update({
                     status: 1,
@@ -132,7 +138,7 @@ export const payWithCard = push => (model, context) => {
                   })
                   .then(() => {
                     message.success('Gracias por renovar tu suscripción')
-                    push('/')
+                    push('/perfil')
                   })
               }
             })
@@ -146,7 +152,7 @@ export const payWithCard = push => (model, context) => {
   })
 }
 
-const makeCharge = push => async model => {
+const makeCharge = push => async (model, context) => {
   const userRef = db.ref('usuario').child(model.uid)
 
   window.$.ajax({
@@ -169,13 +175,16 @@ const makeCharge = push => async model => {
               userRef
                 .update({ tarjetas: { ...usuario.tarjetas, [id]: true } })
                 .then(r => {
-                  payWithCard(push)({
-                    ...model,
-                    parent_id: cc.parent_id,
-                    conekta_id: cc.id,
-                    tarjeta: cc.brand,
-                    last4: cc.last4
-                  })
+                  payWithCard(push)(
+                    {
+                      ...model,
+                      parent_id: cc.parent_id,
+                      conekta_id: cc.id,
+                      tarjeta: cc.brand,
+                      last4: cc.last4
+                    },
+                    context
+                  )
                 })
             })
           })

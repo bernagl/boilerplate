@@ -2,9 +2,14 @@ import React from 'react'
 import Form from './Form'
 import Input from './Input'
 
-export default ({ action }) => {
+export default ({ action, loading }) => {
   return (
-    <Form submitText="Pagar" dontShowError action={model => action(model)}>
+    <Form
+      submitText="Pagar"
+      loading={loading}
+      dontShowError
+      action={model => action(model)}
+    >
       <Input
         name="tarjeta"
         label="Tarjeta"

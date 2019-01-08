@@ -43,7 +43,7 @@ class Form extends Component {
 
   render() {
     const { canSubmit, loading } = this.state
-    const { children, submitText } = this.props
+    const { children, submitText, loading: loadingPayment } = this.props
     return (
       <Formsy
         onValidSubmit={this.submit}
@@ -55,8 +55,10 @@ class Form extends Component {
         <Button
           type="primary"
           htmlType="submit"
-          loading={loading}
-          disabled={loading ? true : !canSubmit ? true : false}
+          loading={loading ? loading : loadingPayment ? loadingPayment : false}
+          disabled={
+            loading ? true : loadingPayment ? true : !canSubmit ? true : false
+          }
           className="fw mt-2"
         >
           {submitText}

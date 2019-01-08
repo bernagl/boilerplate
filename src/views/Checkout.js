@@ -24,7 +24,6 @@ class Checkout extends Component {
   confirm = () => {
     const { clases, creditos } = this.state
     this.setState({ loading: true, label: 'Asignando clases' })
-    console.log('state updated')
     const { invitado, uid, isIlimitado } = this.props.auth
     confirmCheckout(
       {
@@ -38,7 +37,7 @@ class Checkout extends Component {
       this.successCheckout
     )
 
-    console.log('post async request')
+    // console.log('post async request')
 
     // setTimeout(() => {}, 1000)
   }
@@ -51,8 +50,8 @@ class Checkout extends Component {
 
   render() {
     const { clases, creditos, label, loading } = this.state
-    console.log(this.props)
-    console.log(this.state)
+    // console.log(this.props)
+    // console.log(this.state)
     return (
       <AnimationWrapper>
         <div className="row my-4">
