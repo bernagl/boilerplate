@@ -244,7 +244,7 @@ class Perfil extends Component {
     let classesCounter = 0
     auth.clases.forEach(clase => {
       const status =
-        clase.status === 0
+        clase.status === 1 || clase.status === 0
           ? moment(clase.inicio) > moment()
             ? 0
             : 1
