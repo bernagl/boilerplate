@@ -85,8 +85,15 @@ class Gimnasio extends Component {
         })
       })
 
-      this.setState({ gimnasios, sucursales }, () =>
-        this.handleGym(gymSelected)
+      const defaultGym =
+        +creditos['-LJ5w7hFuZxYmwiprTIY'] > 0
+          ? 0
+          : +creditos['-LPrNpstwZt7J3NLUJXc'] > 0
+          ? 1
+          : 0
+
+      this.setState({ gimnasios, sucursales, gymSelected: defaultGym }, () =>
+        this.handleGym(defaultGym)
       )
     }
   }
@@ -269,6 +276,10 @@ class Gimnasio extends Component {
         : 0
 
     if (typeof creditos === 'undefined') creditos = c
+
+    const defaultGym = gimnasios.length > 0 ? gimnasios[gymSelected].id : 0
+    const gymName = gimnasios.length > 0 ? gimnasios[gymSelected].nombre : ''
+    // console.log(defaultGym, gymSelected, gimnasios)
     return (
       <AnimationWrapper>
         <div className="col-12 my-4">
@@ -304,7 +315,7 @@ class Gimnasio extends Component {
                     </div>
                     <div className="col-12">
                       <span>
-                        Créditos disponibles:{' '}
+                        Créditos disponibles en <b>{gymName}</b>:{' '}
                         {isIlimitado ? 'Ilimitados' : creditos}
                       </span>
                       <br />
@@ -321,17 +332,19 @@ class Gimnasio extends Component {
                   </div>
                 </div>
                 <div className="col-12 center-text my-4 my-md-0">
-                  <RadioGroup defaultValue={gymSelected} size="large">
-                    {gimnasios.map((gym, i) => (
-                      <RadioButton
-                        value={gym.id}
-                        onClick={() => this.handleGym(i)}
-                        key={i}
-                      >
-                        {gym.nombre}
-                      </RadioButton>
-                    ))}
-                  </RadioGroup>
+                  {gimnasios.length > 0 && (
+                    <RadioGroup defaultValue={defaultGym} size="large">
+                      {gimnasios.map((gym, i) => (
+                        <RadioButton
+                          value={gym.id}
+                          onClick={() => this.handleGym(i)}
+                          key={i}
+                        >
+                          {gym.nombre}
+                        </RadioButton>
+                      ))}
+                    </RadioGroup>
+                  )}
                 </div>
                 <div className="col-12">
                   <div className="calendar-container">
