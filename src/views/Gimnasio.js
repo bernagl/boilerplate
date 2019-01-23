@@ -213,7 +213,7 @@ class Gimnasio extends Component {
           (clasesCount -= 1),
           (c += 1),
           message.warning('Clase devuelta'))
-        : (clases.set(event.id, { status: 3, cola, ...event }),
+        : (clases.set(event.id, { ...event, status: 3, cola }),
           (c -= 1),
           (clasesCount += 1),
           message.success(`Clase ${event.clase.nombre} agregada`))
