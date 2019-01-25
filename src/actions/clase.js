@@ -9,13 +9,12 @@ export const getClases = () => dispatch => {
       collection.push({ id: element.key, reservada: false, ...element.val() })
     })
 
-    const clasesOrdered = collection.sort(
-      (a, b) =>
-        moment(a.inicio) > moment(b.inicio)
-          ? 1
-          : moment(a.inicio) < moment(b.inicio)
-            ? -1
-            : 0
+    const clasesOrdered = collection.sort((a, b) =>
+      moment(a.inicio) > moment(b.inicio)
+        ? 1
+        : moment(a.inicio) < moment(b.inicio)
+        ? -1
+        : 0
     )
 
     dispatch({ type: GET_CLASES, payload: clasesOrdered })
@@ -45,7 +44,12 @@ export const cancelarClase = ({ sid, costo, cid, uid }) => {
     const { clases: uclases, creditos: ucreditos, ilimitado } = snapshot.val()
     let isIlimitado = false
     if (typeof ilimitado === 'undefined') isIlimitado = false
-    else isIlimitado = moment(ilimitado.fin) > moment() ? true : false
+    else
+      isIlimitado = ilimitado[sid]
+        ? moment(ilimitado[sid].fin) > moment()
+          ? true
+          : false
+        : false
     const creditos = {
       ...ucreditos,
       [sid]: isIlimitado ? ucreditos[sid] : ucreditos[sid] + costo
@@ -60,12 +64,4 @@ export const cancelarClase = ({ sid, costo, cid, uid }) => {
       })
     })
   })
-  // .update({ creditos })
-  // .then(r =>
-  //   db
-  //     .ref('usuario/' + uid + '/clases')
-  //     .child(id)
-  //     .update({ reservada: false, status: 2 })
-  //     .then(r => 202)
-  // )
 }
