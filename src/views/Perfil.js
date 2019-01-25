@@ -116,11 +116,9 @@ class Perfil extends Component {
   }
 
   cancelarClase = async ({ inicio, gimnasio, id, costo, clase }) => {
-    console.log(inicio)
     const { uid } = this.props.auth
     const difference = moment.duration(moment(inicio).diff(moment()))
     const cancelClass = difference.asHours() > 3 ? true : false
-    // console.log(difference, cancelClass)
     if (cancelClass) {
       const r = await cancelarClase({
         sid: gimnasio.id,
@@ -254,7 +252,6 @@ class Perfil extends Component {
     })
 
     const clases = c.sort((a, b) => moment(b.inicio) - moment(a.inicio))
-    // console.log(auth)
     return (
       <AnimationWrapper>
         <div className="row">

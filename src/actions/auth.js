@@ -90,7 +90,6 @@ export const login = ({ correo, contrasena }) => async dispatch => {
 
 export const getAuth = params => async dispatch => {
   auth.onAuthStateChanged(function(user) {
-    // console.log(user.uid)
     if (user) {
       getUser(params, user.uid)(dispatch)
     } else {
@@ -193,6 +192,7 @@ const getUser = (params, uid) => dispatch => {
                     if (log) return { ...log, lid: r.key }
                   })
               )
+
         const logs = await Promise.all(logsPromise)
         logs.sort((a, b) =>
           moment(a.fecha) - moment(b.fecha)
@@ -201,6 +201,7 @@ const getUser = (params, uid) => dispatch => {
             ? 1
             : 0
         )
+
         const tarjetasResolve = await Promise.all(tarjetasPromise)
         const tarjetas = tarjetasResolve.filter(tarjeta => tarjeta && tarjeta)
         dispatch({

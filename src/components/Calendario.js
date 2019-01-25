@@ -51,8 +51,8 @@ export const Body = ({ clases, dates, dias, eventHandler }) => {
                         active === 1
                           ? 'active-reservada'
                           : active === 3
-                            ? 'active'
-                            : ''
+                          ? 'active'
+                          : ''
                       } ${!future && 'disabled'}
                       ${cola && 'full'}`}
                       onClick={() =>
@@ -66,7 +66,7 @@ export const Body = ({ clases, dates, dias, eventHandler }) => {
                       <span>{ev.instructor.nombre}</span>
                       <br />
                       <span>
-                        {moment(ev.inicio).format('LT')} - {' '}
+                        {moment(ev.inicio).format('LT')} -{' '}
                         {moment(ev.fin).format('LT')}
                       </span>
                       {ev.salon && (

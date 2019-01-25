@@ -25,14 +25,15 @@ class Checkout extends Component {
   confirm = () => {
     const { clases, creditos } = this.state
     this.setState({ loading: true, label: 'Asignando clases' })
-    const { invitado, uid, isIlimitado } = this.props.auth
+    const { invitado, uid, ilimitado, sid } = this.props.auth
+    const { isUnlimited, fecha } = this.checkUnlimited(ilimitado, sid)
     confirmCheckout(
       {
         creditos,
         clases,
         invitado,
         uid,
-        isIlimitado,
+        isIlimitado: isUnlimited,
         fecha: moment().format()
       },
       this.successCheckout
@@ -41,6 +42,17 @@ class Checkout extends Component {
     // console.log('post async request')
 
     // setTimeout(() => {}, 1000)
+  }
+
+  checkUnlimited = (ilimitado, sid) => {
+    const fecha = ilimitado
+      ? ilimitado[sid]
+        ? ilimitado[sid].fin
+        : null
+      : null
+
+    const isUnlimited = fecha ? moment(fecha) > moment() : false
+    return { fecha, isUnlimited }
   }
 
   successCheckout = () => {
