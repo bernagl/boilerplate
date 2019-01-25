@@ -210,6 +210,7 @@ const getUser = (params, uid) => dispatch => {
             ...snapshot.val(),
             clases,
             logs,
+            ilimitado,
             isIlimitado,
             tarjetas,
             pagos

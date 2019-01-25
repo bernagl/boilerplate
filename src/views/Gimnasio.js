@@ -27,10 +27,11 @@ class Gimnasio extends Component {
     clasesCount: 0,
     week: 0,
     events: [],
-    creditos: 5,
+    creditos: 0,
     menosCreditos: 0,
     clases: new Map(),
     month: moment().format('MMMM'),
+    sid: null,
     sucursalSelected: null,
     dates: [],
     dias: [
@@ -49,6 +50,7 @@ class Gimnasio extends Component {
     this.props.getClases()
     const { creditos } = this.props.cart
     const { expires, clases, isIlimitado, ilimitado } = this.props.auth
+    console.log(this.props)
 
     this.setState({
       creditos,
@@ -61,7 +63,7 @@ class Gimnasio extends Component {
 
   componentWillReceiveProps(newProps) {
     let {
-      auth: { creditos },
+      auth: { creditos, ilimitado },
       clases,
       gimnasios
     } = newProps
@@ -92,21 +94,45 @@ class Gimnasio extends Component {
           ? 1
           : 0
 
-      this.setState({ gimnasios, sucursales, gymSelected: defaultGym }, () =>
-        this.handleGym(defaultGym)
+      const sid = gimnasios[defaultGym].id
+      // const { fechaUnlimited, isUnlimited } = this.checkUnlimited(
+      //   ilimitado,
+      //   sid
+      // )
+
+      this.setState(
+        {
+          // fechaUnlimited,
+          // isUnlimited,
+          gimnasios,
+          sucursales,
+          gymSelected: defaultGym
+        },
+        () => this.handleGym(defaultGym, sid)
       )
     }
   }
 
-  handleGym = i => {
+  handleGym = (i, sid) => {
     const { gimnasios } = this.state
     const {
-      auth: { creditos: c }
+      auth: { creditos: c, ilimitado }
     } = this.props
+    const { isUnlimited, fecha: fechaUnlimited } = this.checkUnlimited(
+      ilimitado,
+      sid
+    )
+    const creditos = c[sid] ? c[sid] : 0
     this.setState(
       {
         events: gimnasios[i].events,
-        gymSelected: i
+        gymSelected: i,
+        sid,
+        isUnlimited,
+        fechaUnlimited,
+        clases: new Map(),
+        clasesCount: 0,
+        creditos
       },
       () => this.daysHandler()
     )
@@ -156,13 +182,18 @@ class Gimnasio extends Component {
       clases,
       clasesCount: cc,
       sucursales,
-      isIlimitado,
-      ilimitadoFin,
-      expires
+      // isIlimitado,
+      // ilimitadoFin,
+      expires,
+      creditos,
+      sid
     } = this.state
+    const { ilimitado } = this.props.auth
+
     const gymId = gimnasios[gymSelected].id
     const sucursalNombre = gimnasios[gymSelected].nombre
-    const creditos = sucursales[gymId].creditos ? sucursales[gymId].creditos : 0
+    const { isUnlimited, fecha } = this.checkUnlimited(ilimitado, sid)
+    // const creditos = sucursales[gymId].creditos ? sucursales[gymId].creditos : 0
     let c = creditos
     let isSet = clases.has(event.id)
     let clase = clases.get(event.id)
@@ -196,9 +227,9 @@ class Gimnasio extends Component {
       }
     }
 
-    if (creditos >= 1 || isIlimitado) {
-      if (isIlimitado) {
-        if (moment(ilimitadoFin).format() < moment(event.inicio).format()) {
+    if (creditos >= 1 || isUnlimited) {
+      if (isUnlimited) {
+        if (moment(fecha).format() < moment(event.inicio).format()) {
           message.error('El paquete ilimitado no abarca esta fecha')
           return
         }
@@ -219,6 +250,7 @@ class Gimnasio extends Component {
           message.success(`Clase ${event.clase.nombre} agregada`))
       this.setState({
         clases,
+        creditos: c,
         sucursales: {
           ...sucursales,
           [gymId]: { creditos: c, nombre: sucursalNombre }
@@ -252,34 +284,57 @@ class Gimnasio extends Component {
         this.props.history.push('/checkout'))
   }
 
+  checkUnlimited = (ilimitado, sid) => {
+    // const { sid } = this.state
+    // const { ilimitado } = this.props.auth
+    const fecha = ilimitado
+      ? ilimitado[sid]
+        ? ilimitado[sid].fin
+        : null
+      : null
+
+    const isUnlimited = moment(fecha) > moment()
+    return { isUnlimited, fecha }
+  }
+
   render() {
     const {
-      auth: { invitado, status }
+      auth: { invitado, ilimitado, status }
     } = this.props
 
     const {
       dates,
       clasesCount,
-      isIlimitado,
+      isUnlimited,
+      fechaUnlimited,
       dias,
       clases,
       gymSelected,
       gimnasios,
       sucursales,
-      creditos: c
+      creditos
     } = this.state
-    let creditos =
-      gimnasios.length > 0
-        ? sucursales[gimnasios[gymSelected].id]
-          ? sucursales[gimnasios[gymSelected].id].creditos
-          : 0
-        : 0
+    // let creditos =
+    //   gimnasios.length > 0
+    //     ? sucursales[gimnasios[gymSelected].id]
+    //       ? sucursales[gimnasios[gymSelected].id].creditos
+    //       : 0
+    //     : 0
 
-    if (typeof creditos === 'undefined') creditos = c
+    // if (typeof creditos === 'undefined') creditos = c
 
     const defaultGym = gimnasios.length > 0 ? gimnasios[gymSelected].id : 0
-    const gymName = gimnasios.length > 0 ? gimnasios[gymSelected].nombre : ''
+    const gymName = gimnasios.length > 0 ? gimnasios[gymSelected].nombre : null
     // console.log(defaultGym, gymSelected, gimnasios)
+    // const sid = gymName ? gimnasios[gymSelected].id : null
+    // const paqueteIlimitado = ilimitado
+    //   ? ilimitado[sid]
+    //     ? ilimitado[sid].fin
+    //     : null
+    //   : null
+
+    // const isUnlimited = moment(paqueteIlimitado) > moment()
+
     return (
       <AnimationWrapper>
         <div className="col-12 my-4">
@@ -316,13 +371,18 @@ class Gimnasio extends Component {
                     <div className="col-12">
                       <span>
                         Créditos disponibles en <b>{gymName}</b>:{' '}
-                        {isIlimitado ? 'Ilimitados' : creditos}
+                        {isUnlimited ? 'Ilimitado' : creditos}
+                        {isUnlimited && (
+                          <div>
+                            Vence en: {moment(fechaUnlimited).format('LL')}
+                          </div>
+                        )}
                       </span>
                       <br />
                       {clasesCount > 0 && (
                         <span>Tienes {clasesCount} clases</span>
                       )}
-                      {creditos === 0 && !isIlimitado && (
+                      {creditos === 0 && !isUnlimited && (
                         <span className="no-credits-label fade">
                           Ya no tienes créditos disponibles,{' '}
                           <Link to="/comprar">comprar créditos</Link>
@@ -337,7 +397,7 @@ class Gimnasio extends Component {
                       {gimnasios.map((gym, i) => (
                         <RadioButton
                           value={gym.id}
-                          onClick={() => this.handleGym(i)}
+                          onClick={() => this.handleGym(i, gym.id)}
                           key={i}
                         >
                           {gym.nombre}
