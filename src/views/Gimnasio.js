@@ -93,15 +93,8 @@ class Gimnasio extends Component {
           : 0
 
       const sid = gimnasios[defaultGym].id
-      // const { fechaUnlimited, isUnlimited } = this.checkUnlimited(
-      //   ilimitado,
-      //   sid
-      // )
-
       this.setState(
         {
-          // fechaUnlimited,
-          // isUnlimited,
           gimnasios,
           sucursales,
           gymSelected: defaultGym
@@ -128,7 +121,7 @@ class Gimnasio extends Component {
         sid,
         isUnlimited,
         fechaUnlimited,
-        clases,
+        clases: new Map(clases),
         clasesCount: 0,
         creditos
       },
@@ -320,29 +313,11 @@ class Gimnasio extends Component {
       clases,
       gymSelected,
       gimnasios,
-      sucursales,
       creditos
     } = this.state
-    // let creditos =
-    //   gimnasios.length > 0
-    //     ? sucursales[gimnasios[gymSelected].id]
-    //       ? sucursales[gimnasios[gymSelected].id].creditos
-    //       : 0
-    //     : 0
-
-    // if (typeof creditos === 'undefined') creditos = c
 
     const defaultGym = gimnasios.length > 0 ? gimnasios[gymSelected].id : 0
     const gymName = gimnasios.length > 0 ? gimnasios[gymSelected].nombre : null
-    // console.log(defaultGym, gymSelected, gimnasios)
-    // const sid = gymName ? gimnasios[gymSelected].id : null
-    // const paqueteIlimitado = ilimitado
-    //   ? ilimitado[sid]
-    //     ? ilimitado[sid].fin
-    //     : null
-    //   : null
-
-    // const isUnlimited = moment(paqueteIlimitado) > moment()
     return (
       <AnimationWrapper>
         <div className="col-12 my-4">

@@ -1233,7 +1233,6 @@ export default class extends React.Component {
     )
 
     const updateResolve = await Promise.all(updatePromise)
-    console.log(updateResolve)
   }
   render() {
     return (

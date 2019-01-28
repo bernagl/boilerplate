@@ -70,7 +70,6 @@ class ComprarCreditos extends Component {
       },
       this
     )
-    console.log(r)
     return r
   }
 

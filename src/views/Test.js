@@ -36,8 +36,6 @@ export default class Test extends React.Component {
 
   render() {
     const { clases } = this.state
-    // localStorage.setItem('clasesifs', JSON.stringify(clases))
-    // console.log(clases)
     return (
       <div>
         <button onClick={this.updateClases}>Update</button>

@@ -42,7 +42,6 @@ class Checkout extends Component {
   }
 
   checkUnlimited = (ilimitado, sid) => {
-    console.log(ilimitado, sid)
     const fecha = ilimitado
       ? ilimitado[sid]
         ? ilimitado[sid].fin
@@ -50,8 +49,6 @@ class Checkout extends Component {
       : null
 
     const isUnlimited = fecha ? moment(fecha) > moment() : false
-    console.log(fecha, isUnlimited)
-    
     return { fecha, isUnlimited }
   }
 
@@ -65,8 +62,6 @@ class Checkout extends Component {
 
   render() {
     const { clases, creditos, label, loading } = this.state
-    // console.log(this.props)
-    // console.log(this.state)
     return (
       <AnimationWrapper>
         <div className="row my-4">

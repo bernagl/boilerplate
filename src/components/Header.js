@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link, NavLink } from 'react-router-dom'
 
-// export default ({ openModal, closeModal }) => {
 export default class extends React.Component {
   state = { checked: false }
 
@@ -57,17 +56,9 @@ export default class extends React.Component {
                 Mi cuenta
               </NavLink>
             </li>
-            {/* <li className="luxbar-item" onClick={this.handleCheck} onClick={() => openModal()}> */}
           </ul>
         </div>
       </header>
     )
   }
 }
-// }
-
-// const childrenComponent = () => {
-//   return <p>Hola</p>
-// }
-
-// export default Modal(header)(childrenComponent)({ title: 'Testeando' })
