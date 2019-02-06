@@ -29,10 +29,6 @@ class ComprarCreditos extends Component {
   componentDidMount() {
     const { auth } = this.props
     if (auth.status === 0) {
-      // notification.open({
-      //   message: 'Tu suscripción ha vencido',
-      //   description: 'Para poder utilizar tus créditos o comprar más renuevala'
-      // })
       this.setState({ modal: true })
     }
     this.props.getGimnasiosByStatus(1)
@@ -46,12 +42,14 @@ class ComprarCreditos extends Component {
 
   saveCard = async model => {
     const { correo, nombre, uid } = this.props.auth
-    const { paquete, metodo, sucursal } = this.state
+    const { paquete, sucursal } = this.state
     if (!paquete) {
       message.error('Debes seleccionar un paquete')
       return
     }
     const { meses, creditos } = paquete
+    const isLowerPrice = this.checkPackagePrice(+paquete.precio)
+    if (!isLowerPrice) return
     this.setState({ loadingPayment: true })
     const r = await saveCard(this.props.history.push)(
       {
@@ -63,6 +61,7 @@ class ComprarCreditos extends Component {
         name: paquete.nombre,
         correo,
         nombre,
+        usuario: nombre,
         fecha: moment().format(),
         sucursal: sucursal.nombre,
         sid: sucursal.id,
@@ -73,17 +72,35 @@ class ComprarCreditos extends Component {
     return r
   }
 
+  checkPackagePrice = precio => {
+    if (typeof precio === 'number') {
+      if (precio >= 3000) {
+        message.error(
+          'Por el momento solo se pueden hacer comprar menores a $3,000.00 pesos en la página'
+        )
+        message.info(
+          'Si desea puede pagar en la sucursal en efectivo o en terminal'
+        )
+        return false
+      }
+    }
+    return true
+  }
+
   payWithCard = async () => {
     const { paquete, metodo, sucursal } = this.state
-    const { tarjetas, uid } = this.props.auth
+    const { tarjetas, uid, nombre: usuario } = this.props.auth
     const tarjeta = tarjetas[metodo - 1]
     const { meses, creditos } = paquete
+    const isLowerPrice = this.checkPackagePrice(+paquete.precio)
+    if (!isLowerPrice) return
     this.setState({ loadingPayment: true })
     payWithCard(this.props.history.push)(
       {
         uid,
         precio: +paquete.precio,
         meses,
+        usuario,
         creditos,
         name: paquete.nombre,
         parent_id: tarjeta.parent_id,
@@ -99,24 +116,6 @@ class ComprarCreditos extends Component {
     )
   }
 
-  pagar = async () => {
-    const { uid } = this.props.auth
-    const { metodo, paquete } = this.state
-    const r = await this.props.comprarCreditos({
-      uid,
-      metodo,
-      paquete,
-      fecha: moment().format('L'),
-      type: 'paquete'
-    })
-    r &&
-      (message.success('Créditos comprados'),
-      this.props.history.push('/perfil'))
-  }
-
-  vaciar = () => {
-    db.ref('horario').remove()
-  }
   render() {
     const {
       metodo,
@@ -142,8 +141,6 @@ class ComprarCreditos extends Component {
                 className="fw mt-2 mb-4"
                 placeholder="Selecciona un gimnasio"
                 onChange={id => this.handlePaquetes(id)}
-
-                // defaultValue={}
               >
                 {gimnasios.map(({ nombre, id }) => (
                   <Option value={id} key={id}>

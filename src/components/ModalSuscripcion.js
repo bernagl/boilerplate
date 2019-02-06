@@ -46,8 +46,9 @@ class Suscripcion extends React.Component {
         conekta_id: tarjeta.id,
         tarjeta: tarjeta.brand,
         last4: tarjeta.last4,
+        usuario: nombre,
         nombre,
-        precio: '700',
+        precio: 700,
         fecha: moment().format(),
         name: 'Suscripción',
         type: 'subscripcion'

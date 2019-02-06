@@ -1,8 +1,16 @@
 import { db } from './firebase-config'
 import { message } from 'antd'
 import moment from 'moment'
+import { conekta } from '../constants/conektaCredentials'
 
 export const saveCard = push => async (model, context) => {
+  // if (!model.sid) {
+  //   message.error('Por favor selecciona una sucursal e intentalo de nuevo')
+  //   return
+  // }
+  const publicKey = conekta[model.sid || '-LJ5w7hFuZxYmwiprTIY']
+  console.log(publicKey)
+  window.Conekta.setPublicKey(publicKey)
   var data = {
     card: {
       number: model.tarjeta,
@@ -35,20 +43,25 @@ export const deleteCard = id => {
     .ref('tarjeta')
     .child(id)
     .remove()
-    .then(r => message.success('La tarjeta se ha eliminado'))
-    .catch(e =>
-      message.error('Ocurrió un error, por favor vuelve a intentarlo')
-    )
+    .then(r => 202)
+    .catch(e => 404)
 }
 
 export const payWithCard = push => (model, context) => {
   message.info('Estamos validando tu información')
   const userRef = db.ref('usuario').child(model.uid)
+  // if (!model.sid) {
+  //   message.error('Por favor selecciona una sucursal e intentalo de nuevo')
+  //   return
+  // }
+  const publicKey = conekta[model.sid || '-LJ5w7hFuZxYmwiprTIY']
+  console.log(publicKey)
+  window.Conekta.setPublicKey(publicKey)
   window.$.ajax({
     type: 'POST',
-    // url: 'ifs/_ctrl/ctrl.conekta.php',
-    url: 'ifsapi/_ctrl/ctrl.conekta.php',
-    data: { data: model, exec: 'compra_creditos' },
+    url: 'https://reserva.impulsefitness.mx/api/_ctrl/ctrl.conekta.php',
+    // url: 'ifsapi/_ctrl/ctrl.conekta.php',
+    data: { data: model, exec: 'compra_creditos', suc: model.sid },
     dataType: 'json',
     success: function({ error, info, status }) {
       if (+status === 500) {
@@ -157,9 +170,9 @@ const makeCharge = push => async (model, context) => {
 
   window.$.ajax({
     type: 'POST',
-    // url: 'ifs/_ctrl/ctrl.conekta.php',
-    url: 'ifsapi/_ctrl/ctrl.conekta.php',
-    data: { data: model, exec: 'save' },
+    url: 'https://reserva.impulsefitness.mx/api/_ctrl/ctrl.conekta.php',
+    //url: 'ifsapi/_ctrl/ctrl.conekta.php',
+    data: { data: model, exec: 'save', suc: model.sid },
     dataType: 'json',
     success: function({ cc, status, error }) {
       if (+status === 500) {
