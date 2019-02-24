@@ -9,7 +9,6 @@ export const saveCard = push => async (model, context) => {
   //   return
   // }
   const publicKey = conekta[model.sid || '-LJ5w7hFuZxYmwiprTIY']
-  console.log(publicKey)
   window.Conekta.setPublicKey(publicKey)
   var data = {
     card: {
@@ -55,7 +54,6 @@ export const payWithCard = push => (model, context) => {
   //   return
   // }
   const publicKey = conekta[model.sid || '-LJ5w7hFuZxYmwiprTIY']
-  console.log(publicKey)
   window.Conekta.setPublicKey(publicKey)
   window.$.ajax({
     type: 'POST',
@@ -119,7 +117,7 @@ export const payWithCard = push => (model, context) => {
                     .add(1, 'M')
                     .format()
                   if (typeof usuario.creditos !== 'undefined') {
-                    sucursalCreditos = usuario['creditos'][model.sid]
+                    sucursalCreditos = +usuario['creditos'][model.sid]
                   }
                   if (!sucursalCreditos) sucursalCreditos = +model.creditos
                   else sucursalCreditos += +model.creditos
@@ -128,7 +126,7 @@ export const payWithCard = push => (model, context) => {
                     .update({
                       creditos: {
                         ...usuario.creditos,
-                        [model.sid]: sucursalCreditos
+                        [model.sid]: +sucursalCreditos
                       },
                       expires,
                       pagos
@@ -160,7 +158,6 @@ export const payWithCard = push => (model, context) => {
     },
     error: function(r) {
       context.setState({ loadingPayment: false })
-      console.log(r)
     }
   })
 }

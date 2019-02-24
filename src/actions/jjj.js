@@ -1162,22 +1162,6 @@ const csv = [
 ]
 
 export default class extends React.Component {
-  // componentDidMount() {
-  //   const users = []
-  //   db.ref('usuario').once('value', snap => {
-  //     snap.forEach(snapUser => {
-  //       const user = snapUser.val()
-  //       csv.map(
-  //         u =>
-  //           u.correo === user.correo &&
-  //           users.push({ ...user, id: snapUser.key })
-  //       )
-  //     })
-
-  //     console.log(users)
-  //   })
-  // }
-
   printcsv = async () => {
     const updatePromise = csv.map(
       async ({
