@@ -48,7 +48,7 @@ class Suscripcion extends React.Component {
         last4: tarjeta.last4,
         usuario: nombre,
         nombre,
-        precio: 700,
+        precio: 600,
         fecha: moment().format(),
         name: 'Suscripción',
         type: 'subscripcion'
