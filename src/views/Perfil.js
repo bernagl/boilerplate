@@ -11,6 +11,7 @@ import { getPagos, updateProfile, updateUserStatus } from '../actions/perfil'
 import { cancelarClase } from '../actions/clase'
 import { getGimnasiosByStatus } from '../actions/gimnasio'
 import { deleteCard } from '../actions/tarjeta'
+import { sendMail } from '../actions/mail'
 import {
   Badge,
   Divider,
@@ -115,7 +116,7 @@ class Perfil extends Component {
       : message.error('Ocurrió un error, por favor vuelve a intentarlo')
   }
 
-  cancelarClase = async ({ inicio, gimnasio, id, costo, clase }) => {
+  cancelarClase = async ({ inicio, gimnasio, instructor, id, costo, clase }) => {
     const { uid } = this.props.auth
     const difference = moment.duration(moment(inicio).diff(moment()))
     const cancelClass = difference.asHours() > 3 ? true : false
@@ -126,6 +127,7 @@ class Perfil extends Component {
         cid: id,
         uid
       })
+      sendMail({...instructor, inicio: moment(clase.inicio).format('LLLL'), instructora: instructor.nombre, id})
       r && message.success('Clase cancelada, tus créditos han sido devueltos')
     } else
       message.error(
