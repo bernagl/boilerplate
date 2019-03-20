@@ -276,6 +276,14 @@ class Gimnasio extends Component {
       sucursales,
       sid
     } = this.state
+
+    if (this.props.auth.status !== 1) {
+      message.error(
+        'Para poder reservar es necesario que tengas una suscripción activa'
+      )
+
+      return
+    }
     clasesCount === 0
       ? message.error('Para proceder al pago debes agregar al menos una clase')
       : (this.props.setCheckout({
