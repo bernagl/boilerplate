@@ -57,10 +57,15 @@ class Suscripcion extends React.Component {
     )
   }
 
+  getMessage = auth =>
+    auth.invitado
+      ? 'Para poder comprar créditos es necesario que primero actives tu suscripción'
+      : 'Esto se debe a que no hiciste uso de cuenta durante tres meses.Y no podrás hacer uso de tus créditos hasta que la renueves'
   render() {
     const { loadingPayment, metodo, nuevaTarjeta, visible } = this.state
     const { auth, push } = this.props
     const { tarjetas } = auth
+    const alertMsg = this.getMessage(auth)
     return (
       <Modal
         title="Renovar suscripción"
@@ -72,11 +77,7 @@ class Suscripcion extends React.Component {
       >
         <div className="row">
           <div className="col-12">
-            <Alert
-              message="Esto se debe a que no hiciste uso de cuenta durante tres meses.
-                Y no podrás hacer uso de tus créditos hasta que la renueves"
-              type="error"
-            />
+            <Alert message={alertMsg} type="error" />
           </div>
           <Divider />
           <div className="col-12 my-2">

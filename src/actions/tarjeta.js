@@ -77,33 +77,45 @@ export const payWithCard = push => (model, context) => {
               const pagos = { ...usuario.pagos, [cid]: true }
               if (model.type === 'paquete') {
                 if (model.meses) {
-                  const { ilimitado } = usuario
+                  const { ilimitado = {}, expires: userExpires } = usuario
                   let inicio, fin
                   const now = moment()
 
-                  if (typeof ilimitado === 'undefined') {
+                  if (typeof ilimitado[model.sid] === 'undefined') {
                     inicio = now.format()
                     fin = now.add(model.meses, 'M')
                   } else {
-                    if (moment(fin).format() < now.format()) {
+                    if (moment(ilimitado[model.sid].fin) < now) {
                       inicio = now.format()
                       fin = now.add(model.meses, 'M')
                     } else {
-                      inicio = ilimitado['inicio']
-                      fin = moment(ilimitado.fin).add(model.meses, 'M')
+                      inicio = ilimitado[model.sid].inicio
+                      fin = moment(ilimitado[model.sid].fin).add(
+                        model.meses,
+                        'M'
+                      )
                     }
                   }
+                  // debugger
 
-                  const expires = moment(fin)
-                    .add(1, 'M')
-                    .format()
+                  const expires =
+                    moment(userExpires) > moment()
+                      ? moment(userExpires)
+                          .add(model.meses, 'M')
+                          .format()
+                      : moment()
+                          .add(model.meses, 'M')
+                          .format()
 
                   userRef
                     .update({
                       pagos,
                       ilimitado: {
-                        inicio: moment(inicio).format(),
-                        fin: moment(fin).format()
+                        ...ilimitado,
+                        [model.sid]: {
+                          inicio: moment(inicio).format(),
+                          fin: moment(fin).format()
+                        }
                       },
                       expires
                     })
@@ -113,9 +125,15 @@ export const payWithCard = push => (model, context) => {
                     })
                 } else {
                   let sucursalCreditos = 0
-                  const expires = moment()
-                    .add(1, 'M')
-                    .format()
+                  const { expires: userExpires } = usuario
+                  const expires =
+                    moment(userExpires) > moment()
+                      ? moment(userExpires)
+                          .add(1, 'M')
+                          .format()
+                      : moment()
+                          .add(1, 'M')
+                          .format()
                   if (typeof usuario.creditos !== 'undefined') {
                     sucursalCreditos = +usuario['creditos'][model.sid]
                   }

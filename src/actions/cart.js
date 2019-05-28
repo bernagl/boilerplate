@@ -35,10 +35,10 @@ export const confirmCheckout = (props, callback) => {
               .then(r => {
                 uclases = { ...uclases, [clase.id]: 1 }
                 const last_class =
-                  moment(usuario.last_class).format() >
-                  moment(clase.inicio).format()
-                    ? moment(usuario.last_class).format()
-                    : moment(clase.inicio).format()
+                moment(usuario.last_class).format() >
+                moment(clase.inicio).format()
+                  ? moment(usuario.last_class).format()
+                  : moment(clase.inicio).format()
                 if (!props.isIlimitado) {
                   const creditos = clase.costo ? clase.costo : 1
                   ucreditos = {

@@ -25,18 +25,12 @@ const getUsuarios = id => {
     })
 }
 
-export const sendMail = async (event) => {
+export const sendMail = async event => {
   const users = await getUsuarios(event.id)
-//   if(users.length === 0) return
+  //   if(users.length === 0) return
   const form = new FormData()
   form.append('event', JSON.stringify(event))
-  form.append(
-    'data',
-    JSON.stringify([
-      ...users,
-      { correo: 'luisb.galo@gmail.com', nombre: 'Luis Bernardo Garcia Lopez' }
-    ])
-  )
+  form.append('data', JSON.stringify([...users]))
 
   form.append('type', '__qeue_notification__')
   axios
@@ -44,12 +38,12 @@ export const sendMail = async (event) => {
       headers: { 'Content-type': 'multipart/form-data' }
     })
     .then(r => {
-    //   console.log(r)
+      //   console.log(r)
       return 202
       // this.setState({ loading: false, filepath })
     })
     .catch(e => {
-    //   console.log(e)
+      //   console.log(e)
       return 404
     })
 }

@@ -41,7 +41,7 @@ class ComprarCreditos extends Component {
   }
 
   saveCard = async model => {
-    const { correo, nombre, uid } = this.props.auth
+    const { expires, correo, nombre, uid } = this.props.auth
     const { paquete, sucursal } = this.state
     if (!paquete) {
       message.error('Debes seleccionar un paquete')
@@ -54,6 +54,7 @@ class ComprarCreditos extends Component {
     const r = await saveCard(this.props.history.push)(
       {
         ...model,
+        expires,
         uid,
         precio: +paquete.precio,
         creditos,

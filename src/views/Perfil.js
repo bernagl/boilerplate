@@ -116,7 +116,14 @@ class Perfil extends Component {
       : message.error('Ocurrió un error, por favor vuelve a intentarlo')
   }
 
-  cancelarClase = async ({ inicio, gimnasio, instructor, id, costo, clase }) => {
+  cancelarClase = async ({
+    inicio,
+    gimnasio,
+    instructor,
+    id,
+    costo,
+    clase
+  }) => {
     const { uid } = this.props.auth
     const difference = moment.duration(moment(inicio).diff(moment()))
     const cancelClass = difference.asHours() > 3 ? true : false
@@ -127,7 +134,12 @@ class Perfil extends Component {
         cid: id,
         uid
       })
-      sendMail({...instructor, inicio: moment(clase.inicio).format('LLLL'), instructora: instructor.nombre, id})
+      sendMail({
+        ...instructor,
+        inicio: moment(clase.inicio).format('LLLL'),
+        instructora: instructor.nombre,
+        id
+      })
       r && message.success('Clase cancelada, tus créditos han sido devueltos')
     } else
       message.error(
@@ -229,6 +241,27 @@ class Perfil extends Component {
     }
   ]
 
+  printUnlimitedPackage = () => {
+    const {
+      auth: { ilimitado },
+      gimnasios
+    } = this.props
+    let flag = 0
+    const gyms = gimnasios
+      .map(gym => (
+        <div key={gym.id}>
+          {ilimitado && ilimitado[gym.id]
+            ? moment(ilimitado[gym.id].fin) > moment()
+              ? `${gym.nombre}: ${moment(ilimitado[gym.id].fin).format('ll')}`
+              : null
+            : null}
+        </div>
+      ))
+      .filter(e => e)
+
+    return gyms.length === 0 ? 'No tienes paquetes ilímitados' : gyms
+  }
+
   logsCol = () => [
     { label: 'Log', key: 'log' },
     { label: 'Mótivo', key: 'motivo' },
@@ -287,7 +320,8 @@ class Perfil extends Component {
                     </span>
                   </Tooltip>
                   <div>
-                    <span>Vence: {moment(ilimitado.fin).format('LL')}</span>
+                    {this.printUnlimitedPackage()}
+                    {/* <span>Vence: {moment(ilimitado.fin).format('LL')}</span> */}
                   </div>
                 </div>
               ) : (

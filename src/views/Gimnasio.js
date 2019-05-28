@@ -113,6 +113,7 @@ class Gimnasio extends Component {
       ilimitado,
       sid
     )
+    
     const creditos = c[sid] ? c[sid] : 0
     this.setState(
       {
@@ -220,12 +221,12 @@ class Gimnasio extends Component {
 
     if (creditos >= 1 || isUnlimited) {
       if (isUnlimited) {
-        if (moment(fecha).format() < moment(event.inicio).format()) {
+        if (moment(fecha) < moment(event.inicio)) {
           message.error('El paquete ilimitado no abarca esta fecha')
           return
         }
       } else {
-        if (moment(expires).format() < moment(event.inicio).format()) {
+        if (moment(expires) < moment(event.inicio)) {
           message.error('Tus créditos expiran antes de la clase seleccionada')
           return
         }
@@ -297,6 +298,7 @@ class Gimnasio extends Component {
   }
 
   checkUnlimited = (ilimitado, sid) => {
+    
     const fecha = ilimitado
       ? ilimitado[sid]
         ? ilimitado[sid].fin
