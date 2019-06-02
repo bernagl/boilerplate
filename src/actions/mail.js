@@ -37,7 +37,6 @@ export const sendMail = async event => {
       { correo: 'luisb.galo@gmail.com', nombre: 'Luis Bernardo Garcia Lopez' }
     ])
   )
-  debugger
   form.append('type', '__qeue_notification__')
   axios
     .post('https://admin.impulsefitness.mx/sendgrid/index.php', form, {

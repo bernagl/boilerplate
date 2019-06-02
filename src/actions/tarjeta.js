@@ -96,8 +96,6 @@ export const payWithCard = push => (model, context) => {
                       )
                     }
                   }
-                  // debugger
-
                   const expires =
                     moment(userExpires) > moment()
                       ? moment(userExpires)
