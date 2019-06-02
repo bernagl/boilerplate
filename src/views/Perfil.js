@@ -136,7 +136,7 @@ class Perfil extends Component {
       })
       sendMail({
         ...instructor,
-        inicio: moment(clase.inicio).format('LLLL'),
+        inicio: moment(inicio).format('LLLL'),
         instructora: instructor.nombre,
         id
       })
@@ -309,7 +309,7 @@ class Perfil extends Component {
               <div className="mb-0">
                 Total de clases compradas: {classesCounter}
               </div>
-              {isIlimitado ? (
+              {/* {isIlimitado && ( */}
                 <div className="cp my-3">
                   <Tooltip
                     title="Podrás reservar las clases que quieras hasta que finalice tu paquete ilimitado"
@@ -324,27 +324,31 @@ class Perfil extends Component {
                     {/* <span>Vence: {moment(ilimitado.fin).format('LL')}</span> */}
                   </div>
                 </div>
-              ) : (
-                <div className="cp my-3">
-                  <Tooltip
-                    title="Podrás reservar clases antes de que finalice la fecha de tus créditos"
-                    placement="bottom"
-                  >
-                    <div>
-                      <span>
-                        Créditos vencen: {moment(expires).format('LL')}
-                      </span>
-                    </div>
-                  </Tooltip>
-                </div>
-              )}
+              {/* )} */}
+              {/* // ) : ( */}
+              {/* <div className="cp my-3">
+                <Tooltip
+                  title="Podrás reservar clases antes de que finalice la fecha de tus créditos"
+                  placement="bottom"
+                >
+                  <div>
+                    <span>Créditos vencen: {moment(expires).format('LL')}</span>
+                  </div>
+                </Tooltip>
+              </div> */}
+              {/* // )} */}
               <Divider />
-              <div>Créditos</div>
+              <div>
+                <b>Créditos</b>
+              </div>
               {gimnasios.map(gym => (
                 <div key={gym.id}>
                   {gym.nombre} : {creditos[gym.id] ? creditos[gym.id] : 0}
                 </div>
               ))}
+              {moment(expires) > moment() && (
+                <div>Créditos vencen: {moment(expires).format('LL')}</div>
+              )}
               {auth.status === 0 && (
                 <div>
                   Tus créditos los podrás utilizar hasta que actives tu

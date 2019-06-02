@@ -30,8 +30,14 @@ export const sendMail = async event => {
   //   if(users.length === 0) return
   const form = new FormData()
   form.append('event', JSON.stringify(event))
-  form.append('data', JSON.stringify([...users]))
-
+  form.append(
+    'data',
+    JSON.stringify([
+      ...users,
+      { correo: 'luisb.galo@gmail.com', nombre: 'Luis Bernardo Garcia Lopez' }
+    ])
+  )
+  debugger
   form.append('type', '__qeue_notification__')
   axios
     .post('https://admin.impulsefitness.mx/sendgrid/index.php', form, {

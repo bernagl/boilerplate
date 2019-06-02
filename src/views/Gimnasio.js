@@ -113,7 +113,7 @@ class Gimnasio extends Component {
       ilimitado,
       sid
     )
-    
+
     const creditos = c[sid] ? c[sid] : 0
     this.setState(
       {
@@ -279,11 +279,12 @@ class Gimnasio extends Component {
     } = this.state
 
     if (this.props.auth.status !== 1) {
+      if (!this.props.auth.invitado) {
       message.error(
-        'Para poder reservar es necesario que tengas una suscripción activa'
-      )
-
-      return
+          'Para poder reservar es necesario que tengas una suscripción activa'
+        )
+        return
+      }
     }
     clasesCount === 0
       ? message.error('Para proceder al pago debes agregar al menos una clase')
@@ -298,7 +299,6 @@ class Gimnasio extends Component {
   }
 
   checkUnlimited = (ilimitado, sid) => {
-    
     const fecha = ilimitado
       ? ilimitado[sid]
         ? ilimitado[sid].fin
