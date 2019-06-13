@@ -57,8 +57,8 @@ export const payWithCard = push => (model, context) => {
   window.Conekta.setPublicKey(publicKey)
   window.$.ajax({
     type: 'POST',
-    url: 'https://reserva.impulsefitness.mx/api/_ctrl/ctrl.conekta.php',
-    // url: 'ifsapi/_ctrl/ctrl.conekta.php',
+    url: 'https://reserva.impulsefitness.mx/api/_ctrl/test.conekta.php',
+    // url: 'ifsapi/_ctrl/test.conekta.php',
     data: { data: model, exec: 'compra_creditos', suc: model.sid },
     dataType: 'json',
     success: function({ error, info, status }) {
@@ -183,8 +183,8 @@ const makeCharge = push => async (model, context) => {
 
   window.$.ajax({
     type: 'POST',
-    url: 'https://reserva.impulsefitness.mx/api/_ctrl/ctrl.conekta.php',
-    //url: 'ifsapi/_ctrl/ctrl.conekta.php',
+    url: 'https://reserva.impulsefitness.mx/api/_ctrl/test.conekta.php',
+    //url: 'ifsapi/_ctrl/test.conekta.php',
     data: { data: model, exec: 'save', suc: model.sid },
     dataType: 'json',
     success: function({ cc, status, error }) {

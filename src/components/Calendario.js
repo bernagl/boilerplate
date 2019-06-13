@@ -51,13 +51,15 @@ export const Body = ({ clases, dates, dias, eventHandler }) => {
                         active === 1
                           ? 'active-reservada'
                           : active === 3
+                          ?  'mimimi'
+                          : active === 4
                           ? 'active'
                           : ''
                       } ${!future && 'disabled'}
                       ${cola && 'full'}`}
                       onClick={() =>
                         future
-                          ? eventHandler(ev, cola)
+                          ? eventHandler(ev, cola, active === 3 && !cola)
                           : message.info('Esta clase ya se venció')
                       }
                       key={j}

@@ -22,7 +22,7 @@ message.config({
 
 class Gimnasio extends Component {
   state = {
-    gymSelected: 0,
+    gymSelected: null,
     gimnasios: [],
     clasesCount: 0,
     week: 0,
@@ -64,18 +64,35 @@ class Gimnasio extends Component {
     let {
       auth: { creditos },
       clases,
-      gimnasios
+      gimnasios: gyms
     } = newProps
-    if (clases === this.props.clases) return
+
+    if(this.state.sincronized) return
+
+    let gimnasios = [...gyms]
     let sucursales = {}
     if (typeof creditos === 'undefined') creditos = {}
-    gimnasios.map(
-      gym =>
-        (sucursales = {
-          ...sucursales,
-          [gym.id]: { creditos: creditos[gym.id], nombre: gym.nombre }
-        })
-    )
+    if (gimnasios && gimnasios.length) {
+      gimnasios.map(
+        gym =>
+          (sucursales = {
+            ...sucursales,
+            [gym.id]: { creditos: creditos[gym.id], nombre: gym.nombre }
+          })
+      )
+    }
+    if (clases === this.props.clases) {
+      if (gimnasios && gimnasios.length) {
+        gimnasios.map(
+          gym =>
+            (sucursales = {
+              ...sucursales,
+              [gym.id]: { creditos: creditos[gym.id], nombre: gym.nombre }
+            })
+        )
+        this.setState({ gimnasios, sucursales })
+      } else return
+    }
     if (clases.length > 0 && gimnasios.length > 0) {
       gimnasios.map((gym, i) => {
         clases.map(clase => {
@@ -97,9 +114,10 @@ class Gimnasio extends Component {
         {
           gimnasios,
           sucursales,
-          gymSelected: defaultGym
-        },
-        () => this.handleGym(defaultGym, sid)
+          sincronized: true
+          // gymSelected: defaultGym
+        }
+        // () => this.handleGym(defaultGym, sid)
       )
     }
   }
@@ -167,7 +185,7 @@ class Gimnasio extends Component {
     })
   }
 
-  eventHandler = async (event, cola) => {
+  eventHandler = async (event, cola, qeue) => {
     const {
       gymSelected,
       gimnasios,
@@ -189,7 +207,7 @@ class Gimnasio extends Component {
     let c = creditos
     let isSet = clases.has(event.id)
     let clase = clases.get(event.id)
-    let clasesCount = cc
+    let clasesCount = qeue ? cc + 1 : cc < 0 ? 0 : cc
     if (isSet && clase.status === 1) {
       message.error('Para cancelar la clase debe ser desde tu perfil')
       return
@@ -212,7 +230,7 @@ class Gimnasio extends Component {
         })
         r === 202
           ? message.success(
-              'Fuiste agregado a la lista de espera, si un usuario cancela la clase se t enotificará'
+              'Fuiste agregado a la lista de espera, si un usuario cancela la clase se te notificará'
             )
           : message.error('Ocurrió un error, por favor vuelve a intentarlo')
         return
@@ -236,7 +254,7 @@ class Gimnasio extends Component {
           (clasesCount -= 1),
           (c += 1),
           message.warning('Clase devuelta'))
-        : (clases.set(event.id, { ...event, status: 3, cola }),
+        : (clases.set(event.id, { ...event, status: 4, cola }),
           (c -= 1),
           (clasesCount += 1),
           message.success(`Clase ${event.clase.nombre} agregada`))
@@ -280,7 +298,7 @@ class Gimnasio extends Component {
 
     if (this.props.auth.status !== 1) {
       if (!this.props.auth.invitado) {
-      message.error(
+        message.error(
           'Para poder reservar es necesario que tengas una suscripción activa'
         )
         return
@@ -326,8 +344,10 @@ class Gimnasio extends Component {
       creditos
     } = this.state
 
-    const defaultGym = gimnasios.length > 0 ? gimnasios[gymSelected].id : 0
-    const gymName = gimnasios.length > 0 ? gimnasios[gymSelected].nombre : null
+    const defaultGym =
+      gymSelected && gimnasios.length > 0 ? gimnasios[gymSelected].id : 0
+    const gymName =
+      gymSelected && gimnasios.length > 0 ? gimnasios[gymSelected].nombre : null
     return (
       <AnimationWrapper>
         <div className="col-12 my-4">
@@ -405,32 +425,39 @@ class Gimnasio extends Component {
                       ))}
                     </RadioGroup>
                   )}
+                  {gymSelected === null && (
+                    <div style={{ color: '#ed174f' }}>
+                      Debes seleccionar un gimnasio para poder ver el calendario
+                    </div>
+                  )}
                 </div>
-                <div className="col-12">
-                  <div className="calendar-container">
-                    <Button
-                      type="primary"
-                      onClick={() => this.daysHandler(0)}
-                      className="box-button"
-                    >
-                      <Icon type="left" />
-                    </Button>
-                    <Button
-                      type="primary"
-                      onClick={() => this.daysHandler(1)}
-                      className="box-button"
-                    >
-                      <Icon type="right" />
-                    </Button>
-                    <Header dates={dates} dias={dias} />
-                    <Body
-                      clases={clases}
-                      dates={dates}
-                      dias={dias}
-                      eventHandler={this.eventHandler}
-                    />
+                {defaultGym !== null && (
+                  <div className="col-12">
+                    <div className="calendar-container">
+                      <Button
+                        type="primary"
+                        onClick={() => this.daysHandler(0)}
+                        className="box-button"
+                      >
+                        <Icon type="left" />
+                      </Button>
+                      <Button
+                        type="primary"
+                        onClick={() => this.daysHandler(1)}
+                        className="box-button"
+                      >
+                        <Icon type="right" />
+                      </Button>
+                      <Header dates={dates} dias={dias} />
+                      <Body
+                        clases={clases}
+                        dates={dates}
+                        dias={dias}
+                        eventHandler={this.eventHandler}
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

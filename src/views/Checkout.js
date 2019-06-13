@@ -16,7 +16,7 @@ class Checkout extends Component {
     const clases = []
     let creditos = 0
     c.forEach((item, i) => {
-      item.status === 3 && (clases.push(item), (creditos += item.costo))
+      item.status === 4 && (clases.push(item), (creditos += item.costo))
     })
 
     this.setState({ clases, creditos })

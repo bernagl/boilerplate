@@ -102,8 +102,9 @@ class Perfil extends Component {
 
   componentDidMount() {
     const { auth } = this.props
-    const suscripcion =
-      moment().diff(moment(auth.last_class), 'days') >= 30 ? true : false
+    const diff = moment().diff(moment(auth.last_class), 'days')
+    const suscripcion = diff >= 90 ? true : false
+      debugger
     if (suscripcion) updateUserStatus({ uid: auth.uid, status: 0 })
     this.props.getGimnasiosByStatus(1)
     getPagos(this)(auth.uid)
