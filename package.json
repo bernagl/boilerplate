@@ -10,7 +10,7 @@
     "conekta-card-tokenizer": "^1.0.1",
     "firebase": "^5.0.4",
     "formsy-react": "^1.1.4",
-    "moment": "^2.22.2",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.17",
     "react": "^16.4.0",
     "react-addons-css-transition-group": "^15.6.2",
